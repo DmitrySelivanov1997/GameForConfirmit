@@ -1,0 +1,22 @@
+﻿<Window x:Class="Game.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Game"
+        mc:Ignorable="d" ResizeMode="CanResizeWithGrip"
+        Title="MainWindow" Height="500" Width="500">
+
+    <StackPanel SizeChanged="FrameworkElement_OnSizeChanged" >
+
+        <Grid Name="MyGrid" HorizontalAlignment="Center"  >
+
+
+
+        </Grid>
+
+        <Button  x:Name="ButtonStart"  Content="Сгенерировать карту"  Click="ButtonStart_Click" Height="23" Margin="100,25,100,0"   />
+
+    </StackPanel>
+
+</Window>
