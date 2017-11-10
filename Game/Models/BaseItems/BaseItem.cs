@@ -12,8 +12,8 @@ namespace Game.Models.BaseItems
     public class BaseItem
     {
         public Color Color { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int X { get; }
+        public int Y { get; }
 
         public BaseItem(int x, int y)
         {

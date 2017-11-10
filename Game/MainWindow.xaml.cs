@@ -46,6 +46,7 @@ namespace Game
             MapGenerator mapGenerator = new MapGenerator();
             var myMap = mapGenerator.GenerateMap(_mapSize);
             printer.Print(myMap);
+            Console.WriteLine();
 
         }
 

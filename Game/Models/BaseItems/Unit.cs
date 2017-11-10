@@ -2,19 +2,43 @@
 
 namespace Game.Models.BaseItems
 {
-    public class Unit:BaseItem
+    public class Unit:UnitBase
     {
-        public TypesOfObject[,] ScopeArray { get; set; }
-        public Map Map { get; }
-        public Unit(int x, int y,  Color color, Map map) : base(x, y)
+        public Direction Direction { get; set; }
+        public BaseItem[,] ScopeArray { get; }
+        private Map Map { get; }
+        public Unit(int x, int y, Color color, Map map) : base(x, y, color)
         {
             Map = map;
-            Color = color;
+            ScopeArray = GetAllObjectsInScopeArray();
+            
+        }
+        
+        
+
+        private BaseItem[,] GetAllObjectsInScopeArray()
+        {
+            int x = 0;
+            int y = 0;
+            var array = new BaseItem[13,13];
+            for (int i = X - 6; i <= X + 6; i++)
+            {
+                for (int j = Y - 6; j <= Y + 6; j++)
+                {
+                    if(X!=i && Y!=j)
+                    array[x,y]=Map.GetItem(i, j);
+                    y++;
+                }
+                y = 0;
+                x++;
+
+            }
+            return array;
         }
 
         public void Move(Direction direction)
         {
-            
+            Direction = direction;
         }
     }
 }

@@ -16,15 +16,14 @@ namespace Game.Models
         BaseWhite,
         BaseBlack,
         Brick,
-        Border,
-        FogOfWar
+        Border
     }
     public enum Direction
     {
+        Stay,
         Left,
         Right,
         Up,
-        Down,
-        Stay
+        Down
     }
 }

@@ -62,6 +62,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Interfaces\IAlgoritm.cs" />
     <Compile Include="Interfaces\IPrinter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -69,6 +70,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Algoritm1.cs" />
+    <Compile Include="Models\Algoritm2.cs" />
     <Compile Include="Models\BaseItems\Base.cs" />
     <Compile Include="Models\BaseItems\BaseItem.cs" />
     <Compile Include="Models\BaseItems\Border.cs" />
@@ -76,6 +79,8 @@
     <Compile Include="Models\BaseItems\Food.cs" />
     <Compile Include="Models\BaseItems\FreeSpace.cs" />
     <Compile Include="Models\BaseItems\Unit.cs" />
+    <Compile Include="Models\BaseItems\UnitBase.cs" />
+    <Compile Include="Models\Engine.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Map.cs" />
     <Compile Include="Models\MapGenerator.cs" />

@@ -5,6 +5,7 @@ namespace Game.Models
 {
     public class MapGenerator
     {
+
         private static readonly Random Rnd=new Random();
         public Map GenerateMap(int size)
         {
@@ -14,7 +15,7 @@ namespace Game.Models
             GenerateFood(array);
             GenerateWhiteBaseAndUnit(array);
             GenerateBlackBaseAndUnit(array);
-            return new Map(size,array);
+            return new Map(array);
         }
 
 
