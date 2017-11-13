@@ -13,5 +13,11 @@ namespace Game.Models.BaseItems
         {
             Color = color;
         }
+        public override bool Equals(object obj)
+        {
+            var item = obj as UnitBase;
+
+            return X == item?.X && Y == item.Y;
+        }
     }
 }

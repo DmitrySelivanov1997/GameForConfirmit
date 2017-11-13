@@ -14,20 +14,26 @@ namespace Game.Models
     {
         public List<Unit> WhiteArmy = new List<Unit>();
         public List<Unit> BlackArmy = new List<Unit>();
+        private Base BaseWhite { get; set; }
+        private Base BaseBlack { get; set; }
         private TypesOfObject[,] Array { get; }
         public Map( TypesOfObject[,] array)
         {
             Array = array;
+            WhiteArmy = GetArmy(Colors.White);
+            BlackArmy = GetArmy(Colors.Black);
         }
+
+    
 
         public BaseItem GetItem(int i, int j)
         {
             if (i >= 0 && j >= 0 && i < Array.GetLength(0) && j < Array.GetLength(1))
             {
-                switch (Array[i, j])
+                switch (Array[j,i])
                 {
                     case TypesOfObject.Brick:
-                        return new Brick(i,j);
+                        return new Brick(i, j);
                     case TypesOfObject.Food:
                         return new Food(i, j);
                     case TypesOfObject.FreeSpace:
@@ -35,12 +41,12 @@ namespace Game.Models
                     case TypesOfObject.BaseBlack:
                         return new Base(i, j, Colors.Black);
                     case TypesOfObject.BaseWhite:
-                        return new Base(i, j, Colors.White);
+                        BaseWhite = new Base(i, j, Colors.White);
+                        return BaseWhite;
                     case TypesOfObject.UnitBlack:
-                        BlackArmy.Add(new Unit(i, j, Colors.Black, this));
-                        return new UnitBase(i, j, Colors.Black);
+                        BaseBlack = new Base(i, j, Colors.Black);
+                        return BaseBlack;
                     case TypesOfObject.UnitWhite:
-                        WhiteArmy.Add(new Unit(i,j, Colors.White,this));
                         return new UnitBase(i, j, Colors.White);
                 }
                 
@@ -53,7 +59,43 @@ namespace Game.Models
         {
             return Array.GetLength(0);
         }
-        
-        
+
+        private List<Unit> GetArmy(Color color)
+        {
+            var list = new List<Unit>();
+            for (var i = 0; i < Array.GetLength(0); i++)
+            {
+                for (var j = 0; j < Array.GetLength(1); j++)
+                {
+                    if ((color == Colors.White && Array[i, j] == TypesOfObject.UnitWhite) || (color == Colors.Black && Array[i, j] == TypesOfObject.UnitBlack))
+                    {
+                        list.Add(new Unit(j,i,Colors.White,this));
+                    }
+                }
+            }
+            return list;
+        }
+
+        public void SetItem(int x, int y, TypesOfObject obj)
+        {
+            Array[y, x] = obj;
+        }
+
+        public void AddNewUnitNearBase(Color unitColor)
+        {
+            Base BaseTmp;
+            BaseTmp = unitColor == Colors.White ? BaseWhite : BaseBlack;
+            for (var i = BaseTmp.Y - 1; i <= BaseTmp.Y + 1; i++)
+            {
+                for (var j = BaseTmp.X - 1; j <= BaseTmp.X + 1; j++)
+                {
+                    if (i != j && (Array[i, j] == TypesOfObject.Food || Array[i, j] == TypesOfObject.FreeSpace))
+                    {
+                        Array[i, j] = TypesOfObject.UnitWhite;
+                        WhiteArmy.Add(new Unit(j, i, Colors.White, this));
+                    }
+                }
+            }
+        }
     }
 }

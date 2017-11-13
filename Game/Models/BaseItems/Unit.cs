@@ -25,7 +25,7 @@ namespace Game.Models.BaseItems
             {
                 for (int j = Y - 6; j <= Y + 6; j++)
                 {
-                    if(X!=i && Y!=j)
+                    if(i!=X || j!=Y)
                     array[x,y]=Map.GetItem(i, j);
                     y++;
                 }
@@ -40,5 +40,7 @@ namespace Game.Models.BaseItems
         {
             Direction = direction;
         }
+
+        
     }
 }

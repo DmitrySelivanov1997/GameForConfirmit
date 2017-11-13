@@ -45,18 +45,18 @@ namespace Game.Models
 
         private static void GenerateWhiteBaseAndUnit(TypesOfObject[,] array)
         {
-            var x = Rnd.Next(0, array.GetLength(1));
-            var y = Rnd.Next(0, array.GetLength(0) / 10);
-            array[y, x] = TypesOfObject.BaseWhite;
-            array[y+1, x] = TypesOfObject.UnitWhite;
+            var x = Rnd.Next(1, array.GetLength(1));
+            var y = Rnd.Next(1, array.GetLength(0) / 10);
+            array[x, y] = TypesOfObject.BaseWhite;
+            array[x, y+1] = TypesOfObject.UnitWhite;
            
         }
         private void GenerateBlackBaseAndUnit(TypesOfObject[,] array)
         {
-            var x = Rnd.Next(0, array.GetLength(1));
-            var y = Rnd.Next(array.GetLength(0) - array.GetLength(1) / 10, array.GetLength(0));
-            array[y, x] = TypesOfObject.BaseBlack;
-            array[y-1, x] = TypesOfObject.UnitBlack;
+            var x = Rnd.Next(1, array.GetLength(1));
+            var y = Rnd.Next(array.GetLength(0) - array.GetLength(1) / 10, array.GetLength(0)-1);
+            array[x, y] = TypesOfObject.BaseBlack;
+            array[x, y-1] = TypesOfObject.UnitBlack;
         }
 
         private static bool ShouldIGenerateItem(double probability)

@@ -10,9 +10,13 @@ namespace Game.Models
 {
     public class Algoritm1:IAlgoritm
     {
-        public void MoveAllUnits(List<Unit> army)
+       
+        public void MoveAllUnits(IReadOnlyCollection<Unit> army)
         {
-            throw new NotImplementedException();
+            foreach (var unit in army)
+            {
+                unit.Move(Direction.Down);
+            }
         }
     }
 }

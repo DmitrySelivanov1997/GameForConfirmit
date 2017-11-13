@@ -9,6 +9,6 @@ namespace Game.Interfaces
 {
     public interface IAlgoritm
     {
-        void MoveAllUnits(List<Unit> army);
+        void MoveAllUnits(IReadOnlyCollection<Unit> army);
     }
 }

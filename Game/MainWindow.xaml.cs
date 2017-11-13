@@ -34,6 +34,7 @@ namespace Game
             MyGrid.Width = Width - 100;
 
             MyGrid.Height = Height - 100;
+
         }
 
         private void ButtonStart_Click(object sender, RoutedEventArgs e)
@@ -46,7 +47,9 @@ namespace Game
             MapGenerator mapGenerator = new MapGenerator();
             var myMap = mapGenerator.GenerateMap(_mapSize);
             printer.Print(myMap);
-            Console.WriteLine();
+            Engine eng = new Engine(new Algoritm1(), new Algoritm2(), myMap);
+            eng.Startbattle();
+            printer.Print(myMap);
 
         }
 
