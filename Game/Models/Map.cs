@@ -12,13 +12,15 @@ namespace Game.Models
 {
     public class Map
     {
+        public IPrinter Printer { get; set; }
         public List<Unit> WhiteArmy = new List<Unit>();
         public List<Unit> BlackArmy = new List<Unit>();
         private Base BaseWhite { get; set; }
         private Base BaseBlack { get; set; }
         private TypesOfObject[,] Array { get; }
-        public Map( TypesOfObject[,] array)
+        public Map( TypesOfObject[,] array, IPrinter printer)
         {
+            Printer = printer;
             Array = array;
             WhiteArmy = GetArmy(Colors.White);
             BlackArmy = GetArmy(Colors.Black);
@@ -26,32 +28,32 @@ namespace Game.Models
 
     
 
-        public BaseItem GetItem(int i, int j)
+        public BaseItem GetItem(int y, int x)
         {
-            if (i >= 0 && j >= 0 && i < Array.GetLength(0) && j < Array.GetLength(1))
+            if (y >= 0 && x >= 0 && y < Array.GetLength(0) && x < Array.GetLength(1))
             {
-                switch (Array[j,i])
+                switch (Array[y,x])
                 {
                     case TypesOfObject.Brick:
-                        return new Brick(i, j);
+                        return new Brick(y, x);
                     case TypesOfObject.Food:
-                        return new Food(i, j);
+                        return new Food(y, x);
                     case TypesOfObject.FreeSpace:
-                        return new FreeSpace(i, j);
+                        return new FreeSpace(y, x);
                     case TypesOfObject.BaseBlack:
-                        return new Base(i, j, Colors.Black);
+                        BaseBlack = new Base(y, x, Colors.DarkSlateBlue);
+                        return BaseBlack;
                     case TypesOfObject.BaseWhite:
-                        BaseWhite = new Base(i, j, Colors.White);
+                        BaseWhite = new Base(y, x, Colors.PaleGreen);
                         return BaseWhite;
                     case TypesOfObject.UnitBlack:
-                        BaseBlack = new Base(i, j, Colors.Black);
-                        return BaseBlack;
+                        return new UnitBase(y, x, Colors.Black); ;
                     case TypesOfObject.UnitWhite:
-                        return new UnitBase(i, j, Colors.White);
+                        return new UnitBase(y, x, Colors.White);
                 }
                 
             }
-            return new Border(i,j);
+            return new Border(y,x);
            
         }
 
@@ -69,16 +71,17 @@ namespace Game.Models
                 {
                     if ((color == Colors.White && Array[i, j] == TypesOfObject.UnitWhite) || (color == Colors.Black && Array[i, j] == TypesOfObject.UnitBlack))
                     {
-                        list.Add(new Unit(j,i,Colors.White,this));
+                        list.Add(new Unit(i,j,color,this));
                     }
                 }
             }
             return list;
         }
 
-        public void SetItem(int x, int y, TypesOfObject obj)
+        public void SetItem( int y, int x, TypesOfObject obj)
         {
             Array[y, x] = obj;
+            Printer.UpdateItem( GetItem(y,x));
         }
 
         public void AddNewUnitNearBase(Color unitColor)
@@ -91,8 +94,15 @@ namespace Game.Models
                 {
                     if (i != j && (Array[i, j] == TypesOfObject.Food || Array[i, j] == TypesOfObject.FreeSpace))
                     {
-                        Array[i, j] = TypesOfObject.UnitWhite;
-                        WhiteArmy.Add(new Unit(j, i, Colors.White, this));
+                        if (unitColor == Colors.White)
+                        {
+                            SetItem(i, j, TypesOfObject.UnitWhite);
+                            WhiteArmy.Add(new Unit(i, j, Colors.White, this));
+                            return;
+                        }
+                        SetItem(i, j, TypesOfObject.UnitBlack);
+                        BlackArmy.Add(new Unit(i, j, Colors.Black, this));
+                        return;
                     }
                 }
             }

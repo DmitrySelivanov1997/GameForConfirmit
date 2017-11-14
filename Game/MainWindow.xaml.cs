@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,7 @@ namespace Game
     /// </summary>
     public partial class MainWindow
     {
+        public Map MyMap;
         private const int _mapSize = 100;
 
         public MainWindow()
@@ -40,16 +42,10 @@ namespace Game
         private void ButtonStart_Click(object sender, RoutedEventArgs e)
         {
             Brick.Probability = 0.15;
-            Food.Probability = 0.02;
+            Food.Probability = 0.05;
             GetGridCleared();
             AddRowsAndColomns();
-            WpfPrinter printer = new WpfPrinter(MyGrid);
-            MapGenerator mapGenerator = new MapGenerator();
-            var myMap = mapGenerator.GenerateMap(_mapSize);
-            printer.Print(myMap);
-            Engine eng = new Engine(new Algoritm1(), new Algoritm2(), myMap);
-            eng.Startbattle();
-            printer.Print(myMap);
+           
 
         }
 
@@ -58,12 +54,17 @@ namespace Game
             MyGrid.Children.Clear();
             MyGrid.RowDefinitions.Clear();
             MyGrid.ColumnDefinitions.Clear();
+            WpfPrinter printer = new WpfPrinter(MyGrid);
+            MapGenerator mapGenerator = new MapGenerator();
+            MyMap = mapGenerator.GenerateMap(_mapSize, printer);
+            printer.Print(MyMap);
         }
 
         private void AddRowsAndColomns()
         {
             for (int i = 0; i < _mapSize; i++)
             {
+                
                 MyGrid.ColumnDefinitions.Add(new ColumnDefinition());
                 MyGrid.RowDefinitions.Add(new RowDefinition());
             }
@@ -75,6 +76,15 @@ namespace Game
             MyGrid.Width = Width - 100;
 
             MyGrid.Height = Height - 100;
+        }
+
+        private async void ButtonStartFight_Click(object sender, RoutedEventArgs e)
+        {
+            Engine eng = new Engine(new Algoritm1(), new Algoritm2(), MyMap);
+            for (var i = 0; i < 100000; i++)
+            {
+                await eng.Startbattle();
+            }
         }
     }
 }

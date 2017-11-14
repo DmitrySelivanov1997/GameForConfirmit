@@ -15,7 +15,7 @@ namespace Game.Models.BaseItems
         public int X { get; }
         public int Y { get; }
 
-        public BaseItem(int x, int y)
+        public BaseItem(int y, int x)
         {
             X = x;
             Y = y;

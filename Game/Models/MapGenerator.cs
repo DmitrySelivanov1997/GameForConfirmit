@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Interfaces;
 using Game.Models.BaseItems;
 
 namespace Game.Models
@@ -7,7 +8,7 @@ namespace Game.Models
     {
 
         private static readonly Random Rnd=new Random();
-        public Map GenerateMap(int size)
+        public Map GenerateMap(int size,IPrinter printer)
         {
             var rnd=new Random();
             TypesOfObject[,] array = new TypesOfObject[size, size];
@@ -15,7 +16,7 @@ namespace Game.Models
             GenerateFood(array);
             GenerateWhiteBaseAndUnit(array);
             GenerateBlackBaseAndUnit(array);
-            return new Map(array);
+            return new Map(array,printer);
         }
 
 
@@ -47,16 +48,16 @@ namespace Game.Models
         {
             var x = Rnd.Next(1, array.GetLength(1));
             var y = Rnd.Next(1, array.GetLength(0) / 10);
-            array[x, y] = TypesOfObject.BaseWhite;
-            array[x, y+1] = TypesOfObject.UnitWhite;
+            array[y, x] = TypesOfObject.BaseWhite;
+            array[y+1, x] = TypesOfObject.UnitWhite;
            
         }
         private void GenerateBlackBaseAndUnit(TypesOfObject[,] array)
         {
             var x = Rnd.Next(1, array.GetLength(1));
             var y = Rnd.Next(array.GetLength(0) - array.GetLength(1) / 10, array.GetLength(0)-1);
-            array[x, y] = TypesOfObject.BaseBlack;
-            array[x, y-1] = TypesOfObject.UnitBlack;
+            array[y, x] = TypesOfObject.BaseBlack;
+            array[y-1, x] = TypesOfObject.UnitBlack;
         }
 
         private static bool ShouldIGenerateItem(double probability)

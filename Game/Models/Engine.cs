@@ -13,7 +13,6 @@ namespace Game.Models
 {
     public class Engine
     {
-        public IPrinter Printer { get; set; }
         private Map Map { get; }
         public IReadOnlyCollection<Unit> WhiteArmy { get; set; }
         public IReadOnlyCollection<Unit> BlackArmy { get; set; }
@@ -29,16 +28,15 @@ namespace Game.Models
             BlackArmy = map.BlackArmy.ToArray();
         }
 
-        public void Startbattle()
+        public Task Startbattle()
         {
-            for (var i=0;i<100;i++)
+            return Task.Factory.StartNew(() =>
             {
                 FirstAlgoritm.MoveAllUnits(WhiteArmy);
                 UpdateUnits(WhiteArmy);
                 SecondAlgoritm.MoveAllUnits(BlackArmy);
-                UpdateUnits(Map.BlackArmy);
-
-            }
+                UpdateUnits(BlackArmy);
+            });
         }
 
         private void UpdateUnits(IReadOnlyCollection<Unit> army)
@@ -50,7 +48,7 @@ namespace Game.Models
                 {
                     case Direction.Down:
                         xNew = unit.X;
-                        yNew = unit.Y - 1;
+                        yNew = unit.Y + 1;
                         break;
                     case Direction.Left:
                         xNew = unit.X - 1;
@@ -62,38 +60,50 @@ namespace Game.Models
                         break;
                     case Direction.Up:
                         xNew = unit.X;
-                        yNew = unit.Y + 1;
+                        yNew = unit.Y - 1;
                         break;
                     case Direction.Stay:
                         continue;
                 }
-                if (Map.GetItem(xNew, yNew) is FreeSpace) // if there is free space below: replace unit with freespace, and move unit one cell down 
+                if (Map.GetItem(yNew, xNew) is FreeSpace) // if there is free space below: replace unit with freespace, and move unit one cell down 
                 {
-                    RemoveOldUnitAddNewOne(xNew, yNew, unit);
-                    Map.SetItem(unit.X, unit.Y, TypesOfObject.FreeSpace);
+                    RemoveOldUnitAddNewOne(yNew, xNew, unit);
+                    Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
                     continue;
                 }
-                if (Map.GetItem(xNew, yNew) is Brick || Map.GetItem(xNew, yNew) is Border ||
-                    Map.GetItem(xNew, yNew) is Base || Map.GetItem(xNew, yNew) is UnitBase)
+                if (Map.GetItem(yNew, xNew) is Brick || Map.GetItem(yNew, xNew) is Border ||
+                    Map.GetItem(yNew, xNew ) is Base || Map.GetItem(yNew, xNew) is UnitBase)
                 {
                     unit.Direction = Direction.Stay;
                     continue;
                 }
-                if (Map.GetItem(xNew, yNew) is Food)
+                if (Map.GetItem(yNew, xNew) is Food)
                 {
-                    RemoveOldUnitAddNewOne(xNew, yNew, unit);
-                    Map.SetItem(unit.X, unit.Y, TypesOfObject.FreeSpace);
+                    RemoveOldUnitAddNewOne(yNew, xNew, unit);
+                    Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
                     Map.AddNewUnitNearBase(unit.Color);
                 }
             }
-            WhiteArmy = (army.Last().Color == Colors.White ? Map.WhiteArmy : Map.BlackArmy).ToArray();
+            if (army.Last().Color == Colors.White)
+            {
+                WhiteArmy = Map.WhiteArmy.ToArray();
+                return;
+            }
+            BlackArmy = Map.BlackArmy.ToArray();
+
         }
 
-        private void RemoveOldUnitAddNewOne(int x, int y, Unit unit)
+        private void RemoveOldUnitAddNewOne( int y, int x, Unit unit)
         {
-            Map.SetItem(x, y, unit.Color == Colors.White ? TypesOfObject.UnitWhite : TypesOfObject.UnitBlack );
-            Map.WhiteArmy.Remove(unit);
-            Map.WhiteArmy.Add(new Unit(x, y, unit.Color, Map));
+            Map.SetItem(y, x,  unit.Color == Colors.White ? TypesOfObject.UnitWhite : TypesOfObject.UnitBlack );
+            if (unit.Color == Colors.White)
+            {
+                Map.WhiteArmy.Remove(unit);
+                Map.WhiteArmy.Add(new Unit(y, x, unit.Color, Map));
+                return;
+            }
+            Map.BlackArmy.Remove(unit);
+            Map.BlackArmy.Add(new Unit(y, x, unit.Color, Map));
         }
     }
 }

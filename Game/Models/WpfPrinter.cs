@@ -12,7 +12,6 @@ namespace Game.Models
 {
     class WpfPrinter:IPrinter
     {
-        
         public Grid Grid { get; }
         public WpfPrinter(Grid grid )
         {
@@ -32,16 +31,10 @@ namespace Game.Models
             }
         }
 
-        public void UpdateItem(Map map, BaseItem item)
+        public void UpdateItem( BaseItem item)
         {
-            for (var i = 0; i < map.GetLength(); i++)
-            {
-                for (var j = 0; j < map.GetLength(); j++)
-                {
-                   
-                }
-            }
-
+            Grid.Dispatcher.Invoke(
+                () => AddButtonAndColorIt(item.Y, item.X, item.Color));
         }
 
         private void AddButtonAndColorIt(int i, int j, Color color)
