@@ -28,15 +28,12 @@ namespace Game.Models
             BlackArmy = map.BlackArmy.ToArray();
         }
 
-        public Task Startbattle()
+        public void Startbattle()
         {
-            return Task.Factory.StartNew(() =>
-            {
-                FirstAlgoritm.MoveAllUnits(WhiteArmy);
-                UpdateUnits(WhiteArmy);
-                SecondAlgoritm.MoveAllUnits(BlackArmy);
-                UpdateUnits(BlackArmy);
-            });
+            FirstAlgoritm.MoveAllUnits(WhiteArmy);
+            UpdateUnits(WhiteArmy);
+            SecondAlgoritm.MoveAllUnits(BlackArmy);
+            UpdateUnits(BlackArmy);
         }
 
         private void UpdateUnits(IReadOnlyCollection<Unit> army)

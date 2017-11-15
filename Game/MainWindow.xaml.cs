@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -33,9 +34,9 @@ namespace Game
 
             Height = SystemParameters.PrimaryScreenHeight - 100;
 
-            MyGrid.Width = Width - 100;
+            MainImage.Width = Width - 100;
 
-            MyGrid.Height = Height - 100;
+            MainImage.Height = Height - 100;
 
         }
 
@@ -43,47 +44,49 @@ namespace Game
         {
             Brick.Probability = 0.15;
             Food.Probability = 0.05;
-            GetGridCleared();
-            AddRowsAndColomns();
-           
-
+            //GetGridCleared();
+            //AddRowsAndColomns();
+            var writeableBmp = BitmapFactory.New((int)MainImage.Width, (int)MainImage.Width);
+            WpfPrinter printer = new WpfPrinter(MainImage);
+            MainImage.Source = writeableBmp;
+            MapGenerator mapGenerator = new MapGenerator();
+            MyMap = mapGenerator.GenerateMap(_mapSize, printer);
+            printer.Print(MyMap, writeableBmp);
         }
 
         private void GetGridCleared()
         {
-            MyGrid.Children.Clear();
-            MyGrid.RowDefinitions.Clear();
-            MyGrid.ColumnDefinitions.Clear();
-            WpfPrinter printer = new WpfPrinter(MyGrid);
-            MapGenerator mapGenerator = new MapGenerator();
-            MyMap = mapGenerator.GenerateMap(_mapSize, printer);
-            printer.Print(MyMap);
+            
+            
+            
+            
         }
 
-        private void AddRowsAndColomns()
-        {
-            for (int i = 0; i < _mapSize; i++)
-            {
-                
-                MyGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                MyGrid.RowDefinitions.Add(new RowDefinition());
-            }
-        }
+        
 
 
         private void FrameworkElement_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            MyGrid.Width = Width - 100;
+            MainImage.Width = Width - 100;
 
-            MyGrid.Height = Height - 100;
+            MainImage.Height = Height - 100;
         }
 
-        private async void ButtonStartFight_Click(object sender, RoutedEventArgs e)
+        private void ButtonStartFight_Click(object sender, RoutedEventArgs e)
+        {
+            var task = Task.Factory.StartNew(StartEngine, TaskCreationOptions.LongRunning);
+
+        }
+
+        private void StartEngine()
         {
             Engine eng = new Engine(new Algoritm1(), new Algoritm2(), MyMap);
-            for (var i = 0; i < 100000; i++)
+            for (int i = 0;; i++)
             {
-                await eng.Startbattle();
+                eng.Startbattle();
+                //Thread.Sleep(1);
+                //await Task.Delay(1);
+                //Debug.WriteLine(i);
             }
         }
     }

@@ -46,7 +46,7 @@ namespace Game.Models
 
         private static void GenerateWhiteBaseAndUnit(TypesOfObject[,] array)
         {
-            var x = Rnd.Next(1, array.GetLength(1));
+            var x = Rnd.Next(1, array.GetLength(1)-1);
             var y = Rnd.Next(1, array.GetLength(0) / 10);
             array[y, x] = TypesOfObject.BaseWhite;
             array[y+1, x] = TypesOfObject.UnitWhite;
@@ -54,7 +54,7 @@ namespace Game.Models
         }
         private void GenerateBlackBaseAndUnit(TypesOfObject[,] array)
         {
-            var x = Rnd.Next(1, array.GetLength(1));
+            var x = Rnd.Next(1, array.GetLength(1)-1);
             var y = Rnd.Next(array.GetLength(0) - array.GetLength(1) / 10, array.GetLength(0)-1);
             array[y, x] = TypesOfObject.BaseBlack;
             array[y-1, x] = TypesOfObject.UnitBlack;

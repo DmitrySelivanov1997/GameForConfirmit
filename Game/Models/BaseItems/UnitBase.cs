@@ -17,7 +17,7 @@ namespace Game.Models.BaseItems
         {
             var item = obj as UnitBase;
 
-            return X == item?.X && Y == item.Y;
+            return (X == item?.X && Y == item.Y);
         }
     }
 }

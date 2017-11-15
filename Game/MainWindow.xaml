@@ -5,15 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game"
         mc:Ignorable="d" ResizeMode="CanResizeWithGrip"
-        Title="MainWindow" Height="500" Width="500">
+        Title="MainWindow" >
 
     <StackPanel SizeChanged="FrameworkElement_OnSizeChanged" >
-
-        <Grid Name="MyGrid" HorizontalAlignment="Center"  >
-
+        <Image Name="MainImage" Height="1000" Width="1000"></Image>
 
 
-        </Grid>
+       
 
         <Button  x:Name="ButtonStart"  Content="Сгенерировать карту"  Click="ButtonStart_Click" Height="23" Margin="100,0,100,0"   />
         <Button  x:Name="ButtonStartFight"  Content="Начать бой"  Click="ButtonStartFight_Click" Height="23" Margin="100,15,100,0"   />
