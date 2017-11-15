@@ -71,21 +71,25 @@ namespace Game.Models
 
         public void Print(Map map, WriteableBitmap writeableBitmap)
         {
-            var timer = Stopwatch.StartNew();
+            
 
             using (writeableBitmap.GetBitmapContext())
             {
+                var timer = Stopwatch.StartNew();
                 for (var i = 0; i < map.GetLength(); i++)
                 {
+                   
                     for (var j = 0; j < map.GetLength(); j++)
                     {
                         if (map.GetItem(i, j) != null)
                             AddObjectOnBmp(i, j, map.GetItem(i, j).Color, writeableBitmap, map);
                     }
+                    
                 }
+                Debug.WriteLine(timer.ElapsedMilliseconds);
             }
+          
 
-            Debug.WriteLine(timer.ElapsedMilliseconds);
         }
 
         private void AddObjectOnBmp(int j, int i, Color color, WriteableBitmap writeableBitmap, Map map)
@@ -93,10 +97,11 @@ namespace Game.Models
             writeableBitmap.FillRectangle(
                 (int) (i * MainImage.Height / map.GetLength()),
                 (int)(j * MainImage.Width / map.GetLength()),
-                (int)((i +1)*(i * MainImage.Width / map.GetLength())), 
-                (int)((j + 1) * (j * MainImage.Height / map.GetLength())),
+                (int)((i +1)*( MainImage.Width / map.GetLength())), 
+                (int)((j + 1) * ( MainImage.Height / map.GetLength())),
                 color
                 );
+           
         }
 
         public void UpdateItem( BaseItem item)
