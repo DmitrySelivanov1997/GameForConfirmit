@@ -55,7 +55,7 @@ namespace Game.Models
         private void GenerateBlackBaseAndUnit(TypesOfObject[,] array)
         {
             var x = Rnd.Next(1, array.GetLength(1)-1);
-            var y = Rnd.Next(array.GetLength(0) - array.GetLength(1) / 10, array.GetLength(0)-1);
+            var y = Rnd.Next((array.GetLength(0) - array.GetLength(1) / 10)-1, array.GetLength(0)-1);
             array[y, x] = TypesOfObject.BaseBlack;
             array[y-1, x] = TypesOfObject.UnitBlack;
         }

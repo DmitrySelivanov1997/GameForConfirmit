@@ -13,8 +13,8 @@ namespace Game.Models
     public class Map
     {
         public IPrinter Printer { get; set; }
-        public List<Unit> WhiteArmy = new List<Unit>();
-        public List<Unit> BlackArmy = new List<Unit>();
+        public List<Unit> WhiteArmy;
+        public List<Unit> BlackArmy;
         private Base BaseWhite { get; set; }
         private Base BaseBlack { get; set; }
         private TypesOfObject[,] Array { get; }
@@ -41,10 +41,10 @@ namespace Game.Models
                     case TypesOfObject.FreeSpace:
                         return new FreeSpace(y, x);
                     case TypesOfObject.BaseBlack:
-                        BaseBlack = new Base(y, x, Colors.DarkSlateBlue);
+                        BaseBlack = new Base(y, x, Colors.Black, this);
                         return BaseBlack;
                     case TypesOfObject.BaseWhite:
-                        BaseWhite = new Base(y, x, Colors.PaleGreen);
+                        BaseWhite = new Base(y, x, Colors.White, this);
                         return BaseWhite;
                     case TypesOfObject.UnitBlack:
                         return new UnitBase(y, x, Colors.Black); ;
@@ -81,7 +81,6 @@ namespace Game.Models
         public void SetItem( int y, int x, TypesOfObject obj)
         {
             Array[y, x] = obj;
-            Printer.UpdateItem( GetItem(y,x));
         }
 
         public void AddNewUnitNearBase(Color unitColor)
@@ -106,6 +105,16 @@ namespace Game.Models
                     }
                 }
             }
+        }
+
+        public void RemoveUnitFromArmy(Unit unit)
+        {
+            if (unit.Color == Colors.White)
+            {
+                WhiteArmy.Remove(unit);
+                return;
+            }
+            BlackArmy.Remove(unit);
         }
     }
 }

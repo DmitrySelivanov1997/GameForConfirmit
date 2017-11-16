@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Game.Models;
 using Game.Models.BaseItems;
 
@@ -24,8 +25,12 @@ namespace Game
     /// </summary>
     public partial class MainWindow
     {
+        public Engine Engine ;
+        public DispatcherTimer PrintTimer;
+        public WpfPrinter Printer;
         public Map MyMap;
-        private const int _mapSize = 100;
+        public WriteableBitmap WriteableBitmap;
+        private const int _mapSize = 15;
 
         public MainWindow()
         {
@@ -43,27 +48,24 @@ namespace Game
         private void ButtonStart_Click(object sender, RoutedEventArgs e)
         {
             Brick.Probability = 0.15;
-            Food.Probability = 0.05;
-            //GetGridCleared();
-            //AddRowsAndColomns();
-            var writeableBmp = BitmapFactory.New((int)MainImage.Width, (int)MainImage.Width);
-            WpfPrinter printer = new WpfPrinter(MainImage);
-            MainImage.Source = writeableBmp;
+            Food.Probability = 0.5;
+            WriteableBitmap = BitmapFactory.New((int)MainImage.Width, (int)MainImage.Width);
+            Printer = new WpfPrinter(MainImage);
+            MainImage.Source = WriteableBitmap;
             MapGenerator mapGenerator = new MapGenerator();
-            MyMap = mapGenerator.GenerateMap(_mapSize, printer);
-            printer.Print(MyMap, writeableBmp);
+            MyMap = mapGenerator.GenerateMap(_mapSize, Printer);
+            Printer.Print(MyMap, WriteableBitmap);
+            PrintTimer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 0, 0, 30)};
+            PrintTimer.Tick += PrintMap;
+            Engine = new Engine(new Algoritm1(), new Algoritm2(), MyMap);
+            Engine.GameOver += Show_Message;
+
         }
 
-        private void GetGridCleared()
+        private void PrintMap(object sender, EventArgs e)
         {
-            
-            
-            
-            
+            Printer.Print(MyMap, WriteableBitmap);
         }
-
-        
-
 
         private void FrameworkElement_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -74,20 +76,23 @@ namespace Game
 
         private void ButtonStartFight_Click(object sender, RoutedEventArgs e)
         {
-            var task = Task.Factory.StartNew(StartEngine, TaskCreationOptions.LongRunning);
+            PrintTimer.Stop();
+            PrintTimer.Start();
+            var task = Task.Factory.StartNew(StartEngine);
 
         }
 
         private void StartEngine()
         {
-            Engine eng = new Engine(new Algoritm1(), new Algoritm2(), MyMap);
+
             for (int i = 0;; i++)
             {
-                eng.Startbattle();
-                //Thread.Sleep(1);
-                //await Task.Delay(1);
-                //Debug.WriteLine(i);
+                Engine.Startbattle();
             }
+        }
+        private static void Show_Message(string message)
+        {
+            MessageBox.Show(message);
         }
     }
 }

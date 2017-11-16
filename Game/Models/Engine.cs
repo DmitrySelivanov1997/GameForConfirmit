@@ -13,6 +13,9 @@ namespace Game.Models
 {
     public class Engine
     {
+        public delegate void GameOverMessager(string message);
+        // Событие, возникающее при выводе денег
+        public event GameOverMessager GameOver = delegate { };
         private Map Map { get; }
         public IReadOnlyCollection<Unit> WhiteArmy { get; set; }
         public IReadOnlyCollection<Unit> BlackArmy { get; set; }
@@ -26,14 +29,38 @@ namespace Game.Models
             SecondAlgoritm = secondAlgoritm;
             WhiteArmy = map.WhiteArmy.ToArray();
             BlackArmy = map.BlackArmy.ToArray();
+
         }
 
         public void Startbattle()
         {
             FirstAlgoritm.MoveAllUnits(WhiteArmy);
             UpdateUnits(WhiteArmy);
+            UnitsAttackFoes(BlackArmy);
+            UnitsAttackFoes(WhiteArmy);
             SecondAlgoritm.MoveAllUnits(BlackArmy);
             UpdateUnits(BlackArmy);
+            UnitsAttackFoes(BlackArmy);
+            UnitsAttackFoes(WhiteArmy);
+            
+
+        }
+
+        private void UnitsAttackFoes(IReadOnlyCollection<Unit> army)
+        {
+            var color = army.Last().Color;
+            foreach (var unit in army)
+            {
+                if (unit.DieOrSurvive())
+                {
+                    Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
+                    Map.RemoveUnitFromArmy(unit);
+                }
+            }
+            UpdateArmy(army);
+            if (BlackArmy.Count == 0 || WhiteArmy.Count == 0)
+                GameOver($"Армия {color} разбита");
+            if()
         }
 
         private void UpdateUnits(IReadOnlyCollection<Unit> army)
@@ -81,13 +108,17 @@ namespace Game.Models
                     Map.AddNewUnitNearBase(unit.Color);
                 }
             }
+            UpdateArmy(army);
+        }
+
+        private void UpdateArmy(IReadOnlyCollection<Unit> army)
+        {
             if (army.Last().Color == Colors.White)
             {
                 WhiteArmy = Map.WhiteArmy.ToArray();
                 return;
             }
             BlackArmy = Map.BlackArmy.ToArray();
-
         }
 
         private void RemoveOldUnitAddNewOne( int y, int x, Unit unit)

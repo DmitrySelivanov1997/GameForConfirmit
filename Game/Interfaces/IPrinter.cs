@@ -12,6 +12,5 @@ namespace Game.Interfaces
     public interface IPrinter
     {
         void Print(Map map, WriteableBitmap bmp);
-        void UpdateItem( BaseItem item);
     }
 }

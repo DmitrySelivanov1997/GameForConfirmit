@@ -1,4 +1,6 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Runtime.CompilerServices;
+using System.Windows.Media;
 
 namespace Game.Models.BaseItems
 {
@@ -21,16 +23,20 @@ namespace Game.Models.BaseItems
             int x = 0;
             int y = 0;
             var array = new BaseItem[13,13];
-            for (int i = X - 6; i <= X + 6; i++)
+            for (int i = Y - 6; i <= Y + 6; i++)
             {
-                for (int j = Y - 6; j <= Y + 6; j++)
+                for (int j = X - 6; j <= X + 6; j++)
                 {
-                    if(i!=X || j!=Y)
-                    array[x,y]=Map.GetItem(i, j);
-                    y++;
+                    if ((Math.Abs(i - Y )+Math.Abs(j-X)) <= 6)
+                    {
+                        if (i != X || j != Y)
+                            array[y,x] = Map.GetItem(i, j);
+                    }
+
+                    x++;
                 }
-                y = 0;
-                x++;
+                x = 0;
+                y++;
 
             }
             return array;
@@ -41,6 +47,25 @@ namespace Game.Models.BaseItems
             Direction = direction;
         }
 
-        
+
+        public bool DieOrSurvive()
+        {
+            var allies=1;
+            var foes = 0;
+            foreach (var item in ScopeArray)
+            {
+                if (item!=null && item is UnitBase)
+                {
+                    if (Math.Abs(item.X - X) + Math.Abs(item.Y - Y) <= 3)
+                    {
+                        if (Color == item.Color)
+                            allies++;
+                        else
+                            foes++;
+                    }
+                }
+            }
+            return foes > allies;
+        }
     }
 }
