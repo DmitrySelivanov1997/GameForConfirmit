@@ -30,19 +30,17 @@ namespace Game
         public WpfPrinter Printer;
         public Map MyMap;
         public WriteableBitmap WriteableBitmap;
-        private const int _mapSize = 15;
+        public int _mapSize ;
 
         public MainWindow()
         {
             InitializeComponent();
-            Width = SystemParameters.PrimaryScreenHeight - 100;
-
-            Height = SystemParameters.PrimaryScreenHeight - 100;
-
-            MainImage.Width = Width - 100;
-
-            MainImage.Height = Height - 100;
-
+            Height = SystemParameters.PrimaryScreenHeight - 100;  
+            Width = SystemParameters.PrimaryScreenHeight -100;
+            MyGrid.Width = Width;
+            MyGrid.Height = Height;
+            MainImage.Height = Width *3/4 ;
+            MainImage.Width = Width * 3 / 4; 
         }
 
         private void ButtonStart_Click(object sender, RoutedEventArgs e)
@@ -67,32 +65,65 @@ namespace Game
             Printer.Print(MyMap, WriteableBitmap);
         }
 
-        private void FrameworkElement_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            MainImage.Width = Width - 100;
-
-            MainImage.Height = Height - 100;
-        }
+        
 
         private void ButtonStartFight_Click(object sender, RoutedEventArgs e)
         {
+            _mapSize = Convert.ToInt32(MapSize.Text);
             PrintTimer.Stop();
             PrintTimer.Start();
             var task = Task.Factory.StartNew(StartEngine);
+            
 
         }
 
         private void StartEngine()
         {
 
-            for (int i = 0;; i++)
-            {
-                Engine.Startbattle();
-            }
+            Engine.Startbattle();
+            
         }
         private static void Show_Message(string message)
         {
             MessageBox.Show(message);
+            Environment.Exit(0);
+        }
+
+        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            MyGrid.Width = Width;
+            MyGrid.Height = Height;
+            MainImage.Height = Width * 3 / 4;
+            MainImage.Width = Width * 3 / 4;
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (MapSize.Text.Length == 0 || Convert.ToInt32(MapSize.Text) == 0)
+            {
+                ButtonStart.IsEnabled = false;
+                ButtonStartFight.IsEnabled = false;
+            }
+            else
+            {
+                ButtonStart.IsEnabled = true;
+                ButtonStartFight.IsEnabled = true;
+            }
+        }
+
+        private void MapSize_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
         }
     }
 }

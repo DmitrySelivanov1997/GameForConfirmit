@@ -44,7 +44,7 @@ namespace Game.Models.BaseItems
             Scope = array;
         }
 
-        public bool DieOrSurvive()
+        public bool GetIsAlive()
         {
             var foes = 0;
             foreach (var item in Scope)
@@ -54,12 +54,12 @@ namespace Game.Models.BaseItems
                     if (Math.Abs(item.X - X) + Math.Abs(item.Y - Y) <= 3)
                     {
                         if (Color == item.Color)
-                            return false;
+                            return true;
                         foes++;
                     }
                 }
             }
-            return foes >0;
+            return foes == 0;
         }
     }
 }

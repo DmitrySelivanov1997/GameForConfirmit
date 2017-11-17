@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Game.Interfaces;
@@ -22,6 +23,8 @@ namespace Game.Models
         public IAlgoritm FirstAlgoritm { get; set; }
         public IAlgoritm SecondAlgoritm { get; set; }
 
+        public bool IsCanceled { get; set; } = false;
+
         public Engine(IAlgoritm firstAlgoritm, IAlgoritm secondAlgoritm, Map map)
         {
             Map = map;
@@ -34,15 +37,19 @@ namespace Game.Models
 
         public void Startbattle()
         {
-            FirstAlgoritm.MoveAllUnits(WhiteArmy);
-            UpdateUnits(WhiteArmy);
-            UnitsAttackFoes(BlackArmy);
-            UnitsAttackFoes(WhiteArmy);
-            SecondAlgoritm.MoveAllUnits(BlackArmy);
-            UpdateUnits(BlackArmy);
-            UnitsAttackFoes(BlackArmy);
-            UnitsAttackFoes(WhiteArmy);
-            
+            //for (int i=0; ; i++)
+            while (!IsCanceled)
+            {
+                FirstAlgoritm.MoveAllUnits(WhiteArmy);
+                UpdateUnits(WhiteArmy);
+                UnitsAttackFoes(BlackArmy);
+                UnitsAttackFoes(WhiteArmy);
+                SecondAlgoritm.MoveAllUnits(BlackArmy);
+                UpdateUnits(BlackArmy);
+                UnitsAttackFoes(BlackArmy);
+                UnitsAttackFoes(WhiteArmy);
+            }
+
 
         }
 
@@ -58,9 +65,16 @@ namespace Game.Models
                 }
             }
             UpdateArmy(army);
+            var armyString = color == Colors.White ? "белых" : "черных";
             if (BlackArmy.Count == 0 || WhiteArmy.Count == 0)
-                GameOver($"Армия {color} разбита");
-            if()
+                {
+                GameOver($"Армия {armyString} разбита");
+                return;
+                }
+            if (!Map.BaseBlack.GetIsAlive() || !Map.BaseWhite.GetIsAlive())
+                {
+                    GameOver($"База {armyString}разбита");
+                }
         }
 
         private void UpdateUnits(IReadOnlyCollection<Unit> army)
