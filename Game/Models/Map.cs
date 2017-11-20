@@ -17,7 +17,7 @@ namespace Game.Models
         public List<Unit> BlackArmy;
         public Base BaseWhite { get; set; }
         public Base BaseBlack { get; set; }
-        private TypesOfObject[,] Array { get; }
+        public TypesOfObject[,] Array { get; }
         public Map( TypesOfObject[,] array, IPrinter printer)
         {
             Printer = printer;

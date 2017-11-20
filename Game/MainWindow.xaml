@@ -5,26 +5,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game"
         mc:Ignorable="d" ResizeMode="CanResizeWithGrip"
-        Title="MainWindow" SizeChanged="MainWindow_OnSizeChanged">
-    <Grid  Name="MyGrid" >
+        Title="MainWindow" SizeChanged="MainWindow_OnSizeChanged" Background="AliceBlue" >
+    <Grid  VerticalAlignment="Stretch" Name="MyGrid" HorizontalAlignment="Left"   >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="4*"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock FontSize="28" Text="Размер поля:" Grid.Row="0" Margin="0,40,0,293.2" Grid.Column="1"  />
-        <TextBox PreviewTextInput="MapSize_OnPreviewTextInput" Name="MapSize" FontSize="28" Grid.Row="0" Height="70" Grid.Column="1" Margin="0,90,0,240.2" TextChanged="TextBox_TextChanged"/>
-        <Image x:Name="MainImage"  Grid.Row="0" Grid.Column="0"/>
-        <CheckBox  VerticalAlignment="Top" HorizontalAlignment="Left" Name="CheckBox" FontSize="30" IsChecked="False" Content="Пауза" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked" Grid.Row="0" Grid.Column="1"
-                  Margin="0,0,0,0" Width="107" />
-        <StackPanel Grid.Column="0" Grid.Row="1" Name ="MyStackpanel" Margin="0,0,0,0"  >
+        <StackPanel Grid.Column="1" Grid.Row="0"     >
+            <CheckBox Margin="0,0,15,0" Name="PauseOn" FontSize="24" IsChecked="False" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked"  HorizontalAlignment="Left">
+                <CheckBox.Content>
+                    <TextBlock TextWrapping="Wrap">Пауза</TextBlock>
+                </CheckBox.Content>
+            </CheckBox>
+            <TextBlock Margin="0,0,15,0" TextWrapping="Wrap" FontSize="24" Text="Размер поля: " Height="73" HorizontalAlignment="Left" />
+            <TextBox Margin="0,0,15,0" MaxLength="3" PreviewTextInput="MapSize_OnPreviewTextInput" Name="MapSize" FontSize="24" TextChanged="TextBox_TextChanged"  HorizontalAlignment="Left"  Width="69"/>
+            <TextBlock Margin="0,0,15,0" TextWrapping="Wrap" FontSize="24" Text="Номер Хода: " Height="73" HorizontalAlignment="Left"  />
+            <Label Margin="0,0,15,0" Name="NumberOfTurns" FontSize="24" HorizontalAlignment="Left"  Height="44" />
+            <Label Margin="0,0,15,0" Height="40">
+                <Label.Content>
+                    <TextBlock TextWrapping="Wrap">Скорость отрисовки</TextBlock>
+                </Label.Content>
+            </Label>
+            <Slider Value="0" Minimum="0" Maximum="100" SelectionStart="0" Height="25" IsSelectionRangeEnabled="True" ValueChanged="RangeBase_OnValueChanged" Margin="0,0,15,0"/>
+        </StackPanel>
+        <Image x:Name="MainImage"  Grid.Row="0" Grid.Column="0"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-
-            <Button  x:Name="ButtonStartFight" IsEnabled="False" Content="Начать бой"  Click="ButtonStartFight_Click" Height="23"    />
-            <Button  x:Name="ButtonStart"  IsEnabled="False" Content="Сгенерировать карту"  Click="ButtonStart_Click" Height="23" Margin="0,30,0,10"   />
+        <StackPanel Grid.Column="0" Grid.Row="1" Name ="MyStackpanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  >
+            <Button VerticalAlignment="Stretch" HorizontalAlignment="Center"  x:Name="ButtonStartFight" IsEnabled="False" Content="Начать бой"  Click="ButtonStartFight_Click" />
+            <Button VerticalAlignment="Stretch" HorizontalAlignment="Center"  x:Name="ButtonStart"  IsEnabled="False" Content="Сгенерировать карту"  Click="ButtonStart_Click"/>
 
         </StackPanel>
 

@@ -7,7 +7,7 @@ namespace Game.Models.BaseItems
     public class Unit:UnitBase
     {
         public Direction Direction { get; set; }
-        public BaseItem[,] ScopeArray { get; }
+        public BaseItem[,] ScopeArray { get; set; }
         private Map Map { get; }
         public Unit(int x, int y, Color color, Map map) : base(x, y, color)
         {
@@ -50,6 +50,7 @@ namespace Game.Models.BaseItems
 
         public bool DieOrSurvive()
         {
+            ScopeArray = GetAllObjectsInScopeArray();
             var allies=1;
             var foes = 0;
             foreach (var item in ScopeArray)

@@ -17,11 +17,12 @@ namespace Game.Models
         public delegate void GameOverMessager(string message);
         // Событие, возникающее при выводе денег
         public event GameOverMessager GameOver = delegate { };
-        private Map Map { get; }
+        public Map Map { get; set; }
         public IReadOnlyCollection<Unit> WhiteArmy { get; set; }
         public IReadOnlyCollection<Unit> BlackArmy { get; set; }
         public IAlgoritm FirstAlgoritm { get; set; }
         public IAlgoritm SecondAlgoritm { get; set; }
+        public int TurnNumber { get; set; }
 
         public bool IsCanceled { get; set; } = false;
 
@@ -46,8 +47,9 @@ namespace Game.Models
                 UnitsAttackFoes(WhiteArmy);
                 SecondAlgoritm.MoveAllUnits(BlackArmy);
                 UpdateUnits(BlackArmy);
-                UnitsAttackFoes(BlackArmy);
                 UnitsAttackFoes(WhiteArmy);
+                UnitsAttackFoes(BlackArmy);
+                TurnNumber++;
             }
 
 
@@ -73,11 +75,11 @@ namespace Game.Models
                 }
             if (!Map.BaseBlack.GetIsAlive() || !Map.BaseWhite.GetIsAlive())
                 {
-                    GameOver($"База {armyString}разбита");
+                    GameOver($"База {armyString} разбита");
                 }
         }
 
-        private void UpdateUnits(IReadOnlyCollection<Unit> army)
+        public void UpdateUnits(IReadOnlyCollection<Unit> army)
         {
             int xNew=0, yNew=0;
             foreach (var unit in army)

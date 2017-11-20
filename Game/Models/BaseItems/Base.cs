@@ -46,6 +46,7 @@ namespace Game.Models.BaseItems
 
         public bool GetIsAlive()
         {
+            GetScopeAroundBase();
             var foes = 0;
             foreach (var item in Scope)
             {
