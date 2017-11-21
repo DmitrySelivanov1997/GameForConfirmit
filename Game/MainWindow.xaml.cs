@@ -44,7 +44,7 @@ namespace Game
             MainImage.Width = MainImage.Height; 
         }
 
-        private void ButtonStart_Click(object sender, RoutedEventArgs e)
+        private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
         {
             Brick.Probability = 0.15;
             Food.Probability = 0.0;
@@ -57,7 +57,7 @@ namespace Game
             ButtonStartFight.IsEnabled = true;
             MyMap = mapGenerator.GenerateMap(_mapSize, Printer);
             Printer.Print(MyMap, WriteableBitmap);
-            Engine = new Engine(new Algoritm1(), new Algoritm2(), MyMap) {IsCanceled = false};
+            Engine = new Engine(new Algoritm1(), new Algoritm2(), MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
             Engine.GameOver += Show_Message;
 
 
@@ -65,7 +65,7 @@ namespace Game
 
         private void PrintMap(object sender, EventArgs e)
         {
-            Printer?.Print(MyMap, WriteableBitmap);
+            Printer.Print(MyMap, WriteableBitmap);
 
             NumberOfTurns.Content = Convert.ToString(Engine.TurnNumber);
         }
@@ -74,11 +74,11 @@ namespace Game
 
         private void ButtonStartFight_Click(object sender, RoutedEventArgs e)
         {
-            PrintTimer.Stop();
+            PauseOn.IsEnabled = true;
             PrintTimer.Start();
+            ButtonStartFight.IsEnabled = false;
             var task = Task.Factory.StartNew(StartEngine);
             
-
         }
 
         private void StartEngine()
@@ -121,14 +121,14 @@ namespace Game
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (MapSize.Text.Length == 0 || Convert.ToInt32(MapSize.Text) == 0)
+            if (MapSize.Text.Length == 0 || Convert.ToInt32(MapSize.Text) < 10)
             {
-                ButtonStart.IsEnabled = false;
+                ButtonGenerateMap.IsEnabled = false;
                 ButtonStartFight.IsEnabled = false;
             }
             else
             {
-                ButtonStart.IsEnabled = true;
+                ButtonGenerateMap.IsEnabled = true;
             }
         }
 
@@ -137,9 +137,17 @@ namespace Game
             if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
         }
 
-        private void RangeBase_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void DrawTimeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            
+            var time = (int)DrawTimeSlider.Value;
+            PrintTimer.Interval=new TimeSpan(0,0,0,time);
+
+        }
+
+        private void TurnsTimeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if(Engine!=null)
+            Engine.WaitTime = (int)TurnsTimeSlider.Value*1000;
 
         }
     }

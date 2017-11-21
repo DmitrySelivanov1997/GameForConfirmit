@@ -23,7 +23,7 @@ namespace Game.Models
         public IAlgoritm FirstAlgoritm { get; set; }
         public IAlgoritm SecondAlgoritm { get; set; }
         public int TurnNumber { get; set; }
-
+        public int WaitTime { get; set; }
         public bool IsCanceled { get; set; } = false;
 
         public Engine(IAlgoritm firstAlgoritm, IAlgoritm secondAlgoritm, Map map)
@@ -50,6 +50,7 @@ namespace Game.Models
                 UnitsAttackFoes(WhiteArmy);
                 UnitsAttackFoes(BlackArmy);
                 TurnNumber++;
+                Thread.Sleep(WaitTime);
             }
 
 
@@ -70,13 +71,18 @@ namespace Game.Models
             var armyString = color == Colors.White ? "белых" : "черных";
             if (BlackArmy.Count == 0 || WhiteArmy.Count == 0)
                 {
-                GameOver($"Армия {armyString} разбита");
+                    GameOver($"Армия {armyString} разбита");
                 return;
                 }
-            if (!Map.BaseBlack.GetIsAlive() || !Map.BaseWhite.GetIsAlive())
+            if (!Map.BaseBlack.GetIsAlive())
                 {
-                    GameOver($"База {armyString} разбита");
+                    GameOver("База черных разбита");
+                    return;
                 }
+            if (!Map.BaseWhite.GetIsAlive())
+            {
+                GameOver("База белых разбита");
+            }
         }
 
         public void UpdateUnits(IReadOnlyCollection<Unit> army)
