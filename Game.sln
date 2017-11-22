@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.Tests", "Game.Tests\Game.Tests.csproj", "{1DBB1C58-73B4-4BC7-AF5C-F96E7E0429D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonInterfaceLibrary", "CommonInterfaceLibrary\CommonInterfaceLibrary.csproj", "{046BAEFD-A0B7-4CDB-B242-D8D22B666984}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfaceLibrary", "InterfaceLibrary\InterfaceLibrary.csproj", "{C3F7A27B-7372-4CF0-986A-9E8386D938B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{1DBB1C58-73B4-4BC7-AF5C-F96E7E0429D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DBB1C58-73B4-4BC7-AF5C-F96E7E0429D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DBB1C58-73B4-4BC7-AF5C-F96E7E0429D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{046BAEFD-A0B7-4CDB-B242-D8D22B666984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{046BAEFD-A0B7-4CDB-B242-D8D22B666984}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{046BAEFD-A0B7-4CDB-B242-D8D22B666984}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{046BAEFD-A0B7-4CDB-B242-D8D22B666984}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3F7A27B-7372-4CF0-986A-9E8386D938B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3F7A27B-7372-4CF0-986A-9E8386D938B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3F7A27B-7372-4CF0-986A-9E8386D938B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3F7A27B-7372-4CF0-986A-9E8386D938B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

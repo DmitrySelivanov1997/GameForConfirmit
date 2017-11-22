@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Game.Models.BaseItems
 {
-    class Food:BaseItem
+    public class Food:BaseItem
     {
         public static double Probability { get; set; }
         public Food(int x, int y): base(x, y)

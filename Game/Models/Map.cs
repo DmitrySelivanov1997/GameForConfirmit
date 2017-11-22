@@ -7,20 +7,19 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using Game.Interfaces;
 using Game.Models.BaseItems;
+using InterfaceLibrary;
 
 namespace Game.Models
 {
     public class Map
     {
-        public IPrinter Printer { get; set; }
-        public List<Unit> WhiteArmy;
-        public List<Unit> BlackArmy;
+        public List<IUnit> WhiteArmy;
+        public List<IUnit> BlackArmy;
         public Base BaseWhite { get; set; }
         public Base BaseBlack { get; set; }
         public TypesOfObject[,] Array { get; }
-        public Map( TypesOfObject[,] array, IPrinter printer)
+        public Map( TypesOfObject[,] array)
         {
-            Printer = printer;
             Array = array;
             WhiteArmy = GetArmy(Colors.White);
             BlackArmy = GetArmy(Colors.Black);
@@ -28,7 +27,7 @@ namespace Game.Models
 
     
 
-        public BaseItem GetItem(int y, int x)
+        public IItem GetItem(int y, int x)
         {
             if (y >= 0 && x >= 0 && y < Array.GetLength(0) && x < Array.GetLength(1))
             {
@@ -62,9 +61,9 @@ namespace Game.Models
             return Array.GetLength(0);
         }
 
-        private List<Unit> GetArmy(Color color)
+        private List<IUnit> GetArmy(Color color)
         {
-            var list = new List<Unit>();
+            var list = new List<IUnit>();
             for (var i = 0; i < Array.GetLength(0); i++)
             {
                 for (var j = 0; j < Array.GetLength(1); j++)
@@ -107,7 +106,7 @@ namespace Game.Models
             }
         }
 
-        public void RemoveUnitFromArmy(Unit unit)
+        public void RemoveUnitFromArmy(IUnit unit)
         {
             if (unit.Color == Colors.White)
             {

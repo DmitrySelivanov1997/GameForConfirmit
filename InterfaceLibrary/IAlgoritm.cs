@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommonInterfaceLibrary
+namespace InterfaceLibrary
 {
-    interface IAlgoritm
+    public interface IAlgoritm
     {
         void MoveAllUnits(IReadOnlyCollection<IUnit> army);
     }

@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
+using InterfaceLibrary;
 
 namespace Game.Models.BaseItems
 {
-    public class BaseItem : IEquatable<BaseItem>
+    public class BaseItem : IEquatable<BaseItem>, IItem
     {
         public Color Color { get; set; }
         public int X { get; }

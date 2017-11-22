@@ -7,24 +7,24 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using Game.Interfaces;
 using Game.Models.BaseItems;
+using InterfaceLibrary;
 
 namespace Game.Models
 {
     public class Engine
     {
         public delegate void GameOverMessager(string message);
-        // Событие, возникающее при выводе денег
         public event GameOverMessager GameOver = delegate { };
         public Map Map { get; set; }
-        public IReadOnlyCollection<Unit> WhiteArmy { get; set; }
-        public IReadOnlyCollection<Unit> BlackArmy { get; set; }
+        public IReadOnlyCollection<IUnit> WhiteArmy { get; set; }
+        public IReadOnlyCollection<IUnit> BlackArmy { get; set; }
         public IAlgoritm FirstAlgoritm { get; set; }
         public IAlgoritm SecondAlgoritm { get; set; }
         public int TurnNumber { get; set; }
         public int WaitTime { get; set; }
         public bool IsCanceled { get; set; } = false;
+        public Rules Rules = new Rules();
 
         public Engine(IAlgoritm firstAlgoritm, IAlgoritm secondAlgoritm, Map map)
         {
@@ -45,18 +45,18 @@ namespace Game.Models
                 UpdateUnits(WhiteArmy);
                 UnitsAttackFoes(BlackArmy);
                 UnitsAttackFoes(WhiteArmy);
+                Thread.Sleep(WaitTime);
                 SecondAlgoritm.MoveAllUnits(BlackArmy);
                 UpdateUnits(BlackArmy);
                 UnitsAttackFoes(WhiteArmy);
                 UnitsAttackFoes(BlackArmy);
                 TurnNumber++;
-                Thread.Sleep(WaitTime);
             }
 
 
         }
 
-        private void UnitsAttackFoes(IReadOnlyCollection<Unit> army)
+        private void UnitsAttackFoes(IReadOnlyCollection<IUnit> army)
         {
             var color = army.Last().Color;
             foreach (var unit in army)
@@ -85,55 +85,25 @@ namespace Game.Models
             }
         }
 
-        public void UpdateUnits(IReadOnlyCollection<Unit> army)
+        public void UpdateUnits(IReadOnlyCollection<IUnit> army)
         {
-            int xNew=0, yNew=0;
             foreach (var unit in army)
             {
-                switch (unit.Direction)
-                {
-                    case Direction.Down:
-                        xNew = unit.X;
-                        yNew = unit.Y + 1;
-                        break;
-                    case Direction.Left:
-                        xNew = unit.X - 1;
-                        yNew = unit.Y;
-                        break;
-                    case Direction.Right:
-                        xNew = unit.X + 1;
-                        yNew = unit.Y;
-                        break;
-                    case Direction.Up:
-                        xNew = unit.X;
-                        yNew = unit.Y - 1;
-                        break;
-                    case Direction.Stay:
-                        continue;
-                }
-                if (Map.GetItem(yNew, xNew) is FreeSpace) // if there is free space below: replace unit with freespace, and move unit one cell down 
+                var xNew = unit.X;
+                var yNew = unit.Y;
+                Rules.GetNewPositionAccordingToDirection(ref yNew, ref xNew, unit);
+                if (Rules.ShouldUnitsBeUpdated(Map.GetItem(yNew, xNew)))
                 {
                     RemoveOldUnitAddNewOne(yNew, xNew, unit);
-                    Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
-                    continue;
-                }
-                if (Map.GetItem(yNew, xNew) is Brick || Map.GetItem(yNew, xNew) is Border ||
-                    Map.GetItem(yNew, xNew ) is Base || Map.GetItem(yNew, xNew) is UnitBase)
-                {
-                    unit.Direction = Direction.Stay;
-                    continue;
                 }
                 if (Map.GetItem(yNew, xNew) is Food)
-                {
-                    RemoveOldUnitAddNewOne(yNew, xNew, unit);
-                    Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
                     Map.AddNewUnitNearBase(unit.Color);
-                }
+                
             }
             UpdateArmy(army);
         }
 
-        private void UpdateArmy(IReadOnlyCollection<Unit> army)
+        private void UpdateArmy(IReadOnlyCollection<IUnit> army)
         {
             if (army.Last().Color == Colors.White)
             {
@@ -143,7 +113,7 @@ namespace Game.Models
             BlackArmy = Map.BlackArmy.ToArray();
         }
 
-        private void RemoveOldUnitAddNewOne( int y, int x, Unit unit)
+        private void RemoveOldUnitAddNewOne( int y, int x, IUnit unit)
         {
             Map.SetItem(y, x,  unit.Color == Colors.White ? TypesOfObject.UnitWhite : TypesOfObject.UnitBlack );
             if (unit.Color == Colors.White)
@@ -154,6 +124,7 @@ namespace Game.Models
             }
             Map.BlackArmy.Remove(unit);
             Map.BlackArmy.Add(new Unit(y, x, unit.Color, Map));
+            Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
         }
     }
 }

@@ -65,7 +65,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Interfaces\IAlgoritm.cs" />
     <Compile Include="Interfaces\IPrinter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -84,9 +83,9 @@
     <Compile Include="Models\BaseItems\Unit.cs" />
     <Compile Include="Models\BaseItems\UnitBase.cs" />
     <Compile Include="Models\Engine.cs" />
-    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Map.cs" />
     <Compile Include="Models\MapGenerator.cs" />
+    <Compile Include="Models\Rules.cs" />
     <Compile Include="Models\WpfPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -113,6 +112,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InterfaceLibrary\InterfaceLibrary.csproj">
+      <Project>{c3f7a27b-7372-4cf0-986a-9e8386d938b0}</Project>
+      <Name>InterfaceLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

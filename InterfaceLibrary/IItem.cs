@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Media;
 
-namespace CommonInterfaceLibrary
+namespace InterfaceLibrary
 {
-    interface IItem
+    public interface IItem
     {
         Color Color { get; set; }
         int X { get; }

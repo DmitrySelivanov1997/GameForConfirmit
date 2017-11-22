@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommonInterfaceLibrary
+namespace InterfaceLibrary
 {
-    interface IUnit
+    public interface IUnit:IItem
     {
         Direction Direction { get; set; }
         IItem[,] ScopeArray { get; set; }

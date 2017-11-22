@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Game.Models;
 using Game.Models.BaseItems;
+using System.Reflection;
 
 namespace Game
 {
@@ -50,12 +51,12 @@ namespace Game
             Food.Probability = 0.0;
 
             _mapSize = Convert.ToInt32(MapSize.Text);
-            MapGenerator mapGenerator = new MapGenerator();
+            MapGenerator mapGenerator = new MapGenerator(_mapSize);
             WriteableBitmap = BitmapFactory.New((int)MainImage.Width, (int)MainImage.Width);
             MainImage.Source = WriteableBitmap;
             Printer = new WpfPrinter(MainImage);
             ButtonStartFight.IsEnabled = true;
-            MyMap = mapGenerator.GenerateMap(_mapSize, Printer);
+            MyMap = mapGenerator.GenerateMap();
             Printer.Print(MyMap, WriteableBitmap);
             Engine = new Engine(new Algoritm1(), new Algoritm2(), MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
             Engine.GameOver += Show_Message;
@@ -147,7 +148,7 @@ namespace Game
         private void TurnsTimeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if(Engine!=null)
-            Engine.WaitTime = (int)TurnsTimeSlider.Value*1000;
+            Engine.WaitTime = (int)TurnsTimeSlider.Value;
 
         }
     }

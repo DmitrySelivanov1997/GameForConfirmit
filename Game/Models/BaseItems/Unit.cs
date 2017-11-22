@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
+using InterfaceLibrary;
 
 namespace Game.Models.BaseItems
 {
-    public class Unit:UnitBase
+    public class Unit:UnitBase, IUnit
     {
         public Direction Direction { get; set; }
-        public BaseItem[,] ScopeArray { get; set; }
+        public IItem[,] ScopeArray { get; set; }
         private Map Map { get; }
         public Unit(int x, int y, Color color, Map map) : base(x, y, color)
         {
@@ -18,14 +19,14 @@ namespace Game.Models.BaseItems
         
         
 
-        private BaseItem[,] GetAllObjectsInScopeArray()
+        private IItem[,] GetAllObjectsInScopeArray()
         {
             int x = 0;
             int y = 0;
-            var array = new BaseItem[13,13];
-            for (int i = Y - 6; i <= Y + 6; i++)
+            var array = new IItem[13,13];
+            for (var i = Y - 6; i <= Y + 6; i++)
             {
-                for (int j = X - 6; j <= X + 6; j++)
+                for (var j = X - 6; j <= X + 6; j++)
                 {
                     if ((Math.Abs(i - Y )+Math.Abs(j-X)) <= 6)
                     {

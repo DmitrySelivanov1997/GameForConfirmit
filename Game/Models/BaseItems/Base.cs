@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using InterfaceLibrary;
 
 namespace Game.Models.BaseItems
 {
@@ -12,11 +13,11 @@ namespace Game.Models.BaseItems
     {
 
         private Map Map { get; }
-        private BaseItem[,] Scope { get; set; }
+        private IItem[,] Scope { get; set; }
         public Base(int x, int y, Color color, Map map) : base(x, y)
         {
             Color = color;
-            Scope = new BaseItem[7,7];
+            Scope = new IItem[7,7];
             Map = map;
         }
 
@@ -24,7 +25,7 @@ namespace Game.Models.BaseItems
         {
             int x = 0;
             int y = 0;
-            var array = new BaseItem[13, 13];
+            var array = new IItem[13, 13];
             for (int i = Y - 3; i <= Y + 3; i++)
             {
                 for (int j = X - 3; j <= X + 3; j++)
