@@ -14,11 +14,7 @@ namespace Game.Models
 {
     public class Engine
     {
-        public delegate void GameOverMessager(string message);
-        public event GameOverMessager GameOver = delegate { };
-        public Map Map { get; set; }
-        public IReadOnlyCollection<IUnit> WhiteArmy { get; set; }
-        public IReadOnlyCollection<IUnit> BlackArmy { get; set; }
+        public MapManager MapManager { get; set; }
         public IAlgoritm FirstAlgoritm { get; set; }
         public IAlgoritm SecondAlgoritm { get; set; }
         public int TurnNumber { get; set; }
@@ -28,11 +24,9 @@ namespace Game.Models
 
         public Engine(IAlgoritm firstAlgoritm, IAlgoritm secondAlgoritm, Map map)
         {
-            Map = map;
+            MapManager= new MapManager(map);
             FirstAlgoritm = firstAlgoritm;
             SecondAlgoritm = secondAlgoritm;
-            WhiteArmy = map.WhiteArmy.ToArray();
-            BlackArmy = map.BlackArmy.ToArray();
 
         }
 
@@ -41,90 +35,57 @@ namespace Game.Models
             //for (int i=0; ; i++)
             while (!IsCanceled)
             {
-                FirstAlgoritm.MoveAllUnits(WhiteArmy);
-                UpdateUnits(WhiteArmy);
-                UnitsAttackFoes(BlackArmy);
-                UnitsAttackFoes(WhiteArmy);
-                Thread.Sleep(WaitTime);
-                SecondAlgoritm.MoveAllUnits(BlackArmy);
-                UpdateUnits(BlackArmy);
-                UnitsAttackFoes(WhiteArmy);
-                UnitsAttackFoes(BlackArmy);
+                FirstAlgoritm.MoveAllUnits(MapManager.Map.WhiteArmyReadOnlyCollection);
+                UpdateUnits(MapManager.Map.WhiteArmy);
+                UnitsAttackFoes(MapManager.Map.BlackArmy);
+                UnitsAttackFoes(MapManager.Map.WhiteArmy);
+                SecondAlgoritm.MoveAllUnits(MapManager.Map.BlackArmyReadOnlyCollection);
+                UpdateUnits(MapManager.Map.BlackArmy);
+                UnitsAttackFoes(MapManager.Map.WhiteArmy);
+                UnitsAttackFoes(MapManager.Map.BlackArmy);
                 TurnNumber++;
+                Thread.Sleep(WaitTime);
             }
 
 
         }
 
-        private void UnitsAttackFoes(IReadOnlyCollection<IUnit> army)
+        private void UnitsAttackFoes(List<IUnitManagable> army)
         {
-            var color = army.Last().Color;
             foreach (var unit in army)
             {
                 if (unit.DieOrSurvive())
                 {
-                    Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
-                    Map.RemoveUnitFromArmy(unit);
+                    MapManager.UnitDied(unit);
                 }
             }
-            UpdateArmy(army);
-            var armyString = color == Colors.White ? "белых" : "черных";
-            if (BlackArmy.Count == 0 || WhiteArmy.Count == 0)
-                {
-                    GameOver($"Армия {armyString} разбита");
-                return;
-                }
-            if (!Map.BaseBlack.GetIsAlive())
-                {
-                    GameOver("База черных разбита");
-                    return;
-                }
-            if (!Map.BaseWhite.GetIsAlive())
-            {
-                GameOver("База белых разбита");
-            }
+            MapManager.Map.UpdateArmies();
+            MapManager.CheckForGameOver();
+            
         }
-
-        public void UpdateUnits(IReadOnlyCollection<IUnit> army)
+        public void UpdateUnits(List<IUnitManagable> army)
         {
             foreach (var unit in army)
             {
                 var xNew = unit.X;
                 var yNew = unit.Y;
                 Rules.GetNewPositionAccordingToDirection(ref yNew, ref xNew, unit);
-                if (Rules.ShouldUnitsBeUpdated(Map.GetItem(yNew, xNew)))
+                if (Rules.ShouldUnitsBeUpdated(MapManager.Map.GetItem(yNew, xNew)))
                 {
-                    RemoveOldUnitAddNewOne(yNew, xNew, unit);
+                    if (MapManager.Map.GetItem(yNew, xNew) is Food)
+                    {
+                        MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unit);
+                        MapManager.AddNewUnitNearBase(unit.GetFraction());
+                    }
+                    else
+                        MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unit);
+
                 }
-                if (Map.GetItem(yNew, xNew) is Food)
-                    Map.AddNewUnitNearBase(unit.Color);
-                
+
             }
-            UpdateArmy(army);
+            MapManager.Map.UpdateArmies();
         }
 
-        private void UpdateArmy(IReadOnlyCollection<IUnit> army)
-        {
-            if (army.Last().Color == Colors.White)
-            {
-                WhiteArmy = Map.WhiteArmy.ToArray();
-                return;
-            }
-            BlackArmy = Map.BlackArmy.ToArray();
-        }
-
-        private void RemoveOldUnitAddNewOne( int y, int x, IUnit unit)
-        {
-            Map.SetItem(y, x,  unit.Color == Colors.White ? TypesOfObject.UnitWhite : TypesOfObject.UnitBlack );
-            if (unit.Color == Colors.White)
-            {
-                Map.WhiteArmy.Remove(unit);
-                Map.WhiteArmy.Add(new Unit(y, x, unit.Color, Map));
-                return;
-            }
-            Map.BlackArmy.Remove(unit);
-            Map.BlackArmy.Add(new Unit(y, x, unit.Color, Map));
-            Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
-        }
+        
     }
 }

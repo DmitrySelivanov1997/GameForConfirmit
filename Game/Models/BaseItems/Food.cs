@@ -11,7 +11,7 @@ namespace Game.Models.BaseItems
     public class Food:BaseItem
     {
         public static double Probability { get; set; }
-        public Food(int x, int y): base(x, y)
+        public Food(int i, int j): base(i, j)
         {
             Color = Colors.Green;
         }

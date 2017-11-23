@@ -125,19 +125,5 @@ namespace Game.Tests
             }
             Assert.AreEqual(4, sum);
         }
-
-        [TestMethod]
-        public void MapsSuccesfullyCreatedWithin3To100Range()
-        {
-            int sum = 0;
-            for (int i = 3; i <= 999; i++)
-            {
-                var map = new MapGenerator(i).GenerateMap();
-                if (map != null)
-                    sum++;
-            }
-
-            Assert.AreEqual(97, sum);
-        }
     }
 }

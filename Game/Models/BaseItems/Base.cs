@@ -14,7 +14,7 @@ namespace Game.Models.BaseItems
 
         private Map Map { get; }
         private IItem[,] Scope { get; set; }
-        public Base(int x, int y, Color color, Map map) : base(x, y)
+        public Base(int i, int j, Color color, Map map) : base(i, j)
         {
             Color = color;
             Scope = new IItem[7,7];

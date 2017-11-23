@@ -20,8 +20,9 @@ namespace Game.Models
             TypesOfObject[,] array = new TypesOfObject[Size, Size];
             GenerateBricks(array);
             GenerateFood(array);
-            GenerateWhiteBaseAndUnit(array);
-            GenerateBlackBaseAndUnit(array);
+            GenerateBaseAndUnit(array, TypesOfObject.UnitWhite, TypesOfObject.BaseWhite);
+            GenerateBaseAndUnit(array, TypesOfObject.UnitBlack, TypesOfObject.BaseBlack);
+
             return new Map(array);
         }
 
@@ -59,18 +60,18 @@ namespace Game.Models
            
         }
 
-        private void GenerateBlackBaseAndUnit(TypesOfObject[,] array)
+        private void GenerateBaseAndUnit(TypesOfObject[,] array, TypesOfObject unit, TypesOfObject Base)
         {
             while (true)
             {
                 var x = Rnd.Next(1, array.GetLength(1) - 1);
                 var y = Rnd.Next(1, array.GetLength(0) - 1);
-                if ((array[y, x] == TypesOfObject.BaseWhite || array[y, x] == TypesOfObject.UnitWhite) || (array[y - 1, x] == TypesOfObject.UnitWhite || array[y - 1, x] == TypesOfObject.UnitWhite))
+                if (array[y, x] != TypesOfObject.FreeSpace && array[y, x] != TypesOfObject.Brick && array[y - 1, x] != TypesOfObject.Food )
                 {
                     continue;
                 }
-                array[y, x] = TypesOfObject.BaseBlack;
-                array[y - 1, x] = TypesOfObject.UnitBlack;
+                array[y, x] = Base;
+                array[y - 1, x] = unit;
                 break;
             }
         }

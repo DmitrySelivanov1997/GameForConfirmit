@@ -9,7 +9,7 @@ namespace Game.Models.BaseItems
 {
     public class UnitBase:BaseItem
     {
-        public UnitBase(int x, int y, Color color) : base(x, y)
+        public UnitBase(int i, int j, Color color) : base(i, j)
         {
             Color = color;
         }

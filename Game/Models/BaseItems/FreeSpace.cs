@@ -10,7 +10,7 @@ namespace Game.Models.BaseItems
 {
     class FreeSpace:BaseItem
     {
-        public FreeSpace(int x, int y):base(x, y)
+        public FreeSpace(int i, int j):base(i, j)
         {
             Color = Colors.Bisque;
         }

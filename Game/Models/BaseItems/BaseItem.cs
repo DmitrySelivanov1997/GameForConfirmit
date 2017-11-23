@@ -12,14 +12,16 @@ namespace Game.Models.BaseItems
 {
     public class BaseItem : IEquatable<BaseItem>, IItem
     {
+        public int I { get; set; }
+        public int J { get; set; }
         public Color Color { get; set; }
-        public int X { get; }
-        public int Y { get; }
+        public int X => J;
+        public int Y => I;
 
-        public BaseItem(int y, int x)
+        public BaseItem(int i, int j)
         {
-            X = x;
-            Y = y;
+            J = j;
+            I = i;
         }
 
         public bool Equals(BaseItem other)

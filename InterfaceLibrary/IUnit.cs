@@ -10,5 +10,6 @@ namespace InterfaceLibrary
         IItem[,] ScopeArray { get; set; }
         void Move(Direction direction);
         bool DieOrSurvive();
+        TypesOfObject GetFraction();
     }
 }

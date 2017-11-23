@@ -11,7 +11,7 @@ namespace Game.Models.BaseItems
     {
         public static double Probability { get; set; }
         
-        public Brick(int x, int y): base(x, y)
+        public Brick(int i, int j): base(i, j)
         {
             Color = Colors.Brown;
         }

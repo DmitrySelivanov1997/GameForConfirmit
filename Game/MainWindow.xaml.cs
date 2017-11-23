@@ -47,8 +47,8 @@ namespace Game
 
         private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
         {
-            Brick.Probability = 0.15;
-            Food.Probability = 0.0;
+            Brick.Probability = 0.0;
+            Food.Probability = 0.01;
 
             _mapSize = Convert.ToInt32(MapSize.Text);
             MapGenerator mapGenerator = new MapGenerator(_mapSize);
@@ -59,7 +59,7 @@ namespace Game
             MyMap = mapGenerator.GenerateMap();
             Printer.Print(MyMap, WriteableBitmap);
             Engine = new Engine(new Algoritm1(), new Algoritm2(), MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
-            Engine.GameOver += Show_Message;
+            Engine.MapManager.GameOver += Show_Message;
 
 
         }

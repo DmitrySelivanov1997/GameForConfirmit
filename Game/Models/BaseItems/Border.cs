@@ -9,7 +9,7 @@ namespace Game.Models.BaseItems
 {
     class Border:BaseItem
     {
-        public Border(int x, int y):base(x, y)
+        public Border(int i, int j):base(i, j)
         {
         }
     }

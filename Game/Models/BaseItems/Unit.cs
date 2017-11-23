@@ -5,12 +5,12 @@ using InterfaceLibrary;
 
 namespace Game.Models.BaseItems
 {
-    public class Unit:UnitBase, IUnit
+    public class Unit:UnitBase, IUnitManagable
     {
         public Direction Direction { get; set; }
         public IItem[,] ScopeArray { get; set; }
         private Map Map { get; }
-        public Unit(int x, int y, Color color, Map map) : base(x, y, color)
+        public Unit(int i, int j, Color color, Map map) : base(i, j, color)
         {
             Map = map;
             ScopeArray = GetAllObjectsInScopeArray();
@@ -68,6 +68,13 @@ namespace Game.Models.BaseItems
                 }
             }
             return foes > allies;
+        }
+
+        public TypesOfObject GetFraction()
+        {
+            if (Color == Colors.White)
+                return TypesOfObject.UnitWhite;
+            return TypesOfObject.UnitBlack;
         }
     }
 }

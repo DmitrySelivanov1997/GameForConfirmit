@@ -85,6 +85,7 @@
     <Compile Include="Models\Engine.cs" />
     <Compile Include="Models\Map.cs" />
     <Compile Include="Models\MapGenerator.cs" />
+    <Compile Include="Models\MapManager.cs" />
     <Compile Include="Models\Rules.cs" />
     <Compile Include="Models\WpfPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
