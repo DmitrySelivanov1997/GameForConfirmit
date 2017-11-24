@@ -25,16 +25,13 @@ namespace Game.Models
         {
             using (writeableBitmap.GetBitmapContext())
             {
-                var timer = Stopwatch.StartNew();
                 for (var i = 0; i < map.GetLength(); i++)
                 {
                     for (var j = 0; j < map.GetLength(); j++)
                     {
-                        if (map.GetItem(i, j) != null)
                             AddObjectOnBmp(i, j, map.GetItem(i, j).Color, writeableBitmap, map);
                     }
                 }
-
             }
 
 

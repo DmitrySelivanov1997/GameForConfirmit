@@ -51,15 +51,6 @@ namespace Game.Models
             }
         }
 
-        private static void GenerateWhiteBaseAndUnit(TypesOfObject[,] array)
-        {
-            var x = Rnd.Next(1, array.GetLength(1)-1);
-            var y = Rnd.Next(1, array.GetLength(0)-1);
-            array[y, x] = TypesOfObject.BaseWhite;
-            array[y+1, x] = TypesOfObject.UnitWhite;
-           
-        }
-
         private void GenerateBaseAndUnit(TypesOfObject[,] array, TypesOfObject unit, TypesOfObject Base)
         {
             while (true)

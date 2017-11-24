@@ -24,8 +24,8 @@ namespace Game.Models
         public Map( TypesOfObject[,] array)
         {
             Array = array;
-            WhiteArmy = GetArmy(Colors.White);
-            BlackArmy = GetArmy(Colors.Black);
+            WhiteArmy = GetArmy(TypesOfObject.UnitWhite);
+            BlackArmy = GetArmy(TypesOfObject.UnitBlack);
             BufferArmy = new List<IUnitManagable>();
             WhiteArmyReadOnlyCollection = WhiteArmy;
             BlackArmyReadOnlyCollection = BlackArmy;
@@ -67,16 +67,16 @@ namespace Game.Models
             return Array.GetLength(0);
         }
 
-        private List<IUnitManagable> GetArmy(Color color)
+        private List<IUnitManagable> GetArmy(TypesOfObject unitColor)
         {
             var list = new List<IUnitManagable>();
             for (var i = 0; i < Array.GetLength(0); i++)
             {
                 for (var j = 0; j < Array.GetLength(1); j++)
                 {
-                    if ((color == Colors.White && Array[i, j] == TypesOfObject.UnitWhite) || (color == Colors.Black && Array[i, j] == TypesOfObject.UnitBlack))
+                    if (Array[i,j] == unitColor)
                     {
-                        list.Add(new Unit(i,j,color,this));
+                        list.Add(new Unit(i, j, unitColor == TypesOfObject.UnitWhite? Colors.White: Colors.Black,this));
                     }
                 }
             }

@@ -10,6 +10,12 @@ namespace Game.Models
 {
     public class Rules
     {
+        public Rules()
+        {
+            Brick.Probability = 0.0;
+            Food.Probability = 0.01;
+            
+        }
         public void GetNewPositionAccordingToDirection(ref int yNew,ref int xNew, IUnit unit)
         {
             switch (unit.Direction)

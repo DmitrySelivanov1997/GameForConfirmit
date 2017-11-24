@@ -28,7 +28,7 @@ namespace Game.Models.BaseItems
             {
                 for (var j = X - 6; j <= X + 6; j++)
                 {
-                    if ((Math.Abs(i - Y )+Math.Abs(j-X)) <= 6)
+                    if ((Math.Abs(j - Y )+Math.Abs(i-X)) <= 6)
                     {
                         if (i != X || j != Y)
                             array[y,x] = Map.GetItem(i, j);

@@ -14,13 +14,13 @@ namespace Game.Models
 {
     public class Engine
     {
-        public MapManager MapManager { get; set; }
         public IAlgoritm FirstAlgoritm { get; set; }
         public IAlgoritm SecondAlgoritm { get; set; }
         public int TurnNumber { get; set; }
         public int WaitTime { get; set; }
         public bool IsCanceled { get; set; } = false;
         public Rules Rules = new Rules();
+        public MapManager MapManager { get; set; }
 
         public Engine(IAlgoritm firstAlgoritm, IAlgoritm secondAlgoritm, Map map)
         {
@@ -31,8 +31,7 @@ namespace Game.Models
         }
 
         public void Startbattle()
-        {
-            //for (int i=0; ; i++)
+        {  
             while (!IsCanceled)
             {
                 FirstAlgoritm.MoveAllUnits(MapManager.Map.WhiteArmyReadOnlyCollection);
@@ -46,8 +45,7 @@ namespace Game.Models
                 TurnNumber++;
                 Thread.Sleep(WaitTime);
             }
-
-
+            
         }
 
         private void UnitsAttackFoes(List<IUnitManagable> army)
@@ -70,18 +68,14 @@ namespace Game.Models
                 var xNew = unit.X;
                 var yNew = unit.Y;
                 Rules.GetNewPositionAccordingToDirection(ref yNew, ref xNew, unit);
-                if (Rules.ShouldUnitsBeUpdated(MapManager.Map.GetItem(yNew, xNew)))
+                if (!Rules.ShouldUnitsBeUpdated(MapManager.Map.GetItem(yNew, xNew))) continue;
+                if (MapManager.Map.GetItem(yNew, xNew) is Food)
                 {
-                    if (MapManager.Map.GetItem(yNew, xNew) is Food)
-                    {
-                        MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unit);
-                        MapManager.AddNewUnitNearBase(unit.GetFraction());
-                    }
-                    else
-                        MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unit);
-
+                    MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unit);
+                    MapManager.AddNewUnitNearBase(unit.GetFraction());
                 }
-
+                else
+                    MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unit);
             }
             MapManager.Map.UpdateArmies();
         }

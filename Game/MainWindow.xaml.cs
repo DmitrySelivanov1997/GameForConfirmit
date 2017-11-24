@@ -39,29 +39,21 @@ namespace Game
             PrintTimer.Tick += PrintMap;
             Height = SystemParameters.PrimaryScreenHeight - 100;  
             Width = SystemParameters.PrimaryScreenHeight -100;
-            MyGrid.Width = Width;
-            MyGrid.Height = Height;
-            MainImage.Height = (Width<Height? Width:Height) * 4 / 5;
-            MainImage.Width = MainImage.Height; 
         }
 
         private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
         {
-            Brick.Probability = 0.0;
-            Food.Probability = 0.01;
-
+            ButtonStartFight.IsEnabled = true;
             _mapSize = Convert.ToInt32(MapSize.Text);
             MapGenerator mapGenerator = new MapGenerator(_mapSize);
+            MyMap = mapGenerator.GenerateMap();
             WriteableBitmap = BitmapFactory.New((int)MainImage.Width, (int)MainImage.Width);
             MainImage.Source = WriteableBitmap;
             Printer = new WpfPrinter(MainImage);
-            ButtonStartFight.IsEnabled = true;
-            MyMap = mapGenerator.GenerateMap();
             Printer.Print(MyMap, WriteableBitmap);
             Engine = new Engine(new Algoritm1(), new Algoritm2(), MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
             Engine.MapManager.GameOver += Show_Message;
-
-
+            
         }
 
         private void PrintMap(object sender, EventArgs e)
@@ -94,6 +86,10 @@ namespace Game
             MessageBox.Show(message);
             Environment.Exit(0);
         }
+
+
+        #region Changeable UI parts
+
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)
         {
@@ -151,6 +147,7 @@ namespace Game
             Engine.WaitTime = (int)TurnsTimeSlider.Value;
 
         }
+        #endregion
     }
 }
 

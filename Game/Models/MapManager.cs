@@ -55,12 +55,12 @@ namespace Game.Models
         {
             if (Map.BlackArmy.Count == 0 )
             {
-                GameOver($"Армия черных разбита");
+                GameOver("Армия черных разбита");
                 return;
             }
             if (Map.WhiteArmy.Count == 0)
             {
-                GameOver($"Армия белых разбита");
+                GameOver("Армия белых разбита");
                 return;
             }
             if (!Map.BaseBlack.GetIsAlive())
