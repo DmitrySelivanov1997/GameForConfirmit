@@ -18,6 +18,7 @@ using System.Windows.Threading;
 using Game.Models;
 using Game.Models.BaseItems;
 using System.Reflection;
+using Microsoft.Win32;
 
 namespace Game
 {
@@ -39,10 +40,14 @@ namespace Game
             PrintTimer.Tick += PrintMap;
             Height = SystemParameters.PrimaryScreenHeight - 100;  
             Width = SystemParameters.PrimaryScreenHeight -100;
+            
         }
 
         private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
         {
+
+            Brick.Probability = 0.0;
+            Food.Probability = 0.05;
             ButtonStartFight.IsEnabled = true;
             _mapSize = Convert.ToInt32(MapSize.Text);
             MapGenerator mapGenerator = new MapGenerator(_mapSize);
@@ -118,7 +123,7 @@ namespace Game
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (MapSize.Text.Length == 0 || Convert.ToInt32(MapSize.Text) < 10)
+            if (MapSize.Text.Length == 0 || Convert.ToInt32(MapSize.Text) < 2)
             {
                 ButtonGenerateMap.IsEnabled = false;
                 ButtonStartFight.IsEnabled = false;
@@ -148,6 +153,19 @@ namespace Game
 
         }
         #endregion
+
+        private void AlgoritmN1_OnClick(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog Fd = new OpenFileDialog
+            {
+                Title = "Выберите библиотеку",
+                Filter = "*.dll"
+            };
+        }
     }
 }
 

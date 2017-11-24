@@ -35,7 +35,7 @@ namespace Game.Models
             {
                 for (var j = baseTmp.X - 1; j <= baseTmp.X + 1; j++)
                 {
-                    if (i != j && (Map.Array[i, j] == TypesOfObject.Food || Map.Array[i, j] == TypesOfObject.Brick || Map.Array[i, j] == TypesOfObject.FreeSpace))
+                    if (i != baseTmp.Y && j!=baseTmp.X && (Map.Array[i, j] == TypesOfObject.Food || Map.Array[i, j] == TypesOfObject.Brick || Map.Array[i, j] == TypesOfObject.FreeSpace))
                     {
                         Map.SetItem(i, j, unit);
                         Map.AddUnitToArmy(unit, i,j);
@@ -53,25 +53,25 @@ namespace Game.Models
 
         public void CheckForGameOver()
         {
-            if (Map.BlackArmy.Count == 0 )
+            if (Map.Army.FindAll(x => x.Fraction == TypesOfObject.UnitBlack).Count == 0 )
             {
                 GameOver("Армия черных разбита");
                 return;
             }
-            if (Map.WhiteArmy.Count == 0)
+            if (Map.Army.FindAll(x => x.Fraction == TypesOfObject.UnitWhite).Count == 0)
             {
                 GameOver("Армия белых разбита");
                 return;
             }
-            if (!Map.BaseBlack.GetIsAlive())
-            {
-                GameOver("База черных разбита");
-                return;
-            }
-            if (!Map.BaseWhite.GetIsAlive())
-            {
-                GameOver("База белых разбита");
-            }
+            //if (!Map.BaseBlack.GetIsAlive())
+            //{
+            //    GameOver("База черных разбита");
+            //    return;
+            //}
+            //if (!Map.BaseWhite.GetIsAlive())
+            //{
+            //    GameOver("База белых разбита");
+            //}
         }
     }
 }

@@ -14,21 +14,15 @@ namespace Game.Models
     public class Map
     {
         public List<IUnitManagable> BufferArmy{ get; set; }
-        public IReadOnlyCollection<IUnit> WhiteArmyReadOnlyCollection { get; set; }
-        public IReadOnlyCollection<IUnit> BlackArmyReadOnlyCollection { get; set; }
-        public List<IUnitManagable> WhiteArmy;
-        public List<IUnitManagable> BlackArmy;
+        public List<IUnitManagable> Army;
         public Base BaseWhite { get; set; }
         public Base BaseBlack { get; set; }
         public TypesOfObject[,] Array { get; }
         public Map( TypesOfObject[,] array)
         {
             Array = array;
-            WhiteArmy = GetArmy(TypesOfObject.UnitWhite);
-            BlackArmy = GetArmy(TypesOfObject.UnitBlack);
+            Army = GetArmy();
             BufferArmy = new List<IUnitManagable>();
-            WhiteArmyReadOnlyCollection = WhiteArmy;
-            BlackArmyReadOnlyCollection = BlackArmy;
         }
 
     
@@ -52,7 +46,7 @@ namespace Game.Models
                         BaseWhite = new Base(y, x, Colors.White, this);
                         return BaseWhite;
                     case TypesOfObject.UnitBlack:
-                        return new UnitBase(y, x, Colors.Black); ;
+                        return new UnitBase(y, x, Colors.Black); 
                     case TypesOfObject.UnitWhite:
                         return new UnitBase(y, x, Colors.White);
                 }
@@ -67,16 +61,16 @@ namespace Game.Models
             return Array.GetLength(0);
         }
 
-        private List<IUnitManagable> GetArmy(TypesOfObject unitColor)
+        private List<IUnitManagable> GetArmy()
         {
             var list = new List<IUnitManagable>();
             for (var i = 0; i < Array.GetLength(0); i++)
             {
                 for (var j = 0; j < Array.GetLength(1); j++)
                 {
-                    if (Array[i,j] == unitColor)
+                    if (Array[i,j] == TypesOfObject.UnitWhite || Array[i, j] == TypesOfObject.UnitBlack)
                     {
-                        list.Add(new Unit(i, j, unitColor == TypesOfObject.UnitWhite? Colors.White: Colors.Black,this));
+                        list.Add(new Unit(i, j, Array[i, j] == TypesOfObject.UnitWhite? Colors.White: Colors.Black,this));
                     }
                 }
             }
@@ -95,27 +89,19 @@ namespace Game.Models
 
         public void AddUnitToArmy(TypesOfObject unit, int i, int j)
         {
-            BufferArmy.Add(new Unit(i, j, Colors.White, this));
+                BufferArmy.Add(new Unit(i, j, unit == TypesOfObject.UnitWhite?Colors.White:Colors.Black, this));
         }
 
         public void UpdateArmies()
         {
             foreach (var unitManagable in BufferArmy)
             {
-                if (unitManagable.GetFraction() == TypesOfObject.UnitWhite)
+                if (Army.Contains(unitManagable))
                 {
-                    if (!WhiteArmy.Contains(unitManagable))
-                        WhiteArmy.Add(unitManagable);
-                    else
-                        WhiteArmy.Remove(unitManagable);
+                    Army.Remove(unitManagable);
+                    continue;
                 }
-                else
-                {
-                    if (!BlackArmy.Contains(unitManagable))
-                        BlackArmy.Add(unitManagable);
-                    else
-                        BlackArmy.Remove(unitManagable);
-                }
+                Army.Add(unitManagable);
             }
             BufferArmy.Clear();
         }

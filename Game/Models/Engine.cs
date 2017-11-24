@@ -34,23 +34,21 @@ namespace Game.Models
         {  
             while (!IsCanceled)
             {
-                FirstAlgoritm.MoveAllUnits(MapManager.Map.WhiteArmyReadOnlyCollection);
-                UpdateUnits(MapManager.Map.WhiteArmy);
-                UnitsAttackFoes(MapManager.Map.BlackArmy);
-                UnitsAttackFoes(MapManager.Map.WhiteArmy);
-                SecondAlgoritm.MoveAllUnits(MapManager.Map.BlackArmyReadOnlyCollection);
-                UpdateUnits(MapManager.Map.BlackArmy);
-                UnitsAttackFoes(MapManager.Map.WhiteArmy);
-                UnitsAttackFoes(MapManager.Map.BlackArmy);
+                FirstAlgoritm.MoveAllUnits(MapManager.Map.Army.FindAll(x=>x.Fraction == TypesOfObject.UnitWhite));
+                UpdateUnits(TypesOfObject.UnitWhite);
+                UnitsAttackFoes();
+                SecondAlgoritm.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.Fraction == TypesOfObject.UnitBlack));
+                UpdateUnits(TypesOfObject.UnitBlack);
+                UnitsAttackFoes();
                 TurnNumber++;
                 Thread.Sleep(WaitTime);
             }
             
         }
 
-        private void UnitsAttackFoes(List<IUnitManagable> army)
+        private void UnitsAttackFoes()
         {
-            foreach (var unit in army)
+            foreach (var unit in MapManager.Map.Army)
             {
                 if (unit.DieOrSurvive())
                 {
@@ -61,21 +59,24 @@ namespace Game.Models
             MapManager.CheckForGameOver();
             
         }
-        public void UpdateUnits(List<IUnitManagable> army)
+        public void UpdateUnits(TypesOfObject unit)
         {
-            foreach (var unit in army)
+            foreach (var unitToUpdate in MapManager.Map.Army)
             {
-                var xNew = unit.X;
-                var yNew = unit.Y;
-                Rules.GetNewPositionAccordingToDirection(ref yNew, ref xNew, unit);
-                if (!Rules.ShouldUnitsBeUpdated(MapManager.Map.GetItem(yNew, xNew))) continue;
-                if (MapManager.Map.GetItem(yNew, xNew) is Food)
+                if (unitToUpdate.Fraction == unit)
                 {
-                    MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unit);
-                    MapManager.AddNewUnitNearBase(unit.GetFraction());
+                    var xNew = unitToUpdate.X;
+                    var yNew = unitToUpdate.Y;
+                    Rules.GetNewPositionAccordingToDirection(ref yNew, ref xNew, unitToUpdate);
+                    if (!Rules.ShouldUnitsBeUpdated(MapManager.Map.GetItem(yNew, xNew))) continue;
+                    if (MapManager.Map.GetItem(yNew, xNew) is Food)
+                    {
+                        MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unitToUpdate);
+                        MapManager.AddNewUnitNearBase(unitToUpdate.Fraction);
+                    }
+                    else
+                        MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unitToUpdate);
                 }
-                else
-                    MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unit);
             }
             MapManager.Map.UpdateArmies();
         }

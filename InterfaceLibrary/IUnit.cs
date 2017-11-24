@@ -6,10 +6,10 @@ namespace InterfaceLibrary
 {
     public interface IUnit:IItem
     {
+        TypesOfObject Fraction { get; }
         Direction Direction { get; set; }
         IItem[,] ScopeArray { get; set; }
         void Move(Direction direction);
         bool DieOrSurvive();
-        TypesOfObject GetFraction();
     }
 }

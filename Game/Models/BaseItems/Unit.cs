@@ -7,6 +7,7 @@ namespace Game.Models.BaseItems
 {
     public class Unit:UnitBase, IUnitManagable
     {
+        public TypesOfObject Fraction { get; }
         public Direction Direction { get; set; }
         public IItem[,] ScopeArray { get; set; }
         private Map Map { get; }
@@ -14,7 +15,8 @@ namespace Game.Models.BaseItems
         {
             Map = map;
             ScopeArray = GetAllObjectsInScopeArray();
-            
+            Fraction = color == Colors.White ? TypesOfObject.UnitWhite : TypesOfObject.UnitBlack;
+
         }
         
         
@@ -28,9 +30,9 @@ namespace Game.Models.BaseItems
             {
                 for (var j = X - 6; j <= X + 6; j++)
                 {
-                    if ((Math.Abs(j - Y )+Math.Abs(i-X)) <= 6)
+                    if ((Math.Abs(i - Y )+Math.Abs(j - X)) <= 6)
                     {
-                        if (i != X || j != Y)
+                        if (x != 6 || y != 6)
                             array[y,x] = Map.GetItem(i, j);
                     }
 
@@ -56,7 +58,7 @@ namespace Game.Models.BaseItems
             var foes = 0;
             foreach (var item in ScopeArray)
             {
-                if (item!=null && item is UnitBase)
+                if (item is UnitBase)
                 {
                     if (Math.Abs(item.X - X) + Math.Abs(item.Y - Y) <= 3)
                     {
@@ -68,13 +70,6 @@ namespace Game.Models.BaseItems
                 }
             }
             return foes > allies;
-        }
-
-        public TypesOfObject GetFraction()
-        {
-            if (Color == Colors.White)
-                return TypesOfObject.UnitWhite;
-            return TypesOfObject.UnitBlack;
         }
     }
 }
