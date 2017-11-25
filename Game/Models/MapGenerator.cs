@@ -22,7 +22,6 @@ namespace Game.Models
             GenerateFood(array);
             GenerateBaseAndUnit(array, TypesOfObject.UnitWhite, TypesOfObject.BaseWhite);
             GenerateBaseAndUnit(array, TypesOfObject.UnitBlack, TypesOfObject.BaseBlack);
-
             return new Map(array);
         }
 
@@ -57,7 +56,8 @@ namespace Game.Models
             {
                 var x = Rnd.Next(1, array.GetLength(1) - 1);
                 var y = Rnd.Next(1, array.GetLength(0) - 1);
-                if (array[y, x] != TypesOfObject.FreeSpace && array[y, x] != TypesOfObject.Brick && array[y - 1, x] != TypesOfObject.Food )
+                if ((array[y, x] != TypesOfObject.FreeSpace && array[y, x] != TypesOfObject.Brick && array[y, x] != TypesOfObject.Food)
+                   || (array[y-1, x] != TypesOfObject.FreeSpace && array[y-1, x] != TypesOfObject.Brick && array[y-1, x] != TypesOfObject.Food) )
                 {
                     continue;
                 }

@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Game.Interfaces;
 using Game.Models.BaseItems;
+using InterfaceLibrary;
 
 namespace Game.Models
 {
@@ -29,23 +30,31 @@ namespace Game.Models
                 {
                     for (var j = 0; j < map.GetLength(); j++)
                     {
-                            AddObjectOnBmp(i, j, map.GetItem(i, j).Color, writeableBitmap, map);
+                            AddObjectOnBmp(i, j, map.GetItem(i, j), writeableBitmap, map);
                     }
                 }
             }
 
 
         }
-        private void AddObjectOnBmp(int j, int i, Color color, WriteableBitmap writeableBitmap, Map map)
+        private void AddObjectOnBmp(int j, int i, IItem item, WriteableBitmap writeableBitmap, Map map)
         {
             writeableBitmap.FillRectangle(
                 (int) (i * MainImage.Height / map.GetLength()),
                 (int)(j * MainImage.Width / map.GetLength()),
                 (int)((i +1)*( MainImage.Width / map.GetLength())), 
                 (int)((j + 1) * ( MainImage.Height / map.GetLength())),
-                color
+                item.Color
                 );
-           
+            if(item is Base )
+                writeableBitmap.FillRectangle(
+                    (int)(i * MainImage.Height / map.GetLength() + MainImage.Height / map.GetLength() / 4),
+                    (int)(j * MainImage.Width / map.GetLength() + MainImage.Height / map.GetLength() / 4),
+                    (int)((i + 1) * (MainImage.Width / map.GetLength()) - MainImage.Height / map.GetLength() / 4),
+                    (int)((j + 1) * (MainImage.Height / map.GetLength()) - MainImage.Height / map.GetLength() / 4),
+                    Colors.Red
+                );
+
         }
     }
 }

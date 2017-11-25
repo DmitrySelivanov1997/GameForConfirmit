@@ -14,6 +14,20 @@ namespace Game.Tests
     public class MapGeneratorTests
     {
 
+        private static int GetNumberOfObjectsInArray(Map map1, TypesOfObject obj)
+        {
+            int sum = 0;
+            for (var i = 0; i < map1.GetLength(); i++)
+            {
+                for (var j = 0; j < map1.GetLength(); j++)
+                {
+                    if (map1.Array[i, j] == obj)
+                        sum++;
+                }
+            }
+            return sum;
+        }
+
         [TestMethod]
         [ExpectedException(typeof(IndexOutOfRangeException), "Map too small")]
         public void CanNotCreateMapLessThan2X2()
@@ -31,33 +45,23 @@ namespace Game.Tests
         }
 
         [TestMethod]
-        public void BricksAndFoodCreatedSuccesfullyWith100Chance()
+        public void BricksCreatedSuccesfullyWith100Chance()
         {
-            int sum = 0;
             Brick.Probability = 100;
             var mg1 = new MapGenerator(10);
             var map1 = mg1.GenerateMap();
+            var sum = GetNumberOfObjectsInArray(map1, TypesOfObject.Brick);
+            Assert.AreEqual(sum,10*10-4);
+        }
+        [TestMethod]
+        public void FoodCreatedSuccesfullyWith100Chance()
+        {
             Brick.Probability = 0;
             Food.Probability = 100;
-            var mg2 = new MapGenerator(10);
-            var map2 = mg2.GenerateMap();
-            for (var i = 0; i < map1.GetLength(); i++)
-            {
-                for (var j = 0; j < map1.GetLength(); j++)
-                {
-                    if (map1.Array[i, j] is TypesOfObject.Brick)
-                        sum++;
-                }
-            }
-            for (var i = 0; i < map2.GetLength(); i++)
-            {
-                for (var j = 0; j < map2.GetLength(); j++)
-                {
-                    if (map2.Array[i, j] is TypesOfObject.Food)
-                        sum++;
-                }
-            }
-            Assert.AreEqual(2*10*10-8,sum);
+            var mg1 = new MapGenerator(10);
+            var map1 = mg1.GenerateMap();
+            var sum = GetNumberOfObjectsInArray(map1, TypesOfObject.Food);
+            Assert.AreEqual(sum, 10 * 10 - 4);
         }
 
         [TestMethod]
@@ -67,46 +71,29 @@ namespace Game.Tests
             Brick.Probability = 100;Food.Probability = 100;
             var mg1 = new MapGenerator(10);
             var map1 = mg1.GenerateMap();
-            for (var i = 0; i < map1.GetLength(); i++)
-            {
-                for (var j = 0; j < map1.GetLength(); j++)
-                {
-                    if (map1.Array[i, j] is TypesOfObject.Food)
-                        sum++;
-                }
-            }
+            sum = GetNumberOfObjectsInArray(map1, TypesOfObject.Food);
 
             Assert.AreEqual(0, sum);
             
         }
 
         [TestMethod]
-        public void BrickAndFoodWereNotCreatedWith0Chance()
+        public void BricksWereNotCreatedWith0Chance()
         {
-            var sum = 0;
             Brick.Probability = 0;
+            var mg1 = new MapGenerator(10);
+            var map1 = mg1.GenerateMap();
+            var sum = GetNumberOfObjectsInArray(map1, TypesOfObject.Brick);
+            Assert.AreEqual(0, sum);
+        }
+        public void FoodWasNotCreatedWith0Chance()
+        {
             Food.Probability = 0;
             var mg1 = new MapGenerator(10);
             var map1 = mg1.GenerateMap();
-            for (var i = 0; i < map1.GetLength(); i++)
-            {
-                for (var j = 0; j < map1.GetLength(); j++)
-                {
-                    if (map1.Array[i, j] is TypesOfObject.Brick)
-                        sum++;
-                }
-            }
-            for (var i = 0; i < map1.GetLength(); i++)
-            {
-                for (var j = 0; j < map1.GetLength(); j++)
-                {
-                    if (map1.Array[i, j] is TypesOfObject.Food)
-                        sum++;
-                }
-            }
+            var sum = GetNumberOfObjectsInArray(map1, TypesOfObject.Food);
             Assert.AreEqual(0, sum);
         }
-
         [TestMethod]
         public void UnitAndBaseSuccesfullyCreatedAndItsNumberIsOk()
         {
@@ -115,14 +102,10 @@ namespace Game.Tests
             Food.Probability = 100;
             var mg1 = new MapGenerator(10);
             var map1 = mg1.GenerateMap();
-            for (var i = 0; i < map1.GetLength(); i++)
-            {
-                for (var j = 0; j < map1.GetLength(); j++)
-                {
-                    if (map1.Array[i, j] is TypesOfObject.UnitWhite || map1.Array[i, j] is TypesOfObject.BaseWhite || map1.Array[i, j] is TypesOfObject.UnitBlack || map1.Array[i, j] is TypesOfObject.BaseBlack)
-                        sum++;
-                }
-            }
+            sum = GetNumberOfObjectsInArray(map1, TypesOfObject.BaseBlack) +
+                  GetNumberOfObjectsInArray(map1, TypesOfObject.BaseWhite) +
+                  GetNumberOfObjectsInArray(map1, TypesOfObject.UnitBlack) +
+                  GetNumberOfObjectsInArray(map1, TypesOfObject.UnitWhite);
             Assert.AreEqual(4, sum);
         }
     }

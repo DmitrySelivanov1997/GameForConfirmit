@@ -46,7 +46,7 @@ namespace Game
         private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
         {
 
-            Brick.Probability = 0.0;
+            Brick.Probability = 0.8;
             Food.Probability = 0.05;
             ButtonStartFight.IsEnabled = true;
             _mapSize = Convert.ToInt32(MapSize.Text);
@@ -123,7 +123,7 @@ namespace Game
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (MapSize.Text.Length == 0 || Convert.ToInt32(MapSize.Text) < 2)
+            if (MapSize.Text.Length == 0 || Convert.ToInt32(MapSize.Text) < 4)
             {
                 ButtonGenerateMap.IsEnabled = false;
                 ButtonStartFight.IsEnabled = false;
@@ -160,11 +160,25 @@ namespace Game
 
         private void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
         {
+            string filename;
             OpenFileDialog Fd = new OpenFileDialog
             {
                 Title = "Выберите библиотеку",
-                Filter = "*.dll"
+                Filter = "Dll files | *.dll"
             };
+            var result = Fd.ShowDialog();
+                if (result == true)
+                {
+                    filename = Fd.FileName;
+                }
+                else return;
+            var asm = Assembly.LoadFrom(filename);
+            var types = asm.GetTypes();
+            if (types.Any(type => type.GetInterface("IAlgotitm") != null))
+            {
+                return;
+            }
+            MessageBox.Show("Данная библиотека не содержит определения для IAlgoritm");
         }
     }
 }

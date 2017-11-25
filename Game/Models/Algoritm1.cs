@@ -10,12 +10,13 @@ namespace Game.Models
 {
     public class Algoritm1:IAlgoritm
     {
-       public Random Rnd1=new Random();
         public void MoveAllUnits(IReadOnlyCollection<IUnit> army)
         {
+
+            Random rnd1 = new Random();
             foreach (var unit in army)
             {
-                unit.Move((Direction)Rnd1.Next(0,5));
+                unit.Move((Direction)rnd1.Next(0,5));
             }
         }
     }
