@@ -14,36 +14,39 @@ namespace Game.Models
 {
     public class Engine
     {
-        public IAlgoritm FirstAlgoritm { get; set; }
-        public IAlgoritm SecondAlgoritm { get; set; }
+        public Dictionary<IAlgoritm, TypesOfObject> DictionaryOfAlgoritms;
+        public event Action<GameResult> GameOver;
         public int TurnNumber { get; set; }
         public int WaitTime { get; set; }
         public bool IsCanceled { get; set; } = false;
         public Rules Rules = new Rules();
         public MapManager MapManager { get; set; }
 
-        public Engine(IAlgoritm firstAlgoritm, IAlgoritm secondAlgoritm, Map map)
+        public Engine(Dictionary<IAlgoritm,TypesOfObject>dictionary, Map map)
         {
             MapManager= new MapManager(map);
-            FirstAlgoritm = firstAlgoritm;
-            SecondAlgoritm = secondAlgoritm;
-
+            DictionaryOfAlgoritms = dictionary;
         }
 
         public void Startbattle()
-        {  
+        {
             while (!IsCanceled)
             {
-                FirstAlgoritm.MoveAllUnits(MapManager.Map.Army.FindAll(x=>x.Fraction == TypesOfObject.UnitWhite));
-                UpdateUnits(TypesOfObject.UnitWhite);
-                UnitsAttackFoes();
-                SecondAlgoritm.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.Fraction == TypesOfObject.UnitBlack));
-                UpdateUnits(TypesOfObject.UnitBlack);
-                UnitsAttackFoes();
+                foreach (var algoritm in DictionaryOfAlgoritms)
+                {
+                    MakeATurn(algoritm);
+                }
                 TurnNumber++;
                 Thread.Sleep(WaitTime);
             }
             
+        }
+
+        private void MakeATurn(KeyValuePair<IAlgoritm, TypesOfObject> algoritm)
+        {
+            algoritm.Key.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.Fraction == algoritm.Value));
+            UpdateUnits(algoritm.Value);
+            UnitsAttackFoes();
         }
 
         private void UnitsAttackFoes()
@@ -55,8 +58,9 @@ namespace Game.Models
                     MapManager.UnitDied(unit);
                 }
             }
-            MapManager.Map.UpdateArmies();
-            MapManager.CheckForGameOver();
+            MapManager.UpdateArmies();
+            if(MapManager.CheckForGameOver()!= GameResult.NotAGameOver)
+                GameOver?.Invoke(MapManager.CheckForGameOver());
             
         }
         public void UpdateUnits(TypesOfObject unit)
@@ -71,14 +75,14 @@ namespace Game.Models
                     if (!Rules.ShouldUnitsBeUpdated(MapManager.Map.GetItem(yNew, xNew))) continue;
                     if (MapManager.Map.GetItem(yNew, xNew) is Food)
                     {
-                        MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unitToUpdate);
-                        MapManager.AddNewUnitNearBase(unitToUpdate.Fraction);
+                        MapManager.MoveUnit(yNew, xNew, unitToUpdate);
+                        MapManager.SpawnUnitNearBase(unitToUpdate.Fraction);
                     }
                     else
-                        MapManager.RemoveOldUnitAddNewOne(yNew, xNew, unitToUpdate);
+                        MapManager.MoveUnit(yNew, xNew, unitToUpdate);
                 }
             }
-            MapManager.Map.UpdateArmies();
+            MapManager.UpdateArmies();
         }
 
         

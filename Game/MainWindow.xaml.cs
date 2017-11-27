@@ -18,6 +18,7 @@ using System.Windows.Threading;
 using Game.Models;
 using Game.Models.BaseItems;
 using System.Reflection;
+using InterfaceLibrary;
 using Microsoft.Win32;
 
 namespace Game
@@ -27,6 +28,7 @@ namespace Game
     /// </summary>
     public partial class MainWindow
     {
+        public Dictionary<IAlgoritm, TypesOfObject> Dictionary = new Dictionary<IAlgoritm, TypesOfObject>();
         public Engine Engine ;
         public DispatcherTimer PrintTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 30) };
         public WpfPrinter Printer;
@@ -46,7 +48,7 @@ namespace Game
         private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
         {
 
-            Brick.Probability = 0.8;
+            Brick.Probability = 0.2;
             Food.Probability = 0.05;
             ButtonStartFight.IsEnabled = true;
             _mapSize = Convert.ToInt32(MapSize.Text);
@@ -56,8 +58,8 @@ namespace Game
             MainImage.Source = WriteableBitmap;
             Printer = new WpfPrinter(MainImage);
             Printer.Print(MyMap, WriteableBitmap);
-            Engine = new Engine(new Algoritm1(), new Algoritm2(), MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
-            Engine.MapManager.GameOver += Show_Message;
+            Engine = new Engine(Dictionary, MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
+            Engine.GameOver += Show_Message;
             
         }
 
@@ -86,9 +88,16 @@ namespace Game
                 Engine.Startbattle();
             }
         }
-        private static void Show_Message(string message)
+        private static void Show_Message(GameResult result)
         {
-            MessageBox.Show(message);
+            if (result == GameResult.BlackArmyDestroyed)
+                MessageBox.Show("Черная армия разбита");
+            if (result == GameResult.WhiteArmyDestroyed)
+                MessageBox.Show("Белая армия разбита");
+            if (result == GameResult.BlackBaseDestroyed)
+                MessageBox.Show("Черная база разбита");
+            if (result == GameResult.WhiteBaseDestroyed)
+                MessageBox.Show("Белая база разбита");
             Environment.Exit(0);
         }
 
@@ -156,9 +165,33 @@ namespace Game
 
         private void AlgoritmN1_OnClick(object sender, RoutedEventArgs e)
         {
+            Type[] types = null;
+            if (LoadDllAndCheckForInterface(ref types)) return;
+            foreach (var type in types)
+            {
+                if (type.GetInterface("IAlgoritm") != null)
+                {
+                   Dictionary.Add((IAlgoritm)Activator.CreateInstance(type),TypesOfObject.UnitWhite);
+                }
+            }
+            AlgoritmN1.Content = "Алгоритм загружен.";
         }
 
         private void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
+        {
+            Type[] types=null;
+            if (LoadDllAndCheckForInterface(ref types)) return;
+            foreach (var type in types)
+            {
+                if (type.GetInterface("IAlgoritm") != null)
+                {
+                    Dictionary.Add((IAlgoritm)Activator.CreateInstance(type),TypesOfObject.UnitBlack);
+                }
+            }
+            AlgoritmN2.Content = "Алгоритм загружен.";
+        }
+
+        private static bool LoadDllAndCheckForInterface(ref Type[] types)
         {
             string filename;
             OpenFileDialog Fd = new OpenFileDialog
@@ -167,18 +200,20 @@ namespace Game
                 Filter = "Dll files | *.dll"
             };
             var result = Fd.ShowDialog();
-                if (result == true)
-                {
-                    filename = Fd.FileName;
-                }
-                else return;
-            var asm = Assembly.LoadFrom(filename);
-            var types = asm.GetTypes();
-            if (types.Any(type => type.GetInterface("IAlgotitm") != null))
+            if (result == true)
             {
-                return;
+                filename = Fd.FileName;
             }
-            MessageBox.Show("Данная библиотека не содержит определения для IAlgoritm");
+            else return true;
+            var asm = Assembly.LoadFrom(filename);
+            types = asm.GetTypes();
+            if (types.Any(type => type.GetInterface("IAlgoritm") == null))
+            {
+                MessageBox.Show("Данная библиотека не содержит определения для IAlgoritm");
+                return true;
+            }
+            return false;
+
         }
     }
 }

@@ -4,14 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using InterfaceLibrary;
 
 namespace Game.Models.BaseItems
 {
     public class UnitBase:BaseItem
     {
-        public UnitBase(int i, int j, Color color) : base(i, j)
+
+        public TypesOfObject Fraction { get; }
+        public UnitBase(int i, int j, TypesOfObject obj) : base(i, j)
         {
-            Color = color;
+            Fraction = obj;
+            Color = obj == TypesOfObject.UnitBlack ? Colors.Black : Colors.White;
         }
        
     }

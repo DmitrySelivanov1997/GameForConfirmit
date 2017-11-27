@@ -9,28 +9,36 @@ using InterfaceLibrary;
 
 namespace Game.Models
 {
+    public enum GameResult
+    {
+        WhiteWin,
+        BlackWin,
+        BlackArmyDestroyed,
+        WhiteArmyDestroyed,
+        WhiteBaseDestroyed,
+        BlackBaseDestroyed,
+        NotAGameOver
+    }
     public class MapManager
     {
-
-        public delegate void GameOverMessager(string message);
-        public event GameOverMessager GameOver = delegate { };
+        
         public Map Map { get; }
 
         public MapManager(Map map)
         {
             Map = map;
         }
-        public void RemoveOldUnitAddNewOne(int y, int x, IUnitManagable unit)
+        public void MoveUnit(int y, int x, IUnitManagable unit)
         {
-            Map.SetItem(y, x, unit.Color == Colors.White ? TypesOfObject.UnitWhite : TypesOfObject.UnitBlack);
+            Map.SetItem(y, x, unit.Fraction);
             Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
             unit.I = y;
             unit.J = x;
         }
 
-        public void AddNewUnitNearBase(TypesOfObject unit)
+        public void SpawnUnitNearBase(TypesOfObject unit)
         {
-            var baseTmp = unit == TypesOfObject.UnitWhite ? Map.BaseWhite : Map.BaseBlack;
+            var baseTmp = unit == TypesOfObject.UnitWhite ? Map.BaseList.Find(x=>x.Fraction ==TypesOfObject.BaseWhite) : Map.BaseList.Find(x => x.Fraction == TypesOfObject.BaseBlack);
             for (var i = baseTmp.Y - 1; i <= baseTmp.Y + 1; i++)
             {
                 for (var j = baseTmp.X - 1; j <= baseTmp.X + 1; j++)
@@ -38,7 +46,7 @@ namespace Game.Models
                     if (i != baseTmp.Y && j!=baseTmp.X && (Map.Array[i, j] == TypesOfObject.Food || Map.Array[i, j] == TypesOfObject.Brick || Map.Array[i, j] == TypesOfObject.FreeSpace))
                     {
                         Map.SetItem(i, j, unit);
-                        Map.AddUnitToArmy(unit, i,j);
+                        Map.AddUnitToArmy(new Unit(i,j,unit,Map));
                         return;
                     }
                 }
@@ -50,28 +58,33 @@ namespace Game.Models
             Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
             Map.RemoveUnitFromArmy(unit);
         }
-
-        public void CheckForGameOver()
+        public void UpdateArmies()
+        {
+            foreach (var unitManagable in Map.BufferArmy)
+            {
+                if (Map.Army.Contains(unitManagable))
+                {
+                    Map.Army.Remove(unitManagable);
+                    continue;
+                }
+                Map.Army.Add(unitManagable);
+            }
+            Map.BufferArmy.Clear();
+        }
+        public GameResult CheckForGameOver()
         {
             if (Map.Army.FindAll(x => x.Fraction == TypesOfObject.UnitBlack).Count == 0 )
             {
-                GameOver("Армия черных разбита");
-                return;
+                return GameResult.BlackArmyDestroyed;
             }
             if (Map.Army.FindAll(x => x.Fraction == TypesOfObject.UnitWhite).Count == 0)
             {
-                GameOver("Армия белых разбита");
-                return;
+                return GameResult.WhiteArmyDestroyed;
             }
-            //if (!Map.BaseBlack.GetIsAlive())
-            //{
-            //    GameOver("База черных разбита");
-            //    return;
-            //}
-            //if (!Map.BaseWhite.GetIsAlive())
-            //{
-            //    GameOver("База белых разбита");
-            //}
+            foreach (var Base in Map.BaseList)
+            {
+            }
+            return GameResult.NotAGameOver;
         }
     }
 }

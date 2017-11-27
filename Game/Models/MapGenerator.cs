@@ -7,6 +7,7 @@ namespace Game.Models
 {
     public class MapGenerator
     {
+        public Map Map { get; set; }
         public int Size { get; set; }
         private static readonly Random Rnd=new Random();
 
@@ -14,55 +15,56 @@ namespace Game.Models
         {
             if(s <= 2) throw new IndexOutOfRangeException("Map is too small");
             Size = s;
+            Map = new Map(Size);
         }
         public Map GenerateMap()
         {
-            TypesOfObject[,] array = new TypesOfObject[Size, Size];
-            GenerateBricks(array);
-            GenerateFood(array);
-            GenerateBaseAndUnit(array, TypesOfObject.UnitWhite, TypesOfObject.BaseWhite);
-            GenerateBaseAndUnit(array, TypesOfObject.UnitBlack, TypesOfObject.BaseBlack);
-            return new Map(array);
+            GenerateBricks();
+            GenerateFood();
+            GenerateBaseAndUnit(TypesOfObject.UnitWhite, TypesOfObject.BaseWhite);
+            GenerateBaseAndUnit(TypesOfObject.UnitBlack, TypesOfObject.BaseBlack);
+            return Map;
         }
 
 
-        private static void GenerateBricks(TypesOfObject[,] array)
+        private void GenerateBricks()
         {
-            for (var i = 0; i < array.GetLength(0); i++)
+            for (var i = 0; i < Map.GetLength(); i++)
             {
-                for (var j = 0; j < array.GetLength(1); j++)
+                for (var j = 0; j < Map.GetLength(); j++)
                 {
                     if (ShouldIGenerateItem(Brick.Probability))
-                        array[i, j] = TypesOfObject.Brick;
+                        Map.SetItem(i,j,TypesOfObject.Brick);
                 }
             }
         }
-        private static void GenerateFood(TypesOfObject[,] array)
+        private void GenerateFood()
         {
-            for (var i = 0; i < array.GetLength(0); i++)
+            for (var i = 0; i < Map.GetLength(); i++)
             {
-                for (var j = 0; j < array.GetLength(1); j++)
+                for (var j = 0; j < Map.GetLength(); j++)
                 {
-                    if (ShouldIGenerateItem(Food.Probability) && array[i, j] != TypesOfObject.Brick)
-                        array[i, j] = TypesOfObject.Food;
+                    if (ShouldIGenerateItem(Food.Probability))
+                        Map.SetItem(i, j, TypesOfObject.Food);
 
                 }
             }
         }
 
-        private void GenerateBaseAndUnit(TypesOfObject[,] array, TypesOfObject unit, TypesOfObject Base)
+        private void GenerateBaseAndUnit(TypesOfObject unit, TypesOfObject Base)
         {
             while (true)
             {
-                var x = Rnd.Next(1, array.GetLength(1) - 1);
-                var y = Rnd.Next(1, array.GetLength(0) - 1);
-                if ((array[y, x] != TypesOfObject.FreeSpace && array[y, x] != TypesOfObject.Brick && array[y, x] != TypesOfObject.Food)
-                   || (array[y-1, x] != TypesOfObject.FreeSpace && array[y-1, x] != TypesOfObject.Brick && array[y-1, x] != TypesOfObject.Food) )
+                var x = Rnd.Next(1, Map.GetLength() - 1);
+                var y = Rnd.Next(1, Map.GetLength() - 1);
+                if ((Map.Array[y, x] != TypesOfObject.FreeSpace && Map.Array[y, x] != TypesOfObject.Brick && Map.Array[y, x] != TypesOfObject.Food)
+                   || (Map.Array[y-1, x] != TypesOfObject.FreeSpace && Map.Array[y-1, x] != TypesOfObject.Brick && Map.Array[y-1, x] != TypesOfObject.Food) )
                 {
                     continue;
                 }
-                array[y, x] = Base;
-                array[y - 1, x] = unit;
+                Map.SetItem(y,x,Base);
+                Map.SetItem(y-1, x, unit);
+                Map.Army.Add(new Unit(y-1, x , unit, Map));
                 break;
             }
         }
@@ -71,5 +73,6 @@ namespace Game.Models
         {
             return !(Rnd.NextDouble() >= probability);
         }
+
     }
 }

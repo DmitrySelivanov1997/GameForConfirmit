@@ -73,8 +73,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Algoritm1.cs" />
-    <Compile Include="Models\Algoritm2.cs" />
     <Compile Include="Models\BaseItems\Base.cs" />
     <Compile Include="Models\BaseItems\BaseItem.cs" />
     <Compile Include="Models\BaseItems\Border.cs" />

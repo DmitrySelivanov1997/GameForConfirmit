@@ -15,14 +15,14 @@ namespace Game.Models
     {
         public List<IUnitManagable> BufferArmy{ get; set; }
         public List<IUnitManagable> Army;
-        public Base BaseWhite { get; set; }
-        public Base BaseBlack { get; set; }
+        public List<Base> BaseList;
         public TypesOfObject[,] Array { get; }
-        public Map( TypesOfObject[,] array)
+        public Map(int size)
         {
-            Array = array;
-            Army = GetArmy();
+            Array = new TypesOfObject[size,size];
+            Army = new List<IUnitManagable>();
             BufferArmy = new List<IUnitManagable>();
+            BaseList = new List<Base>();
         }
 
     
@@ -40,15 +40,13 @@ namespace Game.Models
                     case TypesOfObject.FreeSpace:
                         return new FreeSpace(y, x);
                     case TypesOfObject.BaseBlack:
-                        BaseBlack = new Base(y, x, Colors.Black, this);
-                        return BaseBlack;
+                        return new Base(y, x, TypesOfObject.BaseBlack, this);
                     case TypesOfObject.BaseWhite:
-                        BaseWhite = new Base(y, x, Colors.White, this);
-                        return BaseWhite;
+                        return new Base(y, x, TypesOfObject.BaseWhite, this); ;
                     case TypesOfObject.UnitBlack:
-                        return new UnitBase(y, x, Colors.Black); 
+                        return new UnitBase(y, x, TypesOfObject.UnitBlack); 
                     case TypesOfObject.UnitWhite:
-                        return new UnitBase(y, x, Colors.White);
+                        return new UnitBase(y, x, TypesOfObject.UnitWhite);
                 }
                 
             }
@@ -60,26 +58,11 @@ namespace Game.Models
         {
             return Array.GetLength(0);
         }
-
-        private List<IUnitManagable> GetArmy()
-        {
-            var list = new List<IUnitManagable>();
-            for (var i = 0; i < Array.GetLength(0); i++)
-            {
-                for (var j = 0; j < Array.GetLength(1); j++)
-                {
-                    if (Array[i,j] == TypesOfObject.UnitWhite || Array[i, j] == TypesOfObject.UnitBlack)
-                    {
-                        list.Add(new Unit(i, j, Array[i, j] == TypesOfObject.UnitWhite? Colors.White: Colors.Black,this));
-                    }
-                }
-            }
-            return list;
-        }
-
         public void SetItem( int y, int x, TypesOfObject obj)
         {
             Array[y, x] = obj;
+            if(obj == TypesOfObject.BaseBlack || obj == TypesOfObject.BaseWhite)
+                BaseList.Add(new Base(y, x, obj,this));
         }
 
         public void RemoveUnitFromArmy(IUnitManagable unit)
@@ -87,23 +70,10 @@ namespace Game.Models
             BufferArmy.Add(unit);
         }
 
-        public void AddUnitToArmy(TypesOfObject unit, int i, int j)
+        public void AddUnitToArmy(IUnitManagable unit)
         {
-                BufferArmy.Add(new Unit(i, j, unit == TypesOfObject.UnitWhite?Colors.White:Colors.Black, this));
+            RemoveUnitFromArmy(unit);
         }
 
-        public void UpdateArmies()
-        {
-            foreach (var unitManagable in BufferArmy)
-            {
-                if (Army.Contains(unitManagable))
-                {
-                    Army.Remove(unitManagable);
-                    continue;
-                }
-                Army.Add(unitManagable);
-            }
-            BufferArmy.Clear();
-        }
     }
 }

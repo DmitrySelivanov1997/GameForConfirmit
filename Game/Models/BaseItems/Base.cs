@@ -11,12 +11,13 @@ namespace Game.Models.BaseItems
 {
     public class Base: BaseItem
     {
-
+        public TypesOfObject Fraction { get; }
         private Map Map { get; }
         private IItem[,] Scope { get; set; }
-        public Base(int i, int j, Color color, Map map) : base(i, j)
+        public Base(int i, int j, TypesOfObject fraction, Map map) : base(i, j)
         {
-            Color = color;
+            Fraction = fraction;
+            Color = Fraction == TypesOfObject.BaseBlack?Colors.Black:Colors.White;
             Scope = new IItem[7,7];
             Map = map;
         }

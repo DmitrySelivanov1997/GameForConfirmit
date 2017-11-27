@@ -7,15 +7,13 @@ namespace Game.Models.BaseItems
 {
     public class Unit:UnitBase, IUnitManagable
     {
-        public TypesOfObject Fraction { get; }
         public Direction Direction { get; set; }
         public IItem[,] ScopeArray { get; set; }
         private Map Map { get; }
-        public Unit(int i, int j, Color color, Map map) : base(i, j, color)
+        public Unit(int i, int j, TypesOfObject obj, Map map) : base(i, j, obj)
         {
             Map = map;
             ScopeArray = GetAllObjectsInScopeArray();
-            Fraction = color == Colors.White ? TypesOfObject.UnitWhite : TypesOfObject.UnitBlack;
 
         }
         
