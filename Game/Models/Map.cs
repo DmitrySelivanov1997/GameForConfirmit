@@ -61,7 +61,7 @@ namespace Game.Models
         public void SetItem( int y, int x, TypesOfObject obj)
         {
             Array[y, x] = obj;
-            if(obj == TypesOfObject.BaseBlack || obj == TypesOfObject.BaseWhite)
+            if(obj == TypesOfObject.BaseBlack || obj == TypesOfObject.BaseWhite) // adds base to list if needed
                 BaseList.Add(new Base(y, x, obj,this));
         }
 

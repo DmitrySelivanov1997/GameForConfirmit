@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace Game.Models.BaseItems
 {
-    class FreeSpace:BaseItem
+    public class FreeSpace:BaseItem
     {
         public FreeSpace(int i, int j):base(i, j)
         {

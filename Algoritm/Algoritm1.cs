@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using InterfaceLibrary;
 
-
-namespace Game.Models
+namespace Algoritm
 {
     public class Algoritm1:IAlgoritm
     {
@@ -14,8 +10,7 @@ namespace Game.Models
 
         public Algoritm1()
         {
-
-           rnd = new Random();
+            rnd = new Random();
         }
         public void MoveAllUnits(IReadOnlyCollection<IUnit> army)
         {

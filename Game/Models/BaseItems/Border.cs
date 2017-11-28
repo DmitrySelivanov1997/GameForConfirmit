@@ -7,7 +7,7 @@ using InterfaceLibrary;
 
 namespace Game.Models.BaseItems
 {
-    class Border:BaseItem
+    public class Border:BaseItem
     {
         public Border(int i, int j):base(i, j)
         {

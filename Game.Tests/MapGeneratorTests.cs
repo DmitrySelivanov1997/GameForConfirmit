@@ -63,20 +63,6 @@ namespace Game.Tests
             var sum = GetNumberOfObjectsInArray(map1, TypesOfObject.Food);
             Assert.AreEqual(sum, 10 * 10 - 4);
         }
-
-        [TestMethod]
-        public void FoodCanNotOverrideBrick()
-        {
-            var sum = 0;
-            Brick.Probability = 100;Food.Probability = 100;
-            var mg1 = new MapGenerator(10);
-            var map1 = mg1.GenerateMap();
-            sum = GetNumberOfObjectsInArray(map1, TypesOfObject.Food);
-
-            Assert.AreEqual(0, sum);
-            
-        }
-
         [TestMethod]
         public void BricksWereNotCreatedWith0Chance()
         {

@@ -22,7 +22,7 @@ namespace Game.Models
     public class MapManager
     {
         
-        public Map Map { get; }
+        public Map Map { get; set; }
 
         public MapManager(Map map)
         {
@@ -43,7 +43,9 @@ namespace Game.Models
             {
                 for (var j = baseTmp.X - 1; j <= baseTmp.X + 1; j++)
                 {
-                    if (i != baseTmp.Y && j!=baseTmp.X && (Map.Array[i, j] == TypesOfObject.Food || Map.Array[i, j] == TypesOfObject.Brick || Map.Array[i, j] == TypesOfObject.FreeSpace))
+                    if (i != baseTmp.Y && j!=baseTmp.X && (Map.Array[i, j] == TypesOfObject.Food 
+                        || Map.Array[i, j] == TypesOfObject.Brick 
+                        || Map.Array[i, j] == TypesOfObject.FreeSpace))
                     {
                         Map.SetItem(i, j, unit);
                         Map.AddUnitToArmy(new Unit(i,j,unit,Map));
@@ -83,6 +85,10 @@ namespace Game.Models
             }
             foreach (var Base in Map.BaseList)
             {
+                if (!Base.GetIsAlive())
+                    return Base.Fraction == TypesOfObject.BaseWhite
+                        ? GameResult.WhiteBaseDestroyed
+                        : GameResult.BlackBaseDestroyed;
             }
             return GameResult.NotAGameOver;
         }

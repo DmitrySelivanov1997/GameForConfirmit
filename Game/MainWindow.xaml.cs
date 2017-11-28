@@ -88,16 +88,25 @@ namespace Game
                 Engine.Startbattle();
             }
         }
-        private static void Show_Message(GameResult result)
+        private  void Show_Message(GameResult result)
         {
+            string whiteArmyLeader = null,blackArmyLeader = null;
+            foreach (var algoritm in Dictionary.Keys)
+            {
+                if (Dictionary[algoritm] == TypesOfObject.UnitWhite)
+                    whiteArmyLeader = algoritm.GetType().FullName;
+
+                if (Dictionary[algoritm] == TypesOfObject.UnitBlack)
+                    blackArmyLeader = algoritm.GetType().FullName;
+            }
             if (result == GameResult.BlackArmyDestroyed)
-                MessageBox.Show("Черная армия разбита");
+                MessageBox.Show($"Черная армия, под управлением {blackArmyLeader} разбита");
             if (result == GameResult.WhiteArmyDestroyed)
-                MessageBox.Show("Белая армия разбита");
+                MessageBox.Show($"Белая армия, под управлением {whiteArmyLeader} разбита");
             if (result == GameResult.BlackBaseDestroyed)
-                MessageBox.Show("Черная база разбита");
+                MessageBox.Show($"Черная база, игрока {blackArmyLeader} разбита");
             if (result == GameResult.WhiteBaseDestroyed)
-                MessageBox.Show("Белая база разбита");
+                MessageBox.Show($"Белая база, игрока {whiteArmyLeader} разбита");
             Environment.Exit(0);
         }
 
@@ -165,34 +174,20 @@ namespace Game
 
         private void AlgoritmN1_OnClick(object sender, RoutedEventArgs e)
         {
-            Type[] types = null;
-            if (LoadDllAndCheckForInterface(ref types)) return;
-            foreach (var type in types)
-            {
-                if (type.GetInterface("IAlgoritm") != null)
-                {
-                   Dictionary.Add((IAlgoritm)Activator.CreateInstance(type),TypesOfObject.UnitWhite);
-                }
-            }
+            
+            LoadDllAndCheckForInterface(TypesOfObject.UnitWhite, (Button)sender);
             AlgoritmN1.Content = "Алгоритм загружен.";
         }
 
         private void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
         {
-            Type[] types=null;
-            if (LoadDllAndCheckForInterface(ref types)) return;
-            foreach (var type in types)
-            {
-                if (type.GetInterface("IAlgoritm") != null)
-                {
-                    Dictionary.Add((IAlgoritm)Activator.CreateInstance(type),TypesOfObject.UnitBlack);
-                }
-            }
+            LoadDllAndCheckForInterface(TypesOfObject.UnitBlack, (Button)sender);
             AlgoritmN2.Content = "Алгоритм загружен.";
         }
 
-        private static bool LoadDllAndCheckForInterface(ref Type[] types)
+        private void LoadDllAndCheckForInterface(TypesOfObject unit, Button sender)
         {
+            Type[] types;
             string filename;
             OpenFileDialog Fd = new OpenFileDialog
             {
@@ -204,15 +199,23 @@ namespace Game
             {
                 filename = Fd.FileName;
             }
-            else return true;
+            else return;
             var asm = Assembly.LoadFrom(filename);
             types = asm.GetTypes();
             if (types.Any(type => type.GetInterface("IAlgoritm") == null))
             {
                 MessageBox.Show("Данная библиотека не содержит определения для IAlgoritm");
-                return true;
+                return;
             }
-            return false;
+            foreach (var type in types)
+            {
+                if (type.GetInterface("IAlgoritm") != null)
+                {
+                    Dictionary.Add((IAlgoritm)Activator.CreateInstance(type), unit);
+                    sender.Content = "Алгоритм загружен";
+                    return;
+                }
+            }
 
         }
     }
