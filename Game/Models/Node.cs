@@ -1,32 +1,31 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Media;
-using InterfaceLibrary;
 
-namespace Game.Models.BaseItems
+namespace Algoritm
 {
-    public class BaseItem : IEquatable<BaseItem>, IItem
+    public enum Condition
     {
-        public int I { get; set; }
-        public int J { get; set; }
-        public Color Color { get; set; }
-        public int X => J;
-        public int Y => I;
-        public TypesOfObject TypeOfObject { get; set; }
-
-        public BaseItem(int i, int j , TypesOfObject obj)
+        White,
+        Grey,
+        Black
+    }
+    public class Node : IEquatable<Node>
+    {
+        public Stack<Node> Path { get; set; }
+        public Condition Condition { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public Node(int y, int x)
         {
-            TypeOfObject = obj;
-            J = j;
-            I = i;
+            Path = new Stack<Node>();
+            X = x;
+            Y = y;
         }
 
-        public bool Equals(BaseItem other)
+        public bool Equals(Node other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -38,7 +37,7 @@ namespace Game.Models.BaseItems
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((BaseItem) obj);
+            return Equals((Node) obj);
         }
 
         public override int GetHashCode()
@@ -49,12 +48,12 @@ namespace Game.Models.BaseItems
             }
         }
 
-        public static bool operator ==(BaseItem left, BaseItem right)
+        public static bool operator ==(Node left, Node right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(BaseItem left, BaseItem right)
+        public static bool operator !=(Node left, Node right)
         {
             return !Equals(left, right);
         }

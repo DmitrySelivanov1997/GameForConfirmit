@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using InterfaceLibrary;
 
 namespace Game.Models.BaseItems
 {
@@ -11,7 +12,7 @@ namespace Game.Models.BaseItems
     {
         public static double Probability { get; set; }
         
-        public Brick(int i, int j): base(i, j)
+        public Brick(int i, int j, TypesOfObject obj): base(i, j, obj)
         {
             Color = Colors.Brown;
         }

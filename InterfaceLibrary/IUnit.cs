@@ -6,7 +6,7 @@ namespace InterfaceLibrary
 {
     public interface IUnit:IItem
     {
-        TypesOfObject Fraction { get; }
+        Guid Id { get; }
         Direction Direction { get; set; }
         IItem[,] ScopeArray { get; set; }
         void Move(Direction direction);

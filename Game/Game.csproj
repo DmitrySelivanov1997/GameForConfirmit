@@ -73,6 +73,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Algoritm1.cs" />
     <Compile Include="Models\BaseItems\Base.cs" />
     <Compile Include="Models\BaseItems\BaseItem.cs" />
     <Compile Include="Models\BaseItems\Border.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Models\Map.cs" />
     <Compile Include="Models\MapGenerator.cs" />
     <Compile Include="Models\MapManager.cs" />
+    <Compile Include="Models\Node.cs" />
     <Compile Include="Models\Rules.cs" />
     <Compile Include="Models\WpfPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

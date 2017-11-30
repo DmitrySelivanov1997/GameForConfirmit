@@ -19,7 +19,7 @@ namespace Game.Tests
             bool result;
             var map = CommonTestPart.GenerateMap10X10WithFreeSpace();
             CommonTestPart.AddUnitOnMap(0,0,map,TypesOfObject.UnitBlack);
-            var unit = map.Army.Find(x => x.Fraction == TypesOfObject.UnitBlack);
+            var unit = map.Army.Find(x => x.TypeOfObject == TypesOfObject.UnitBlack);
             unit.Direction = Direction.Down;
             var engine = new Engine(new Dictionary<IAlgoritm, TypesOfObject>(),map );
             engine.UpdateUnits(TypesOfObject.UnitBlack);

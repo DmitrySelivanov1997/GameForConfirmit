@@ -21,7 +21,7 @@ namespace Game.Tests
             CommonTestPart.AddUnitOnMap(0, 0,map,TypesOfObject.UnitBlack);
             CommonTestPart.AddUnitOnMap(0, 1, map, TypesOfObject.UnitWhite);
             CommonTestPart.AddUnitOnMap(1, 0, map, TypesOfObject.UnitWhite);
-            var unit = map.Army.Find(x => x.Fraction == TypesOfObject.UnitBlack);
+            var unit = map.Army.Find(x => x.TypeOfObject == TypesOfObject.UnitBlack);
             var result = unit.DieOrSurvive();
             Assert.IsTrue(result);
         }
@@ -37,7 +37,7 @@ namespace Game.Tests
             map.Army.Add(new Unit(0, 0, TypesOfObject.UnitBlack, map));
             map.Army.Add(new Unit(0, 1, TypesOfObject.UnitWhite, map));
             map.Army.Add(new Unit(1, 0, TypesOfObject.UnitWhite, map));
-            var unit = map.Army.Find(x => x.Fraction == TypesOfObject.UnitBlack);
+            var unit = map.Army.Find(x => x.TypeOfObject == TypesOfObject.UnitBlack);
             var result = unit.DieOrSurvive();
             Assert.IsFalse(result);
         }

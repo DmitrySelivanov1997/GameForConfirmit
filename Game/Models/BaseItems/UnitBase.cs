@@ -10,11 +10,8 @@ namespace Game.Models.BaseItems
 {
     public class UnitBase:BaseItem
     {
-
-        public TypesOfObject Fraction { get; }
-        public UnitBase(int i, int j, TypesOfObject obj) : base(i, j)
+        public UnitBase(int i, int j, TypesOfObject obj) : base(i, j,obj)
         {
-            Fraction = obj;
             Color = obj == TypesOfObject.UnitBlack ? Colors.Black : Colors.White;
         }
        

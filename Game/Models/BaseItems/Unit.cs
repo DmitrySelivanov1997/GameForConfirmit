@@ -7,6 +7,7 @@ namespace Game.Models.BaseItems
 {
     public class Unit:UnitBase, IUnitManagable
     {
+        public Guid Id { get; } = Guid.NewGuid();
         public Direction Direction { get; set; }
         public IItem[,] ScopeArray { get; set; }
         private Map Map { get; }

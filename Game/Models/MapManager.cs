@@ -30,7 +30,7 @@ namespace Game.Models
         }
         public void MoveUnit(int y, int x, IUnitManagable unit)
         {
-            Map.SetItem(y, x, unit.Fraction);
+            Map.SetItem(y, x, unit.TypeOfObject);
             Map.SetItem(unit.Y, unit.X, TypesOfObject.FreeSpace);
             unit.I = y;
             unit.J = x;
@@ -38,7 +38,7 @@ namespace Game.Models
 
         public void SpawnUnitNearBase(TypesOfObject unit)
         {
-            var baseTmp = unit == TypesOfObject.UnitWhite ? Map.BaseList.Find(x=>x.Fraction ==TypesOfObject.BaseWhite) : Map.BaseList.Find(x => x.Fraction == TypesOfObject.BaseBlack);
+            var baseTmp = unit == TypesOfObject.UnitWhite ? Map.BaseList.Find(x=>x.TypeOfObject ==TypesOfObject.BaseWhite) : Map.BaseList.Find(x => x.TypeOfObject == TypesOfObject.BaseBlack);
             for (var i = baseTmp.Y - 1; i <= baseTmp.Y + 1; i++)
             {
                 for (var j = baseTmp.X - 1; j <= baseTmp.X + 1; j++)
@@ -75,21 +75,21 @@ namespace Game.Models
         }
         public GameResult CheckForGameOver()
         {
-            if (Map.Army.FindAll(x => x.Fraction == TypesOfObject.UnitBlack).Count == 0 )
-            {
-                return GameResult.BlackArmyDestroyed;
-            }
-            if (Map.Army.FindAll(x => x.Fraction == TypesOfObject.UnitWhite).Count == 0)
-            {
-                return GameResult.WhiteArmyDestroyed;
-            }
-            foreach (var Base in Map.BaseList)
-            {
-                if (!Base.GetIsAlive())
-                    return Base.Fraction == TypesOfObject.BaseWhite
-                        ? GameResult.WhiteBaseDestroyed
-                        : GameResult.BlackBaseDestroyed;
-            }
+            //    if (Map.Army.FindAll(x => x.TypeOfObject == TypesOfObject.UnitBlack).Count == 0 )
+            //    {
+            //        return GameResult.BlackArmyDestroyed;
+            //    }
+            //    if (Map.Army.FindAll(x => x.TypeOfObject == TypesOfObject.UnitWhite).Count == 0)
+            //    {
+            //        return GameResult.WhiteArmyDestroyed;
+            //    }
+            //    foreach (var Base in Map.BaseList)
+            //    {
+            //        if (!Base.GetIsAlive())
+            //            return Base.TypeOfObject == TypesOfObject.BaseWhite
+            //                ? GameResult.WhiteBaseDestroyed
+            //                : GameResult.BlackBaseDestroyed;
+            //    }
             return GameResult.NotAGameOver;
         }
     }

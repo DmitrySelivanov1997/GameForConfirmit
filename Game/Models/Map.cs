@@ -34,15 +34,15 @@ namespace Game.Models
                 switch (Array[y,x])
                 {
                     case TypesOfObject.Brick:
-                        return new Brick(y, x);
+                        return new Brick(y, x, TypesOfObject.Brick);
                     case TypesOfObject.Food:
-                        return new Food(y, x);
+                        return new Food(y, x, TypesOfObject.Food);
                     case TypesOfObject.FreeSpace:
-                        return new FreeSpace(y, x);
+                        return new FreeSpace(y, x, TypesOfObject.FreeSpace);
                     case TypesOfObject.BaseBlack:
                         return new Base(y, x, TypesOfObject.BaseBlack, this);
                     case TypesOfObject.BaseWhite:
-                        return new Base(y, x, TypesOfObject.BaseWhite, this); ;
+                        return new Base(y, x, TypesOfObject.BaseWhite, this); 
                     case TypesOfObject.UnitBlack:
                         return new UnitBase(y, x, TypesOfObject.UnitBlack); 
                     case TypesOfObject.UnitWhite:
@@ -50,7 +50,7 @@ namespace Game.Models
                 }
                 
             }
-            return new Border(y,x);
+            return new Border(y,x, TypesOfObject.Border);
            
         }
 

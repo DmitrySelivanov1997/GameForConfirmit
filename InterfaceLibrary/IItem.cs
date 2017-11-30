@@ -10,5 +10,6 @@ namespace InterfaceLibrary
         Color Color { get; set; }
         int X { get; }
         int Y { get; }
+        TypesOfObject TypeOfObject { get; set; }
     }
 }

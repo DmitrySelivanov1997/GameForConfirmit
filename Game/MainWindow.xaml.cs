@@ -18,6 +18,7 @@ using System.Windows.Threading;
 using Game.Models;
 using Game.Models.BaseItems;
 using System.Reflection;
+using Algoritm;
 using InterfaceLibrary;
 using Microsoft.Win32;
 
@@ -48,7 +49,7 @@ namespace Game
         private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
         {
 
-            Brick.Probability = 0.2;
+            Brick.Probability = 0.3;
             Food.Probability = 0.05;
             ButtonStartFight.IsEnabled = true;
             _mapSize = Convert.ToInt32(MapSize.Text);
@@ -58,6 +59,8 @@ namespace Game
             MainImage.Source = WriteableBitmap;
             Printer = new WpfPrinter(MainImage);
             Printer.Print(MyMap, WriteableBitmap);
+            Dictionary.Add(new Algoritm1(), TypesOfObject.UnitWhite);
+            Dictionary.Add(new Algoritm1(), TypesOfObject.UnitBlack);
             Engine = new Engine(Dictionary, MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
             Engine.GameOver += Show_Message;
             
@@ -176,13 +179,11 @@ namespace Game
         {
             
             LoadDllAndCheckForInterface(TypesOfObject.UnitWhite, (Button)sender);
-            AlgoritmN1.Content = "Алгоритм загружен.";
         }
 
         private void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
         {
             LoadDllAndCheckForInterface(TypesOfObject.UnitBlack, (Button)sender);
-            AlgoritmN2.Content = "Алгоритм загружен.";
         }
 
         private void LoadDllAndCheckForInterface(TypesOfObject unit, Button sender)
@@ -202,20 +203,20 @@ namespace Game
             else return;
             var asm = Assembly.LoadFrom(filename);
             types = asm.GetTypes();
-            if (types.Any(type => type.GetInterface("IAlgoritm") == null))
+            if (types.Any(type => type.GetInterface("IAlgoritm") != null))
             {
-                MessageBox.Show("Данная библиотека не содержит определения для IAlgoritm");
-                return;
-            }
-            foreach (var type in types)
-            {
-                if (type.GetInterface("IAlgoritm") != null)
+                foreach (var type in types)
                 {
-                    Dictionary.Add((IAlgoritm)Activator.CreateInstance(type), unit);
-                    sender.Content = "Алгоритм загружен";
-                    return;
+                    if (type.GetInterface("IAlgoritm") != null)
+                    {
+                        Dictionary.Add((IAlgoritm)Activator.CreateInstance(type), unit);
+                        sender.Content = "Алгоритм загружен";
+                        return;
+                    }
                 }
             }
+            MessageBox.Show("Данная библиотека не содержит определения для IAlgoritm");
+
 
         }
     }

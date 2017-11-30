@@ -44,7 +44,7 @@ namespace Game.Models
 
         private void MakeATurn(KeyValuePair<IAlgoritm, TypesOfObject> algoritm)
         {
-            algoritm.Key.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.Fraction == algoritm.Value));
+            algoritm.Key.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.TypeOfObject == algoritm.Value));
             UpdateUnits(algoritm.Value);
             UnitsAttackFoes();
         }
@@ -67,7 +67,7 @@ namespace Game.Models
         {
             foreach (var unitToUpdate in MapManager.Map.Army)
             {
-                if (unitToUpdate.Fraction == unit)
+                if (unitToUpdate.TypeOfObject == unit)
                 {
                     var xNew = unitToUpdate.X;
                     var yNew = unitToUpdate.Y;
@@ -76,7 +76,7 @@ namespace Game.Models
                     if (MapManager.Map.GetItem(yNew, xNew) is Food)
                     {
                         MapManager.MoveUnit(yNew, xNew, unitToUpdate);
-                        MapManager.SpawnUnitNearBase(unitToUpdate.Fraction);
+                        MapManager.SpawnUnitNearBase(unitToUpdate.TypeOfObject);
                     }
                     else
                         MapManager.MoveUnit(yNew, xNew, unitToUpdate);
