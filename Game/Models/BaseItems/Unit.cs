@@ -31,7 +31,6 @@ namespace Game.Models.BaseItems
                 {
                     if ((Math.Abs(i - Y )+Math.Abs(j - X)) <= 6)
                     {
-                        if (x != 6 || y != 6)
                             array[y,x] = Map.GetItem(i, j);
                     }
 
@@ -53,7 +52,7 @@ namespace Game.Models.BaseItems
         public bool DieOrSurvive()
         {
             ScopeArray = GetAllObjectsInScopeArray();
-            var allies=1;
+            var allies=0;
             var foes = 0;
             foreach (var item in ScopeArray)
             {
@@ -61,7 +60,7 @@ namespace Game.Models.BaseItems
                 {
                     if (Math.Abs(item.X - X) + Math.Abs(item.Y - Y) <= 3)
                     {
-                        if (Color == item.Color)
+                        if (TypeOfObject == item.TypeOfObject)
                             allies++;
                         else
                             foes++;

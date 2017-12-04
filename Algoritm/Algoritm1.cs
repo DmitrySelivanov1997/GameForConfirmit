@@ -100,5 +100,10 @@ namespace Algoritm
                 }
             }
         }
+
+        public void MoveAllUnits(IReadOnlyCollection<IUnit> army, int mapLength)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -49,8 +49,8 @@ namespace Game
         private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
         {
 
-            Brick.Probability = 0.3;
-            Food.Probability = 0.05;
+            Brick.Probability = 0.2;
+            Food.Probability = 0.1;
             ButtonStartFight.IsEnabled = true;
             _mapSize = Convert.ToInt32(MapSize.Text);
             MapGenerator mapGenerator = new MapGenerator(_mapSize);
@@ -59,8 +59,8 @@ namespace Game
             MainImage.Source = WriteableBitmap;
             Printer = new WpfPrinter(MainImage);
             Printer.Print(MyMap, WriteableBitmap);
-            Dictionary.Add(new Algoritm1(), TypesOfObject.UnitWhite);
-            Dictionary.Add(new Algoritm1(), TypesOfObject.UnitBlack);
+            Dictionary.Add(new Algoritm2(), TypesOfObject.UnitWhite);
+            Dictionary.Add(new Algoritm2(), TypesOfObject.UnitBlack);
             Engine = new Engine(Dictionary, MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
             Engine.GameOver += Show_Message;
             

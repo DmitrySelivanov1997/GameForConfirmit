@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Game.Models.BaseItems;
 using InterfaceLibrary;
 
@@ -7,25 +8,52 @@ namespace Algoritm
 {
     public class Algoritm1:IAlgoritm
     {
-        private Dictionary<Guid,Stack<Node>> UnitsPaths { get; set; }= new Dictionary<Guid, Stack<Node>>();
+        private Random Rnd = new Random();
+        public Base EnemyBase { get; set; }
+        private Dictionary<Guid,List<Node>[]> UnitsPaths { get; set; }= new Dictionary<Guid, List<Node>[]>();
         public List<Node> GraphNodes=new List<Node>();
+
         public void MoveAllUnits(IReadOnlyCollection<IUnit> army)
         {
-            foreach (var unit in army)
+            while (true)
             {
-                if (!UnitsPaths.ContainsKey(unit.Id))
+                foreach (var unit in army)
                 {
-                    UnitsPaths.Add(unit.Id, new Stack<Node>());
-                    UnitsPaths[unit.Id].Push(new Node(unit.Y, unit.X){Condition = Condition.Grey});
+                    if (!UnitsPaths.ContainsKey(unit.Id))
+                    {
+                        UnitsPaths.Add(unit.Id, new[] { new List<Node>(), new List<Node>() });
+                        UnitsPaths[unit.Id][0].Add(new Node(unit.Y, unit.X) { Condition = Condition.Grey });
+                    }
+                    else if (UnitsPaths[unit.Id][0].Last() != new Node(unit.Y, unit.X))
+                    {
+                        UnitsPaths[unit.Id][0].Add(new Node(unit.Y, unit.X) { Condition = Condition.Grey });
+                    }
+                    if (!GraphNodes.Contains(UnitsPaths[unit.Id][0].Last()))
+                        GraphNodes.Add(UnitsPaths[unit.Id][0].Last());
+                    MakeDfsStep(unit);
+                    for (int i = 0; i < unit.ScopeArray.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < unit.ScopeArray.GetLength(1); j++)
+                        {
+                            if (unit.ScopeArray[i, j] is Base @base && unit.Color != unit.ScopeArray[i, j].Color)
+                                EnemyBase = @base;
+                        }
+                    }
                 }
-                else if (UnitsPaths[unit.Id].Peek() != new Node(unit.Y, unit.X))
-                {
-                    UnitsPaths[unit.Id].Push(new Node(unit.Y, unit.X) {Condition = Condition.Grey});
-                }
-                if(!GraphNodes.Contains(UnitsPaths[unit.Id].Peek()))
-                    GraphNodes.Add(UnitsPaths[unit.Id].Peek());
-                MakeDfsStep(unit);
+                break;
+                
+
             }
+            //if (EnemyBase != null)
+            //{
+            //    foreach (var unit in army)
+            //    {
+            //        unit.Direction = Direction.Left;
+            //    }
+
+
+            //}
+
         }
 
         private void MakeDfsStep(IUnit unit)
@@ -35,102 +63,187 @@ namespace Algoritm
 
         private Direction FindDirection(IUnit unit)
         {
-
-
-            if (IsPositionFreeAndNotGrey(unit.ScopeArray[6, 6 - 1], new Node(unit.Y, unit.X - 1)))
-                if (!UnitsPaths[unit.Id].Contains(new Node(unit.Y, unit.X - 1)))
+            if (IsPositionFree(unit.ScopeArray[6, 6 - 1], new Node(unit.Y, unit.X - 1), UnitsPaths[unit.Id][1]))
+                if (!UnitsPaths[unit.Id][0].Contains(new Node(unit.Y, unit.X - 1)))
                 {
                     return Direction.Left;
                 }
-            if (IsPositionFreeAndNotGrey(unit.ScopeArray[6, 6 + 1], new Node(unit.Y, unit.X + 1)))
-                if (!UnitsPaths[unit.Id].Contains(new Node(unit.Y, unit.X + 1)))
+            if (IsPositionFree(unit.ScopeArray[6, 6 + 1], new Node(unit.Y, unit.X + 1), UnitsPaths[unit.Id][1]))
+                if (!UnitsPaths[unit.Id][0].Contains(new Node(unit.Y, unit.X + 1)))
                 {
                     return Direction.Right;
                 }
-            if (IsPositionFreeAndNotGrey(unit.ScopeArray[6 - 1, 6], new Node(unit.Y - 1, unit.X)))
-                if (!UnitsPaths[unit.Id].Contains(new Node(unit.Y - 1, unit.X)))
+            if (IsPositionFree(unit.ScopeArray[6 - 1, 6], new Node(unit.Y - 1, unit.X), UnitsPaths[unit.Id][1]))
+                if (!UnitsPaths[unit.Id][0].Contains(new Node(unit.Y - 1, unit.X)))
                 {
                     return Direction.Up;
                 }
-            if (IsPositionFreeAndNotGrey(unit.ScopeArray[6 + 1, 6], new Node(unit.Y + 1, unit.X)))
-                if (!UnitsPaths[unit.Id].Contains(new Node(unit.Y + 1, unit.X)))
+            if (IsPositionFree(unit.ScopeArray[6 + 1, 6], new Node(unit.Y + 1, unit.X), UnitsPaths[unit.Id][1]))
+                if (!UnitsPaths[unit.Id][0].Contains(new Node(unit.Y + 1, unit.X)))
                 {
                     return Direction.Down;
                 }
-
-            if (IsPositionFree(unit.ScopeArray[6, 6 - 1], new Node(unit.Y, unit.X - 1)))
-                if (!UnitsPaths[unit.Id].Contains(new Node(unit.Y, unit.X - 1)))
-                {
-                    return Direction.Left;
-                }
-            if (IsPositionFree(unit.ScopeArray[6, 6 + 1], new Node(unit.Y, unit.X + 1)))
-                if (!UnitsPaths[unit.Id].Contains(new Node(unit.Y, unit.X + 1)))
-                {
-                    return Direction.Right;
-                }
-            if (IsPositionFree(unit.ScopeArray[6 - 1, 6], new Node(unit.Y - 1, unit.X)))
-                if (!UnitsPaths[unit.Id].Contains(new Node(unit.Y - 1, unit.X)))
-                {
-                    return Direction.Up;
-                }
-            if (IsPositionFree(unit.ScopeArray[6 + 1, 6], new Node(unit.Y + 1, unit.X)))
-                if (!UnitsPaths[unit.Id].Contains(new Node(unit.Y + 1, unit.X)))
-                {
-                    return Direction.Down;
-                }
-            if (!AreOtherUnitsTheReasonOfStuck(unit))
-            {
-
-                GraphNodes.Remove(new Node(unit.Y, unit.X));
-                GraphNodes.Add(new Node(unit.Y, unit.X) { Condition = Condition.Black });
-            }
-            return GetReturnDirection(UnitsPaths[unit.Id]);
+            if(!UnitsPaths[unit.Id][1].Contains(new Node(unit.Y, unit.X)))
+                UnitsPaths[unit.Id][1].Add(new Node(unit.Y, unit.X));
+                return GetReturnDirection(UnitsPaths[unit.Id][0], unit);
         }
 
-        private bool AreOtherUnitsTheReasonOfStuck(IUnit unit)
+        private bool IsOtherUnitTheReasonOfStuck(IUnit unit)
         {
-            if ((unit.X-1>=0 && unit.ScopeArray[unit.X - 1, unit.Y] is Unit) ||( unit.Y - 1 >= 0 && unit.ScopeArray[unit.X, unit.Y - 1] is Unit) || unit.Y + 1 < unit.ScopeArray.GetLength(0)&&
-                unit.ScopeArray[unit.X + 1, unit.Y] is Unit || unit.Y + 1 <unit.ScopeArray.GetLength(0) && unit.ScopeArray[unit.X, unit.Y + 1] is Unit)
+            if (unit.ScopeArray[6 - 1, 6] is UnitBase
+                || unit.ScopeArray[6 + 1, 6] is UnitBase
+                || unit.ScopeArray[6, 6 - 1] is UnitBase
+                || unit.ScopeArray[6, 6 + 1] is UnitBase)
                 return true;
             return false;
         }
 
-        private bool IsPositionFreeAndNotGrey(IItem item, Node node)
+        //private bool AreOtherUnitsTheReasonOfStuck(IUnit unit)
+        //{
+        //    if ((unit.X-1>=0 && unit.ScopeArray[unit.X - 1, unit.Y] is Unit) ||( unit.Y - 1 >= 0 && unit.ScopeArray[unit.X, unit.Y - 1] is Unit) || unit.Y + 1 < unit.ScopeArray.GetLength(0)&&
+        //        unit.ScopeArray[unit.X + 1, unit.Y] is Unit || unit.Y + 1 <unit.ScopeArray.GetLength(0) && unit.ScopeArray[unit.X, unit.Y + 1] is Unit)
+        //        return true;
+        //    return false;
+        //}
+
+        private bool IsPositionFreeAndNotGrey(IItem item, Node node, List<Node> nodeList)
         {
             if ((item is FreeSpace || item is Food)
                 && !GraphNodes.Contains(node)
-                && !GraphNodes.Exists(x => x.Y == node.Y && x.X == node.X && x.Condition == Condition.Black))
+                && !nodeList.Contains(node))
             {
                 return true;
             }
             return false;
         }
 
-        private Direction GetReturnDirection(Stack<Node> unitsPath)
+        private Direction GetReturnDirection(List<Node> unitsPath, IUnit unit)
         {
-            var currentLocation = unitsPath.Pop();
+            var currentLocation = unitsPath.Last();
+            unitsPath.Remove(unitsPath.Last());
             if (unitsPath.Count != 0)
             {
-                if (unitsPath.Peek().Y < currentLocation.Y)
+                if (unitsPath.Last().Y < currentLocation.Y)
+                {
+                    if (unit.ScopeArray[5, 6] is UnitBase)
+                    {
+
+                        if (IsFree(unit.ScopeArray[6, 6 - 1]))
+                            {
+                                return Direction.Left;
+                            }
+                        if (IsFree(unit.ScopeArray[6, 6 + 1]))
+                            {
+                                return Direction.Right;
+                            }
+                        if (IsFree(unit.ScopeArray[6 - 1, 6]))
+                            {
+                                return Direction.Up;
+                            }
+                        if (IsFree(unit.ScopeArray[6 + 1, 6]))
+                            {
+                                return Direction.Down;
+                            }
+                    }
                     return Direction.Up;
-                if (unitsPath.Peek().Y > currentLocation.Y)
+                }
+                if (unitsPath.Last().Y > currentLocation.Y)
+                {
+                    if (unit.ScopeArray[7, 6] is UnitBase)
+                    {
+
+                        if (IsFree(unit.ScopeArray[6, 6 - 1]))
+                        {
+                            return Direction.Left;
+                        }
+                        if (IsFree(unit.ScopeArray[6, 6 + 1]))
+                        {
+                            return Direction.Right;
+                        }
+                        if (IsFree(unit.ScopeArray[6 - 1, 6]))
+                        {
+                            return Direction.Up;
+                        }
+                        if (IsFree(unit.ScopeArray[6 + 1, 6]))
+                        {
+                            return Direction.Down;
+                        }
+                    }
                     return Direction.Down;
-                if (unitsPath.Peek().X > currentLocation.X)
+                }
+                if (unitsPath.Last().X > currentLocation.X)
+                {
+
+                    if (unit.ScopeArray[6, 7] is UnitBase)
+                    {
+
+                        if (IsFree(unit.ScopeArray[6, 6 - 1]))
+                        {
+                            return Direction.Left;
+                        }
+                        if (IsFree(unit.ScopeArray[6, 6 + 1]))
+                        {
+                            return Direction.Right;
+                        }
+                        if (IsFree(unit.ScopeArray[6 - 1, 6]))
+                        {
+                            return Direction.Up;
+                        }
+                        if (IsFree(unit.ScopeArray[6 + 1, 6]))
+                        {
+                            return Direction.Down;
+                        }
+                    }
                     return Direction.Right;
+                }
+
+                if (unit.ScopeArray[6, 5] is UnitBase)
+                {
+
+                    if (IsFree(unit.ScopeArray[6, 6 - 1]))
+                    {
+                        return Direction.Left;
+                    }
+                    if (IsFree(unit.ScopeArray[6, 6 + 1]))
+                    {
+                        return Direction.Right;
+                    }
+                    if (IsFree(unit.ScopeArray[6 - 1, 6]))
+                    {
+                        return Direction.Up;
+                    }
+                    if (IsFree(unit.ScopeArray[6 + 1, 6]))
+                    {
+                        return Direction.Down;
+                    }
+                }
                 return Direction.Left;
             }
-            unitsPath.Push(currentLocation);
+            unitsPath.Add(currentLocation);
             return Direction.Stay;
         }
 
-        private bool IsPositionFree(IItem item, Node node)
+        private bool IsPositionFree(IItem item, Node node, List<Node> nodeList)
         {
             if ((item is FreeSpace || item is Food)
-                && !GraphNodes.Exists(x => x.Y == node.Y && x.X == node.X && x.Condition == Condition.Black))
+                && !nodeList.Contains(node))
             {
                 return true;
             }
             return false;
+        }
+        private bool IsFree(IItem item)
+        {
+            if ((item is FreeSpace || item is Food))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void MoveAllUnits(IReadOnlyCollection<IUnit> army, int mapLength)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -75,21 +75,21 @@ namespace Game.Models
         }
         public GameResult CheckForGameOver()
         {
-            //    if (Map.Army.FindAll(x => x.TypeOfObject == TypesOfObject.UnitBlack).Count == 0 )
-            //    {
-            //        return GameResult.BlackArmyDestroyed;
-            //    }
-            //    if (Map.Army.FindAll(x => x.TypeOfObject == TypesOfObject.UnitWhite).Count == 0)
-            //    {
-            //        return GameResult.WhiteArmyDestroyed;
-            //    }
-            //    foreach (var Base in Map.BaseList)
-            //    {
-            //        if (!Base.GetIsAlive())
-            //            return Base.TypeOfObject == TypesOfObject.BaseWhite
-            //                ? GameResult.WhiteBaseDestroyed
-            //                : GameResult.BlackBaseDestroyed;
-            //    }
+            //if (Map.Army.FindAll(x => x.TypeOfObject == TypesOfObject.UnitBlack).Count == 0)
+            //{
+            //    return GameResult.BlackArmyDestroyed;
+            //}
+            //if (Map.Army.FindAll(x => x.TypeOfObject == TypesOfObject.UnitWhite).Count == 0)
+            //{
+            //    return GameResult.WhiteArmyDestroyed;
+            //}
+            //foreach (var Base in Map.BaseList)
+            //{
+            //    if (!Base.GetIsAlive())
+            //        return Base.TypeOfObject == TypesOfObject.BaseWhite
+            //            ? GameResult.WhiteBaseDestroyed
+            //            : GameResult.BlackBaseDestroyed;
+            //}
             return GameResult.NotAGameOver;
         }
     }

@@ -6,6 +6,6 @@ namespace InterfaceLibrary
 {
     public interface IAlgoritm
     {
-        void MoveAllUnits(IReadOnlyCollection<IUnit> army);
+        void MoveAllUnits(IReadOnlyCollection<IUnit> army,int mapLength);
     }
 }

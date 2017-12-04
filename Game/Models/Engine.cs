@@ -44,7 +44,7 @@ namespace Game.Models
 
         private void MakeATurn(KeyValuePair<IAlgoritm, TypesOfObject> algoritm)
         {
-            algoritm.Key.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.TypeOfObject == algoritm.Value));
+            algoritm.Key.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.TypeOfObject == algoritm.Value),MapManager.Map.GetLength());
             UpdateUnits(algoritm.Value);
             UnitsAttackFoes();
         }
