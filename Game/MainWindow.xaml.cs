@@ -18,7 +18,6 @@ using System.Windows.Threading;
 using Game.Models;
 using Game.Models.BaseItems;
 using System.Reflection;
-using Algoritm;
 using InterfaceLibrary;
 using Microsoft.Win32;
 
@@ -50,7 +49,7 @@ namespace Game
         {
 
             Brick.Probability = 0.2;
-            Food.Probability = 0.1;
+            Food.Probability = 0.01;
             ButtonStartFight.IsEnabled = true;
             _mapSize = Convert.ToInt32(MapSize.Text);
             MapGenerator mapGenerator = new MapGenerator(_mapSize);
