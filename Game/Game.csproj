@@ -65,7 +65,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Exploring.cs" />
+    <Compile Include="Attack.cs" />
+    <Compile Include="CommonStrategyPart.cs" />
+    <Compile Include="Explore.cs" />
     <Compile Include="Interfaces\IPrinter.cs" />
     <Compile Include="Interfaces\IUnitManagable.cs" />
     <Compile Include="IStrategy.cs" />

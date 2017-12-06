@@ -4,7 +4,7 @@ using System.Text;
 
 namespace InterfaceLibrary
 {
-    public interface IAlgoritm
+    public interface IAlgorithm
     {
         void MoveAllUnits(IReadOnlyCollection<IUnit> army,int mapLength);
     }

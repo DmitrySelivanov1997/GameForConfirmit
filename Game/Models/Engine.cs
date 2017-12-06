@@ -14,7 +14,7 @@ namespace Game.Models
 {
     public class Engine
     {
-        public Dictionary<IAlgoritm, TypesOfObject> DictionaryOfAlgoritms;
+        public Dictionary<TypesOfObject, IAlgorithm> DictionaryOfAlgoritms;
         public event Action<GameResult> GameOver;
         public int TurnNumber { get; set; }
         public int WaitTime { get; set; }
@@ -22,7 +22,7 @@ namespace Game.Models
         public Rules Rules = new Rules();
         public MapManager MapManager { get; set; }
 
-        public Engine(Dictionary<IAlgoritm,TypesOfObject>dictionary, Map map)
+        public Engine(Dictionary<TypesOfObject, IAlgorithm> dictionary, Map map)
         {
             MapManager= new MapManager(map);
             DictionaryOfAlgoritms = dictionary;
@@ -32,9 +32,9 @@ namespace Game.Models
         {
             while (!IsCanceled)
             {
-                foreach (var algoritm in DictionaryOfAlgoritms)
+                foreach (var typeOfArmy in DictionaryOfAlgoritms)
                 {
-                    MakeATurn(algoritm);
+                    MakeATurn(typeOfArmy);
                 }
                 TurnNumber++;
                 Thread.Sleep(WaitTime);
@@ -42,10 +42,10 @@ namespace Game.Models
             
         }
 
-        private void MakeATurn(KeyValuePair<IAlgoritm, TypesOfObject> algoritm)
+        private void MakeATurn(KeyValuePair<TypesOfObject, IAlgorithm> armyType)
         {
-            algoritm.Key.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.TypeOfObject == algoritm.Value),MapManager.Map.GetLength());
-            UpdateUnits(algoritm.Value);
+            armyType.Value.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.TypeOfObject == armyType.Key),MapManager.Map.GetLength());
+            UpdateUnits(armyType.Key);
             UnitsAttackFoes();
         }
 

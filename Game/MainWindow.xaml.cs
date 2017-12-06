@@ -28,7 +28,7 @@ namespace Game
     /// </summary>
     public partial class MainWindow
     {
-        public Dictionary<IAlgoritm, TypesOfObject> Dictionary = new Dictionary<IAlgoritm, TypesOfObject>();
+        public Dictionary<TypesOfObject,IAlgorithm> Dictionary = new Dictionary<TypesOfObject,IAlgorithm>();
         public Engine Engine ;
         public DispatcherTimer PrintTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 30) };
         public WpfPrinter Printer;
@@ -58,8 +58,8 @@ namespace Game
             MainImage.Source = WriteableBitmap;
             Printer = new WpfPrinter(MainImage);
             Printer.Print(MyMap, WriteableBitmap);
-            Dictionary.Add(new Algoritm2(), TypesOfObject.UnitWhite);
-            Dictionary.Add(new Algoritm2(), TypesOfObject.UnitBlack);
+            Dictionary.Add(TypesOfObject.UnitWhite,new Algoritm2());
+            Dictionary.Add(TypesOfObject.UnitBlack, new Algoritm2());
             Engine = new Engine(Dictionary, MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
             Engine.GameOver += Show_Message;
             
@@ -93,13 +93,13 @@ namespace Game
         private  void Show_Message(GameResult result)
         {
             string whiteArmyLeader = null,blackArmyLeader = null;
-            foreach (var algoritm in Dictionary.Keys)
+            foreach (var armyType in Dictionary.Keys)
             {
-                if (Dictionary[algoritm] == TypesOfObject.UnitWhite)
-                    whiteArmyLeader = algoritm.GetType().FullName;
+                if(armyType==TypesOfObject.UnitWhite)
+                    whiteArmyLeader = Dictionary[armyType].GetType().FullName;
 
-                if (Dictionary[algoritm] == TypesOfObject.UnitBlack)
-                    blackArmyLeader = algoritm.GetType().FullName;
+                if (armyType == TypesOfObject.UnitBlack)
+                    blackArmyLeader = Dictionary[armyType].GetType().FullName;
             }
             if (result == GameResult.BlackArmyDestroyed)
                 MessageBox.Show($"Черная армия, под управлением {blackArmyLeader} разбита");
@@ -202,13 +202,13 @@ namespace Game
             else return;
             var asm = Assembly.LoadFrom(filename);
             types = asm.GetTypes();
-            if (types.Any(type => type.GetInterface("IAlgoritm") != null))
+            if (types.Any(type => type.GetInterface("IAlgorithm") != null))
             {
                 foreach (var type in types)
                 {
-                    if (type.GetInterface("IAlgoritm") != null)
+                    if (type.GetInterface("IAlgorithm") != null)
                     {
-                        Dictionary.Add((IAlgoritm)Activator.CreateInstance(type), unit);
+                        Dictionary.Add(unit, (IAlgorithm)Activator.CreateInstance(type));
                         sender.Content = "Алгоритм загружен";
                         return;
                     }

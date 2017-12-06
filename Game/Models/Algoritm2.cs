@@ -60,22 +60,26 @@ namespace Game.Models
         }
     }
 
-    public class Algoritm2 : IAlgoritm
+    public class Algoritm2 : IAlgorithm
     {
-        public IItem Base { get; set; }
+        public IItem MyBase { get; set; }
+        public IItem EnemyBase { get; set; }
         public IStrategy Strategy { get; set; }
-
+        
         public void MoveAllUnits(IReadOnlyCollection<IUnit> army, int mapLength)
         {
-            if (Base == null)
-                Strategy=new Exploring(mapLength);
-            else
+            if(Strategy == null)
+                Strategy=new Explore(mapLength);
+            if (EnemyBase != null)
             {
-                int t = 0;
+                Strategy = new Attack(Strategy.Map,EnemyBase);
             }
             foreach (var unit in army)
             {
-                Base = unit.ScopeArray.Cast<IItem>().FirstOrDefault(x=>  unit.TypeOfObject==TypesOfObject.UnitBlack? x.TypeOfObject==TypesOfObject.BaseWhite:x.TypeOfObject==TypesOfObject.BaseBlack);
+                if(EnemyBase==null)
+                    EnemyBase = unit.ScopeArray.Cast<IItem>().FirstOrDefault(x=>x!=null && x.TypeOfObject==(unit.TypeOfObject==TypesOfObject.UnitBlack?TypesOfObject.BaseWhite:TypesOfObject.BaseBlack));
+                if (MyBase == null)
+                    MyBase = unit.ScopeArray.Cast<IItem>().FirstOrDefault(x => x != null && x.TypeOfObject == (unit.TypeOfObject == TypesOfObject.UnitBlack ? TypesOfObject.BaseBlack : TypesOfObject.BaseWhite));
                 unit.Direction=Strategy.FindUnitDirection(unit);
             }
         }
