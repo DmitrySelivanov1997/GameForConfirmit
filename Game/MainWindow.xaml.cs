@@ -28,13 +28,18 @@ namespace Game
     /// </summary>
     public partial class MainWindow
     {
-        public Dictionary<TypesOfObject,IAlgorithm> Dictionary = new Dictionary<TypesOfObject,IAlgorithm>();
+        public int WhiteArmyWins { get; set; }
+        public int BlackArmyWins { get; set; }
+        public IAlgorithm WhiteArmyAlgorithm = new Algoritm2();
+        public IAlgorithm BlackArmyAlgorithm = new Algoritm2();
         public Engine Engine ;
         public DispatcherTimer PrintTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 30) };
         public WpfPrinter Printer;
         public Map MyMap;
         public WriteableBitmap WriteableBitmap;
-        public int _mapSize ;
+        public int _mapSize;
+        public CancellationTokenSource ts;
+        public int NumberOfTournamentsGame;
 
         public MainWindow()
         {
@@ -47,7 +52,6 @@ namespace Game
 
         private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
         {
-
             Brick.Probability = 0.2;
             Food.Probability = 0.01;
             ButtonStartFight.IsEnabled = true;
@@ -58,10 +62,6 @@ namespace Game
             MainImage.Source = WriteableBitmap;
             Printer = new WpfPrinter(MainImage);
             Printer.Print(MyMap, WriteableBitmap);
-            Dictionary.Add(TypesOfObject.UnitWhite,new Algoritm2());
-            Dictionary.Add(TypesOfObject.UnitBlack, new Algoritm2());
-            Engine = new Engine(Dictionary, MyMap) {IsCanceled = false, WaitTime = (int)TurnsTimeSlider.Value};
-            Engine.GameOver += Show_Message;
             
         }
 
@@ -70,46 +70,91 @@ namespace Game
             Printer.Print(MyMap, WriteableBitmap);
 
             NumberOfTurns.Content = Convert.ToString(Engine.TurnNumber);
+            WhiteArmyEnemiesKilled.Content = Engine.WhiteArmyStatistics.EnemiesKilled.ToString();
+            WhiteArmyFoodEaten.Content = Engine.WhiteArmyStatistics.FoodEaten.ToString();
+            WhiteArmyCurrentUnits.Content = Engine.WhiteArmyStatistics.CurrentArmyNumber.ToString();
+            BlackArmyEnemiesKilled.Content = Engine.BlackArmyStatistics.EnemiesKilled.ToString();
+            BlackArmyFoodEaten.Content = Engine.BlackArmyStatistics.FoodEaten.ToString();
+            BlackArmyCurrentUnits.Content = Engine.BlackArmyStatistics.CurrentArmyNumber.ToString();
         }
 
         
 
         private void ButtonStartFight_Click(object sender, RoutedEventArgs e)
         {
+            WhiteArmyAlgorithm = (IAlgorithm) Activator.CreateInstance(WhiteArmyAlgorithm.GetType());
+            BlackArmyAlgorithm = (IAlgorithm)Activator.CreateInstance(BlackArmyAlgorithm.GetType());
+
+            WhiteAlgorithmName.Text = WhiteArmyAlgorithm.GetType().FullName;
+            BlackArmyAlgorithmName.Text = BlackArmyAlgorithm.GetType().FullName;
+
             PauseOn.IsEnabled = true;
             PrintTimer.Start();
             ButtonStartFight.IsEnabled = false;
-            var task = Task.Factory.StartNew(StartEngine);
-            
-        }
-
-        private void StartEngine()
-        {
-            for (;;)
+            Engine = new Engine(WhiteArmyAlgorithm,BlackArmyAlgorithm, MyMap)
             {
-                Engine.Startbattle();
-            }
+                IsCanceled = false,
+                WaitTime = (int)TurnsTimeSlider.Value 
+            };
+            Engine.GameOver += Show_Message;
+            ts = new CancellationTokenSource();
+            CancellationToken ct = ts.Token;
+            Task.Factory.StartNew(() =>
+            {
+                while (!ct.IsCancellationRequested)
+                {
+                    Engine.Startbattle(ct);
+                }
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    (ThreadStart) delegate
+                    {
+                        if(NumberOfTournamentsGame!=0)
+                        {
+                            ButtonGenerateMap_Click(sender, e);
+                            ButtonStartFight_Click(sender, e);
+                            NumberOfTournamentsGame = Convert.ToInt32(TextBoxNumberOfMatches.Text);
+                            NumberOfTournamentsGame--;
+                            TextBoxNumberOfMatches.Text = NumberOfTournamentsGame.ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Счет команды белых {WhiteArmyAlgorithm.GetType().FullName}: {WhiteArmyWins} \r\nСчет команды черных {BlackArmyAlgorithm.GetType().FullName}: {BlackArmyWins}");
+                            ButtonGenerateMap.IsEnabled = true;
+                            ButtonStartFight.IsEnabled = true;
+                            MapSize.IsEnabled = true;
+                            ButtonStartTournament.IsEnabled = true;
+                        }
+                    });
+            }, ct);
+
         }
         private  void Show_Message(GameResult result)
         {
-            string whiteArmyLeader = null,blackArmyLeader = null;
-            foreach (var armyType in Dictionary.Keys)
-            {
-                if(armyType==TypesOfObject.UnitWhite)
-                    whiteArmyLeader = Dictionary[armyType].GetType().FullName;
-
-                if (armyType == TypesOfObject.UnitBlack)
-                    blackArmyLeader = Dictionary[armyType].GetType().FullName;
-            }
+            string whiteArmyLeader = WhiteArmyAlgorithm.GetType().FullName,blackArmyLeader = BlackArmyAlgorithm.GetType().FullName;
             if (result == GameResult.BlackArmyDestroyed)
+            {
                 MessageBox.Show($"Черная армия, под управлением {blackArmyLeader} разбита");
+                WhiteArmyWins++;
+            }
             if (result == GameResult.WhiteArmyDestroyed)
+            {
                 MessageBox.Show($"Белая армия, под управлением {whiteArmyLeader} разбита");
+                BlackArmyWins++;
+            }
+
             if (result == GameResult.BlackBaseDestroyed)
+            {
                 MessageBox.Show($"Черная база, игрока {blackArmyLeader} разбита");
+                WhiteArmyWins++;
+            }
             if (result == GameResult.WhiteBaseDestroyed)
+            {
                 MessageBox.Show($"Белая база, игрока {whiteArmyLeader} разбита");
-            Environment.Exit(0);
+                BlackArmyWins++;
+            }
+            ts.Cancel();
+
+
         }
 
 
@@ -134,7 +179,7 @@ namespace Game
         {
             MyGrid.Width = Width;
             MyGrid.Height = Height;
-            MainImage.Height = (Width<Height? Width:Height) * 4 / 5;
+            MainImage.Height = (Width<Height? Width:Height) * 4 / 6;
             MainImage.Width = MainImage.Height;
             WriteableBitmap = BitmapFactory.New((int)MainImage.Width, (int)MainImage.Width);
             MainImage.Source = WriteableBitmap;
@@ -147,10 +192,23 @@ namespace Game
             {
                 ButtonGenerateMap.IsEnabled = false;
                 ButtonStartFight.IsEnabled = false;
+                ButtonStartTournament.IsEnabled = false;
             }
             else
             {
                 ButtonGenerateMap.IsEnabled = true;
+            }
+        }
+
+        private void TextBoxNumberOfMatches_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (MapSize.Text.Length == 0 || Convert.ToInt32(TextBoxNumberOfMatches.Text) < 2)
+            {
+                ButtonStartTournament.IsEnabled = false;
+            }
+            else
+            {
+                ButtonStartTournament.IsEnabled = true;
             }
         }
 
@@ -177,47 +235,57 @@ namespace Game
         private void AlgoritmN1_OnClick(object sender, RoutedEventArgs e)
         {
             
-            LoadDllAndCheckForInterface(TypesOfObject.UnitWhite, (Button)sender);
+            LoadDllAndCheckForInterface(ref WhiteArmyAlgorithm, (Button)sender);
         }
 
         private void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
         {
-            LoadDllAndCheckForInterface(TypesOfObject.UnitBlack, (Button)sender);
+            LoadDllAndCheckForInterface(ref BlackArmyAlgorithm, (Button)sender);
         }
 
-        private void LoadDllAndCheckForInterface(TypesOfObject unit, Button sender)
+        private void LoadDllAndCheckForInterface(ref IAlgorithm algorithm, Button sender)
         {
-            Type[] types;
             string filename;
-            OpenFileDialog Fd = new OpenFileDialog
+            var fd = new OpenFileDialog
             {
                 Title = "Выберите библиотеку",
                 Filter = "Dll files | *.dll"
             };
-            var result = Fd.ShowDialog();
+            var result = fd.ShowDialog();
             if (result == true)
             {
-                filename = Fd.FileName;
+                filename = fd.FileName;
             }
             else return;
             var asm = Assembly.LoadFrom(filename);
-            types = asm.GetTypes();
+            var types = asm.GetTypes();
             if (types.Any(type => type.GetInterface("IAlgorithm") != null))
             {
                 foreach (var type in types)
                 {
-                    if (type.GetInterface("IAlgorithm") != null)
-                    {
-                        Dictionary.Add(unit, (IAlgorithm)Activator.CreateInstance(type));
-                        sender.Content = "Алгоритм загружен";
-                        return;
-                    }
+                    if (type.GetInterface("IAlgorithm") == null) continue;
+                    algorithm = (IAlgorithm)Activator.CreateInstance(type);
+                    sender.Content = type.FullName;
+                    return;
                 }
             }
             MessageBox.Show("Данная библиотека не содержит определения для IAlgoritm");
 
 
         }
+
+        private void ButtonStartTournamemt_Click(object sender, RoutedEventArgs e)
+        {
+            BlackArmyWins = 0;
+            WhiteArmyWins = 0;
+            ts?.Cancel();
+            ButtonGenerateMap.IsEnabled = false;
+            ButtonStartFight.IsEnabled = false;
+            NumberOfTournamentsGame = Convert.ToInt32(TextBoxNumberOfMatches.Text);
+            ButtonGenerateMap_Click(sender,e);
+            ButtonStartFight_Click(sender,e);
+        }
+        
     }
 }
 

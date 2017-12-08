@@ -32,6 +32,8 @@ namespace Game
             while (true)
             {
                 var closestPoint = GetNewDestinationPoint(unit);
+                if (closestPoint.X == -1)
+                    return Direction.Stay;
                 var arrayAfterWaveAlgorithm = DoWaveAlgorithm(closestPoint, unit);
                 if (arrayAfterWaveAlgorithm[closestPoint.Y, closestPoint.X] == 0)
                 {

@@ -83,10 +83,6 @@ namespace Game.Models
                 unit.Direction=Strategy.FindUnitDirection(unit);
             }
         }
-        private  bool IsBase(IItem p)
-        {
-            return p.TypeOfObject == TypesOfObject.BaseBlack;
-        }
 
     }
 }

@@ -14,7 +14,10 @@ namespace Game.Models
 {
     public class Engine
     {
-        public Dictionary<TypesOfObject, IAlgorithm> DictionaryOfAlgoritms;
+        public Statistics WhiteArmyStatistics = new Statistics();
+        public Statistics BlackArmyStatistics = new Statistics();
+        public IAlgorithm WhiteArmyAlgorithm;
+        public IAlgorithm BlackArmyAlgorithm;
         public event Action<GameResult> GameOver;
         public int TurnNumber { get; set; }
         public int WaitTime { get; set; }
@@ -22,31 +25,36 @@ namespace Game.Models
         public Rules Rules = new Rules();
         public MapManager MapManager { get; set; }
 
-        public Engine(Dictionary<TypesOfObject, IAlgorithm> dictionary, Map map)
+        public Engine(IAlgorithm whiteArmy, IAlgorithm blackArmy, Map map)
         {
+            WhiteArmyAlgorithm = whiteArmy;
+            BlackArmyAlgorithm = blackArmy;
             MapManager= new MapManager(map);
-            DictionaryOfAlgoritms = dictionary;
         }
 
-        public void Startbattle()
+        public void Startbattle(CancellationToken ct)
         {
             while (!IsCanceled)
             {
-                foreach (var typeOfArmy in DictionaryOfAlgoritms)
-                {
-                    MakeATurn(typeOfArmy);
-                }
+                MakeATurn(WhiteArmyAlgorithm, TypesOfObject.UnitWhite, WhiteArmyStatistics);
+                if (ct.IsCancellationRequested)
+                    return;
+                MakeATurn(BlackArmyAlgorithm, TypesOfObject.UnitBlack, BlackArmyStatistics);
+                if (ct.IsCancellationRequested)
+                    return;
                 TurnNumber++;
                 Thread.Sleep(WaitTime);
             }
             
         }
 
-        private void MakeATurn(KeyValuePair<TypesOfObject, IAlgorithm> armyType)
+        private void MakeATurn(IAlgorithm armyType, TypesOfObject unit, Statistics stats)
         {
-            armyType.Value.MoveAllUnits(MapManager.Map.Army.FindAll(x => x.TypeOfObject == armyType.Key),MapManager.Map.GetLength());
-            UpdateUnits(armyType.Key);
+            var army = MapManager.Map.Army.FindAll(x => x.TypeOfObject == unit);
+            armyType.MoveAllUnits(army, MapManager.Map.GetLength());
+            UpdateUnits(unit,stats);
             UnitsAttackFoes();
+            stats.SetArmyNumber(army);
         }
 
         private void UnitsAttackFoes()
@@ -56,14 +64,22 @@ namespace Game.Models
                 if (unit.DieOrSurvive())
                 {
                     MapManager.UnitDied(unit);
+                    if (unit.TypeOfObject == TypesOfObject.UnitBlack)
+                        WhiteArmyStatistics.EnemyGotKilled();
+                    else
+                    {
+                        BlackArmyStatistics.EnemyGotKilled();
+                    }
                 }
             }
             MapManager.UpdateArmies();
-            if(MapManager.CheckForGameOver()!= GameResult.NotAGameOver)
+            if (MapManager.CheckForGameOver() != GameResult.NotAGameOver)
+            {
                 GameOver?.Invoke(MapManager.CheckForGameOver());
-            
+            }
+
         }
-        public void UpdateUnits(TypesOfObject unit)
+        public void UpdateUnits(TypesOfObject unit,Statistics stats)
         {
             foreach (var unitToUpdate in MapManager.Map.Army)
             {
@@ -77,6 +93,7 @@ namespace Game.Models
                     {
                         MapManager.MoveUnit(yNew, xNew, unitToUpdate);
                         MapManager.SpawnUnitNearBase(unitToUpdate.TypeOfObject);
+                        stats.IncFood();
                     }
                     else
                         MapManager.MoveUnit(yNew, xNew, unitToUpdate);

@@ -91,6 +91,7 @@
     <Compile Include="Models\MapGenerator.cs" />
     <Compile Include="Models\MapManager.cs" />
     <Compile Include="Models\Rules.cs" />
+    <Compile Include="Models\Statistics.cs" />
     <Compile Include="Models\WpfPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
