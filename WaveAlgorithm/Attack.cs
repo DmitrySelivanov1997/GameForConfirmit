@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Game.Models;
-using Game.Models.BaseItems;
 using InterfaceLibrary;
 
 namespace Game
@@ -25,7 +24,7 @@ namespace Game
             {
                 for (var j = 0; j < Map.GetLength(1); j++)
                 {
-                    if(Map[i,j] is FreeSpace || Map[i, j] is Food)
+                    if(Map[i,j] != null && (Map[i,j].TypeOfObject is TypesOfObject.FreeSpace || Map[i, j].TypeOfObject is TypesOfObject.Food))
                         if (IsPointAccessibleAndClosereThanOther(startingPoint, new Point(i,j), point))
                            point = new Point(i, j);
                 }

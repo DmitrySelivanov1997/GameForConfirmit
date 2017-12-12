@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Game.Models;
-using Game.Models.BaseItems;
 using InterfaceLibrary;
 
 namespace Game
@@ -29,16 +28,16 @@ namespace Game
             {
                 for (var j = 0; j < Map.GetLength(1); j++)
                 {
-                    switch (Map[i, j])
+                    if (Map[i, j] == null)
                     {
-                        case Food _:
+                        if (IsPointAccessibleAndClosereThanOther(new Point(unit.Y, unit.X), new Point(i, j), point))
+                            point = new Point(i, j);
+                        continue;
+                    }
+                    if(Map[i, j].TypeOfObject == TypesOfObject.Food)
+                    {
                             if (IsPointAccessibleAndClosereThanOther(new Point(unit.Y, unit.X), new Point(i, j), food))
                                 food = new Point(i, j);
-                            break;
-                        case null:
-                            if (IsPointAccessibleAndClosereThanOther(new Point(unit.Y, unit.X), new Point(i, j), point ))
-                                point = new Point(i, j);
-                            break;
                     }
                 }
             }

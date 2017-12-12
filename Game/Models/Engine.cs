@@ -14,6 +14,7 @@ namespace Game.Models
 {
     public class Engine
     {
+        public bool Ct;
         public Statistics WhiteArmyStatistics = new Statistics();
         public Statistics BlackArmyStatistics = new Statistics();
         public IAlgorithm WhiteArmyAlgorithm;
@@ -32,15 +33,15 @@ namespace Game.Models
             MapManager= new MapManager(map);
         }
 
-        public void Startbattle(CancellationToken ct)
+        public void Startbattle()
         {
             while (!IsCanceled)
             {
                 MakeATurn(WhiteArmyAlgorithm, TypesOfObject.UnitWhite, WhiteArmyStatistics);
-                if (ct.IsCancellationRequested)
+                if (Ct)
                     return;
                 MakeATurn(BlackArmyAlgorithm, TypesOfObject.UnitBlack, BlackArmyStatistics);
-                if (ct.IsCancellationRequested)
+                if (Ct)
                     return;
                 TurnNumber++;
                 Thread.Sleep(WaitTime);
@@ -75,6 +76,7 @@ namespace Game.Models
             MapManager.UpdateArmies();
             if (MapManager.CheckForGameOver() != GameResult.NotAGameOver)
             {
+                Ct = true;
                 GameOver?.Invoke(MapManager.CheckForGameOver());
             }
 

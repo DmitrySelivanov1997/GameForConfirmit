@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Game.Models;
-using Game.Models.BaseItems;
 using InterfaceLibrary;
 
 namespace Game
@@ -70,7 +69,7 @@ namespace Game
 
         public void SetNumberForNeigbourCell(ref List<Point> cellsQueue, ref int[,] arrayForWaveSearch, int i, int j, Point point)
         {
-            if ((Map[i, j] is Food || Map[i, j] is FreeSpace || i == point.Y && j == point.X) && arrayForWaveSearch[i, j] == 0)
+            if ((Map[i,j]==null || (Map[i, j].TypeOfObject == TypesOfObject.Food || Map[i, j].TypeOfObject == TypesOfObject.FreeSpace || i == point.Y && j == point.X)) && arrayForWaveSearch[i, j] == 0)
             {
                 arrayForWaveSearch[i, j] = arrayForWaveSearch[cellsQueue.First().Y, cellsQueue.First().X] + 1;
                 cellsQueue.Add(new Point(i, j));
@@ -83,7 +82,7 @@ namespace Game
             {
                 for (var j = 0; j < unit.ScopeArray.GetLength(1); j++)
                 {
-                    if (!(unit.ScopeArray[i, j] is Border) && unit.ScopeArray[i, j] != null)
+                    if (unit.ScopeArray[i, j] != null && unit.ScopeArray[i, j].TypeOfObject != TypesOfObject.Border )
                     {
                         Map[unit.Y - 6 + i, unit.X - 6 + j] = unit.ScopeArray[i, j];
                     }

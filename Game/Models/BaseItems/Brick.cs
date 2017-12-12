@@ -10,7 +10,7 @@ namespace Game.Models.BaseItems
 {
     public class Brick:BaseItem
     {
-        public static double Probability { get; set; }
+        public static double Probability { get; set; } = Properties.Settings.Default.BrickProbability;
         
         public Brick(int i, int j, TypesOfObject obj): base(i, j, obj)
         {

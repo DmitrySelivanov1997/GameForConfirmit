@@ -45,6 +45,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="WaveAlgorithm">
+      <HintPath>..\WaveAlgorithm\bin\Debug\WaveAlgorithm.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -65,19 +68,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Attack.cs" />
-    <Compile Include="CommonStrategyPart.cs" />
-    <Compile Include="Explore.cs" />
     <Compile Include="Interfaces\IPrinter.cs" />
     <Compile Include="Interfaces\IUnitManagable.cs" />
-    <Compile Include="IStrategy.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Algoritm2.cs" />
     <Compile Include="Models\BaseItems\Base.cs" />
     <Compile Include="Models\BaseItems\BaseItem.cs" />
     <Compile Include="Models\BaseItems\Border.cs" />
