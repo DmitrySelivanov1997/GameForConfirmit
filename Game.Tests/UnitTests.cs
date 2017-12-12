@@ -17,7 +17,6 @@ namespace Game.Tests
         public void DieOrSurvive_ReturnsTrueIfUnitHasMoreFoesThanAlliesInAttackRange()
         {
             var map = CommonTestPart.GenerateMap10X10WithFreeSpace();
-            var baseTest = new BaseTests();
             CommonTestPart.AddUnitOnMap(0, 0,map,TypesOfObject.UnitBlack);
             CommonTestPart.AddUnitOnMap(0, 1, map, TypesOfObject.UnitWhite);
             CommonTestPart.AddUnitOnMap(1, 0, map, TypesOfObject.UnitWhite);

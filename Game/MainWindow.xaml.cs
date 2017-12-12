@@ -92,8 +92,6 @@ namespace Game
                 WaitTime = (int)TurnsTimeSlider.Value 
             };
             Engine.GameOver += Show_Message;
-            Ts = new CancellationTokenSource();
-            CancellationToken ct = Ts.Token;
             Task.Factory.StartNew(() =>
             {
                 while (!Engine.Ct)
@@ -119,7 +117,7 @@ namespace Game
 
                        }
                    });
-            }, ct);
+            });
         }
 
         private void UpdateButtonsStatusAfterTournamentEnded()

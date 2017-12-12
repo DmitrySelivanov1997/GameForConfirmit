@@ -21,8 +21,8 @@ namespace Game.Tests
             CommonTestPart.AddUnitOnMap(0,0,map,TypesOfObject.UnitBlack);
             var unit = map.Army.Find(x => x.TypeOfObject == TypesOfObject.UnitBlack);
             unit.Direction = Direction.Down;
-            var engine = new Engine(new Dictionary<TypesOfObject, IAlgorithm>(), map );
-            engine.UpdateUnits(TypesOfObject.UnitBlack);
+            var engine = new Engine(new Algoritm2(), new Algoritm2(),map );
+            engine.UpdateUnits(TypesOfObject.UnitBlack,new Statistics());
             if (unit.X == 0 && unit.Y == 1 && map.Array[1, 0] == TypesOfObject.UnitBlack)
                 result = true;
             else result = false;

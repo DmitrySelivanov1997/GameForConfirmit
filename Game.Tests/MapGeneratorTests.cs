@@ -47,6 +47,7 @@ namespace Game.Tests
         [TestMethod]
         public void BricksCreatedSuccesfullyWith100Chance()
         {
+            Food.Probability = 0;
             Brick.Probability = 100;
             var mg1 = new MapGenerator(10);
             var map1 = mg1.GenerateMap();
