@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Game.Models;
 using Game.Models.BaseItems;
+using InterfaceLibrary;
 
 namespace Game.Interfaces
 {
     public interface IPrinter
     {
-        void Print(Map map, WriteableBitmap bmp);
+        void Print(TypesOfObject[,] array, WriteableBitmap bmp);
     }
 }

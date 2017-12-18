@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,8 +22,11 @@ using System.Windows.Threading;
 using Game.Models;
 using Game.Models.BaseItems;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using InterfaceLibrary;
 using Microsoft.Win32;
+using System.Net.Http.Formatting;
+using Newtonsoft.Json;
 
 namespace Game
 {
@@ -33,13 +40,14 @@ namespace Game
         public IAlgorithm WhiteArmyAlgorithm = new Algoritm2();
         public IAlgorithm BlackArmyAlgorithm = new Algoritm2();
         public Engine Engine ;
-        public DispatcherTimer PrintTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 30) };
+        public DispatcherTimer PrintTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 80) };
         public WpfPrinter Printer;
-        public Map MyMap;
+        public TypesOfObject[,] MyMap;
         public WriteableBitmap WriteableBitmap;
         public int _mapSize;
         public CancellationTokenSource Ts;
         public int NumberOfTournamentsGame;
+        public const string AppPath = "http://localhost:62109/";
 
         public MainWindow()
         {
@@ -48,81 +56,36 @@ namespace Game
             Height = SystemParameters.PrimaryScreenHeight - 100;  
             Width = SystemParameters.PrimaryScreenHeight -100;
             WhiteAlgorithmName.Text = WhiteArmyAlgorithm.GetType().FullName;
-            BlackArmyAlgorithmName.Text = BlackArmyAlgorithm.GetType().FullName;
-
-        }
-
-        private void ButtonGenerateMap_Click(object sender, RoutedEventArgs e)
-        {
-            _mapSize = Convert.ToInt32(MapSize.Text);
-            MapGenerator mapGenerator = new MapGenerator(_mapSize);
-            MyMap = mapGenerator.GenerateMap();
-            WriteableBitmap = BitmapFactory.New((int)MainImage.Width, (int)MainImage.Width);
-            MainImage.Source = WriteableBitmap;
+            BlackAlgorithmName.Text = BlackArmyAlgorithm.GetType().FullName;
             Printer = new WpfPrinter(MainImage);
-            Printer.Print(MyMap, WriteableBitmap);
-            
-        }
-
-        private void PrintMap(object sender, EventArgs e)
-        {
-            Printer.Print(MyMap, WriteableBitmap);
-
-            NumberOfTurns.Content = Convert.ToString(Engine.TurnNumber);
-            WhiteArmyEnemiesKilled.Content = Engine.WhiteArmyStatistics.EnemiesKilled.ToString();
-            WhiteArmyFoodEaten.Content = Engine.WhiteArmyStatistics.FoodEaten.ToString();
-            WhiteArmyCurrentUnits.Content = Engine.WhiteArmyStatistics.CurrentArmyNumber.ToString();
-            BlackArmyEnemiesKilled.Content = Engine.BlackArmyStatistics.EnemiesKilled.ToString();
-            BlackArmyFoodEaten.Content = Engine.BlackArmyStatistics.FoodEaten.ToString();
-            BlackArmyCurrentUnits.Content = Engine.BlackArmyStatistics.CurrentArmyNumber.ToString();
-        }
-
-        
-
-        private void ButtonStartFight(object sender, RoutedEventArgs e)
-        {
-            WhiteArmyAlgorithm = (IAlgorithm) Activator.CreateInstance(WhiteArmyAlgorithm.GetType());
-            BlackArmyAlgorithm = (IAlgorithm)Activator.CreateInstance(BlackArmyAlgorithm.GetType());
-
-            PauseOn.IsEnabled = true;
             PrintTimer.Start();
-            Engine = new Engine(WhiteArmyAlgorithm,BlackArmyAlgorithm, MyMap)
-            {
-                IsCanceled = false,
-                WaitTime = (int)TurnsTimeSlider.Value 
-            };
-            Engine.GameOver += Show_Message;
-            Task.Factory.StartNew(() =>
-            {
-                while (!Engine.Ct)
-                {
-                    Engine.Startbattle();
-                }
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (ThreadStart)delegate
-                   {
-                       if (NumberOfTournamentsGame > 1)
-                       {
-                           ButtonGenerateMap_Click(sender, e);
-                           ButtonStartFight(sender, e);
-                           NumberOfTournamentsGame--;
-                           TextBlockCurrentScore.Text = $"{WhiteArmyWins}:{BlackArmyWins}";
-                       }
-                       else
-                       {
-                           TextBlockCurrentScore.Text = $"{WhiteArmyWins}:{BlackArmyWins}";
-                           UpdateButtonsStatusAfterTournamentEnded();
-                           PrintTimer.Stop();
-                           MyMap = null;
+        }
+        
+        private async void PrintMap(object sender, EventArgs e)
+        {
+            await GetMapFromTheWebServiceAndSetIt();
+            Printer.Print(MyMap, WriteableBitmap);
 
-                       }
-                   });
-            });
+            //NumberOfTurns.Content = Convert.ToString(Engine.TurnNumber);
+            //WhiteArmyEnemiesKilled.Content = Engine.WhiteArmyStatistics.EnemiesKilled.ToString();
+            //WhiteArmyFoodEaten.Content = Engine.WhiteArmyStatistics.FoodEaten.ToString();
+            //WhiteArmyCurrentUnits.Content = Engine.WhiteArmyStatistics.CurrentArmyNumber.ToString();
+            //BlackArmyEnemiesKilled.Content = Engine.BlackArmyStatistics.EnemiesKilled.ToString();
+            //BlackArmyFoodEaten.Content = Engine.BlackArmyStatistics.FoodEaten.ToString();
+            //BlackArmyCurrentUnits.Content = Engine.BlackArmyStatistics.CurrentArmyNumber.ToString();
+        }
+
+        private async Task GetMapFromTheWebServiceAndSetIt()
+        {
+            using (var client = new HttpClient())
+            {
+                string json = await client.GetStringAsync(AppPath + "api/tournament");
+                MyMap = JsonConvert.DeserializeObject<TypesOfObject[,]>(json);
+            }
         }
 
         private void UpdateButtonsStatusAfterTournamentEnded()
         {
-            ButtonGenerateMap.IsEnabled = true;
             MapSize.IsEnabled = true;
             ButtonStartTournament.IsEnabled = true;
             PauseOn.IsEnabled = false;
@@ -157,7 +120,6 @@ namespace Game
 
         private void checkBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            PrintTimer.Start();
 
             Engine.IsCanceled = false;
         }
@@ -170,24 +132,18 @@ namespace Game
             MainImage.Width = MainImage.Height;
             WriteableBitmap = BitmapFactory.New((int)MainImage.Width, (int)MainImage.Width);
             MainImage.Source = WriteableBitmap;
-            Printer?.Print(MyMap,WriteableBitmap);
         }
 
         private void MapSize_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (ButtonStartTournament != null && ButtonGenerateMap != null)
+            if (ButtonStartTournament != null)
             {
                 if (MapSize.Text.Length == 0 || Convert.ToInt32(MapSize.Text) < 4)
                 {
-                    ButtonGenerateMap.IsEnabled = false;
                     ButtonStartTournament.IsEnabled = false;
                 }
                 else if (Convert.ToInt32(TextBoxNumberOfMatches.Text) >= 1)
                     ButtonStartTournament.IsEnabled = true;
-                if(MapSize.Text.Length != 0 && Convert.ToInt32(MapSize.Text) >= 4)
-                {
-                    ButtonGenerateMap.IsEnabled = true;
-                }
             }
         }
 
@@ -226,20 +182,47 @@ namespace Game
         }
         #endregion
 
-        private void AlgoritmN1_OnClick(object sender, RoutedEventArgs e)
+        private async void AlgoritmN1_OnClick(object sender, RoutedEventArgs e)
         {
-            
-            LoadDllAndCheckForInterface(ref WhiteArmyAlgorithm, (Button)sender);
+
+            await GetAlgoritmnameFromTheServer(WhiteAlgorithmName, "white");
+            //LoadDllAndCheckForInterface(ref WhiteArmyAlgorithm, (Button)sender);
         }
 
-        private void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
+        private async Task GetAlgoritmnameFromTheServer(TextBlock algorithmName,string id)
         {
-            LoadDllAndCheckForInterface(ref BlackArmyAlgorithm, (Button)sender);
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetStringAsync(AppPath+"api/algorithm/" + id);
+                algorithmName.Text = response;
+            }
         }
 
-        private  void LoadDllAndCheckForInterface(ref IAlgorithm algorithm, Button sender)
+        private async void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
         {
-            string filename;
+            var asm = LoadDll();
+            if(asm.Length==0)
+                return;
+            await PostAlgorithmToTheServer(asm, "black");
+            await GetAlgoritmnameFromTheServer(BlackAlgorithmName, "black");
+        }
+
+        private async Task PostAlgorithmToTheServer(byte[] asm, string id)
+        {
+            using (var client = new HttpClient())
+            {
+                var byteArrayContent = new ByteArrayContent(asm);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/bson"));
+                byteArrayContent.Headers.ContentType = new MediaTypeHeaderValue("application/bson");
+                var result = await client.PostAsync(AppPath+"api/algorithm/"+id, byteArrayContent);
+            }
+        }
+
+        private byte[] LoadDll()
+        {
+            string filename = null;
             var fd = new OpenFileDialog
             {
                 Title = "Выберите библиотеку",
@@ -249,47 +232,45 @@ namespace Game
             if (result == true)
             {
                 filename = fd.FileName;
+                return File.ReadAllBytes(filename);
             }
-            else return;
-            var asm = Assembly.LoadFrom(filename);
-            var types = asm.GetTypes();
-            if (types.Any(type => type.GetInterface("IAlgorithm") != null))
-            {
-                foreach (var type in types)
-                {
-                    if (type.GetInterface("IAlgorithm") == null) continue;
-                    algorithm = (IAlgorithm)Activator.CreateInstance(type);
-                    sender.Content = type.FullName;
-                    break;
-                }
-            }
-            WhiteAlgorithmName.Text = WhiteArmyAlgorithm.GetType().FullName;
-            BlackArmyAlgorithmName.Text = BlackArmyAlgorithm.GetType().FullName;
+            return new byte[0];
         }
 
-        private void ButtonStartTournamemt_Click(object sender, RoutedEventArgs e)
+        private async void ButtonStartTournamemt_Click(object sender, RoutedEventArgs e)
         {
-
-            TextBlockCurrentScore.Text = "0:0";
-            BlackArmyWins = 0;
-            WhiteArmyWins = 0;
-            ButtonGenerateMap.IsEnabled = false;
-            TextBoxNumberOfMatches.IsEnabled = false;
-            ButtonStartTournament.IsEnabled = false;
-            ButtonCancellTournament.IsEnabled = true;
-            AlgoritmN1.IsEnabled = false;
-            AlgoritmN2.IsEnabled = false;
+            _mapSize = Convert.ToInt32(MapSize.Text);
             NumberOfTournamentsGame = Convert.ToInt32(TextBoxNumberOfMatches.Text);
-            if(MyMap == null)
-                ButtonGenerateMap_Click(sender,e);
-            ButtonStartFight(sender,e);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(AppPath);
+                var value = new ClassForTournamentControllerPost
+                {
+                    MapSize = _mapSize,
+                    NumberOfGames = NumberOfTournamentsGame,
+                    WaitTime = (int)TurnsTimeSlider.Value
+                };
+                var response = await client.PostAsJsonAsync<ClassForTournamentControllerPost>(AppPath + "api/tournament", value);
+                if (!response.IsSuccessStatusCode)
+                {
+                   MessageBox.Show(" Tournamen information has not been sent. \r\nERROR:" + response.ReasonPhrase);
+                }
+
+            }
+            ButtonCancellTournament.IsEnabled = true;
         }
 
-        private void ButtonCancellTournament_OnClick(object sender, RoutedEventArgs e)
+        private async void ButtonCancellTournament_OnClick(object sender, RoutedEventArgs e)
         {
-            NumberOfTournamentsGame = 0;
-            Engine.Ct = true;
-            UpdateButtonsStatusAfterTournamentEnded();
+            using (var client = new HttpClient())
+            {
+                var response = await client.DeleteAsync(AppPath + "api/tournament");
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show(" Tournamen has not been stopped. \r\nERROR:" + response.ReasonPhrase);
+                }
+
+            }
         }
     }
 }

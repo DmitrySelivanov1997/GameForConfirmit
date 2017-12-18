@@ -16,7 +16,7 @@ namespace Game.Models
         public List<IUnitManagable> BufferArmy{ get; set; }
         public List<IUnitManagable> Army;
         public List<Base> BaseList;
-        public TypesOfObject[,] Array { get; }
+        public TypesOfObject[,] Array { get; set; }
         public Map(int size)
         {
             Array = new TypesOfObject[size,size];

@@ -13,7 +13,6 @@ namespace Game.Models
 
         public MapGenerator(int s)
         {
-            if(s <= 2) throw new IndexOutOfRangeException("Map is too small");
             Size = s;
             Map = new Map(Size);
         }

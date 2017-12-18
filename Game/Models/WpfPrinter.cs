@@ -22,8 +22,11 @@ namespace Game.Models
         {
             MainImage = mainImage;
         }
-        public void Print(Map map, WriteableBitmap writeableBitmap)
+        public void Print(TypesOfObject[,] array, WriteableBitmap writeableBitmap)
         {
+            if(array == null)
+                return;
+            var map=new Map(array.GetLength(0)){Array = array};
             using (writeableBitmap.GetBitmapContext())
             {
                 for (var i = 0; i < map.GetLength(); i++)

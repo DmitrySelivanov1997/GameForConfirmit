@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Margin="15,0,15,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="60" Text="{Binding Text, ElementName=WhiteAlgorithmName}" TextAlignment="Center" FontSize="24" />
             <TextBlock Grid.Column="1" Name="TextBlockCurrentScore" Margin="5,0,5,0" Text="0:0" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Bottom" FontSize="24" />
-            <TextBlock Grid.Column="2" Margin="15,0,15,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="60" TextAlignment="Center" Text="{Binding Text, ElementName=BlackArmyAlgorithmName}" FontSize="24" />
+            <TextBlock Grid.Column="2" Margin="15,0,15,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Height="60" TextAlignment="Center" Text="{Binding Text, ElementName=BlackAlgorithmName}" FontSize="24" />
         </Grid>
         <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"     >
             <CheckBox IsEnabled="False" Margin="0,0,15,0" Name="PauseOn" FontSize="24" IsChecked="False" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked"  HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -58,8 +58,7 @@
 
         <StackPanel Grid.Column="0" Grid.Row="2" Name ="MyStackpanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  >
             <Button VerticalAlignment="Stretch" HorizontalAlignment="Center" x:Name="ButtonStartTournament" Content="Начать турнир" Click="ButtonStartTournamemt_Click"/>
-            <Button VerticalAlignment="Stretch" HorizontalAlignment="Center"  x:Name="ButtonCancellTournament"  IsEnabled="False" Content="Отменить турнир" Click="ButtonCancellTournament_OnClick"  />
-            <Button VerticalAlignment="Stretch" HorizontalAlignment="Center"  x:Name="ButtonGenerateMap"  Content="Сгенерировать карту"  Click="ButtonGenerateMap_Click"/>
+            <Button VerticalAlignment="Stretch" HorizontalAlignment="Center"  x:Name="ButtonCancellTournament" Content="Отменить турнир" Click="ButtonCancellTournament_OnClick"  />
 
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="2">
@@ -74,7 +73,7 @@
             <Label Margin="0,0,15,0" Name="WhiteArmyCurrentUnits" FontSize="20" HorizontalAlignment="Left"   />
             <TextBlock Margin="0,0,15,0" TextWrapping="Wrap"  FontSize="20" Text="Юнитов уничтожено:"  HorizontalAlignment="Left" />
             <Label Margin="0,0,15,0" Name="WhiteArmyEnemiesKilled" FontSize="20" HorizontalAlignment="Left"   />
-            <TextBlock Margin="0,0,15,0" TextWrapping="Wrap" Name="BlackArmyAlgorithmName" TextDecorations="Underline" FontSize="24" Text="" HorizontalAlignment="Left" />
+            <TextBlock Margin="0,0,15,0" TextWrapping="Wrap" Name="BlackAlgorithmName" TextDecorations="Underline" FontSize="24" Text="" HorizontalAlignment="Left" />
             <TextBlock Margin="0,0,15,0" TextWrapping="Wrap"  FontSize="20" Text="Съедено еды:"  HorizontalAlignment="Left" />
             <Label Margin="0,0,15,0" Name="BlackArmyFoodEaten" FontSize="20" HorizontalAlignment="Left"   />
             <TextBlock Margin="0,0,15,0" TextWrapping="Wrap"  FontSize="20" Text="Юнитов в армии:"  HorizontalAlignment="Left" />
