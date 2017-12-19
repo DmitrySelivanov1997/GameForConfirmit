@@ -10,6 +10,8 @@ namespace Game.Models
 {
     public class Statistics
     {
+        public int NumberOfWins { get; set; }
+        public int TurnNumber { get; set; }
         public int FoodEaten { get; set; }
         public int CurrentArmyNumber { get; set; }
         public int EnemiesKilled { get; set; }

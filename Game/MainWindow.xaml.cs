@@ -27,6 +27,7 @@ using InterfaceLibrary;
 using Microsoft.Win32;
 using System.Net.Http.Formatting;
 using Newtonsoft.Json;
+using WebGameService.Models;
 
 namespace Game
 {
@@ -37,10 +38,8 @@ namespace Game
     {
         public int WhiteArmyWins { get; set; }
         public int BlackArmyWins { get; set; }
-        public IAlgorithm WhiteArmyAlgorithm = new Algoritm2();
-        public IAlgorithm BlackArmyAlgorithm = new Algoritm2();
         public Engine Engine ;
-        public DispatcherTimer PrintTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 80) };
+        public DispatcherTimer PrintTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 75) };
         public WpfPrinter Printer;
         public TypesOfObject[,] MyMap;
         public WriteableBitmap WriteableBitmap;
@@ -49,86 +48,147 @@ namespace Game
         public int NumberOfTournamentsGame;
         public const string AppPath = "http://localhost:62109/";
 
-        public MainWindow()
+        public  MainWindow()
         {
             InitializeComponent();
             PrintTimer.Tick += PrintMap;
             Height = SystemParameters.PrimaryScreenHeight - 100;  
             Width = SystemParameters.PrimaryScreenHeight -100;
-            WhiteAlgorithmName.Text = WhiteArmyAlgorithm.GetType().FullName;
-            BlackAlgorithmName.Text = BlackArmyAlgorithm.GetType().FullName;
             Printer = new WpfPrinter(MainImage);
             PrintTimer.Start();
         }
         
         private async void PrintMap(object sender, EventArgs e)
         {
-            await GetMapFromTheWebServiceAndSetIt();
+            var state = await GetTournamentState();
+            MyMap = state.Map;
             Printer.Print(MyMap, WriteableBitmap);
-
-            //NumberOfTurns.Content = Convert.ToString(Engine.TurnNumber);
-            //WhiteArmyEnemiesKilled.Content = Engine.WhiteArmyStatistics.EnemiesKilled.ToString();
-            //WhiteArmyFoodEaten.Content = Engine.WhiteArmyStatistics.FoodEaten.ToString();
-            //WhiteArmyCurrentUnits.Content = Engine.WhiteArmyStatistics.CurrentArmyNumber.ToString();
-            //BlackArmyEnemiesKilled.Content = Engine.BlackArmyStatistics.EnemiesKilled.ToString();
-            //BlackArmyFoodEaten.Content = Engine.BlackArmyStatistics.FoodEaten.ToString();
-            //BlackArmyCurrentUnits.Content = Engine.BlackArmyStatistics.CurrentArmyNumber.ToString();
+            SetStatisticInformation(state.WhiteStatistics, state.BlackStatistics);
         }
-
-        private async Task GetMapFromTheWebServiceAndSetIt()
+        async Task<TournamentState> GetTournamentState()
         {
             using (var client = new HttpClient())
             {
-                string json = await client.GetStringAsync(AppPath + "api/tournament");
-                MyMap = JsonConvert.DeserializeObject<TypesOfObject[,]>(json);
+                string json = await client.GetStringAsync(AppPath + "api/tournament/");
+                return JsonConvert.DeserializeObject<TournamentState>(json);
+            }
+        }
+        private void SetStatisticInformation(Statistics statisticsWhite, Statistics statisticsBlack)
+        {
+            NumberOfTurns.Content = Convert.ToString(statisticsWhite.TurnNumber);
+            WhiteArmyEnemiesKilled.Content = statisticsWhite.EnemiesKilled.ToString();
+            WhiteArmyFoodEaten.Content = statisticsWhite.FoodEaten.ToString();
+            WhiteArmyCurrentUnits.Content = statisticsWhite.CurrentArmyNumber.ToString();
+            BlackArmyEnemiesKilled.Content = statisticsBlack.EnemiesKilled.ToString();
+            BlackArmyFoodEaten.Content = statisticsBlack.FoodEaten.ToString();
+            BlackArmyCurrentUnits.Content = statisticsBlack.CurrentArmyNumber.ToString();
+            TextBlockCurrentScore.Text = $"{statisticsWhite.NumberOfWins}:{statisticsBlack.NumberOfWins}";
+        }
+        private async void AlgoritmN1_OnClick(object sender, RoutedEventArgs e)
+        {
+            var asm = LoadDll();
+            if (asm.Length == 0)
+                return;
+            await PostAlgorithmToTheServer(asm, "white");
+            await GetAlgoritmnameFromTheServer(WhiteAlgorithmName, "white");
+        }
+        private async void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
+        {
+            var asm = LoadDll();
+            if(asm.Length==0)
+                return;
+            await PostAlgorithmToTheServer(asm, "black");
+            await GetAlgoritmnameFromTheServer(BlackAlgorithmName, "black");
+        }
+        private static byte[] LoadDll()
+        {
+            var fd = new OpenFileDialog
+            {
+                Title = "Выберите библиотеку",
+                Filter = "Dll files | *.dll"
+            };
+            var result = fd.ShowDialog();
+            if (result == true)
+            {
+                var filename = fd.FileName;
+                return File.ReadAllBytes(filename);
+            }
+            return new byte[0];
+        }
+        private static async Task PostAlgorithmToTheServer(byte[] asm, string id)
+        {
+            using (var client = new HttpClient())
+            {
+                var byteArrayContent = new ByteArrayContent(asm);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/bson"));
+                byteArrayContent.Headers.ContentType = new MediaTypeHeaderValue("application/bson");
+                await client.PostAsync(AppPath + "api/algorithm/" + id, byteArrayContent);
+            }
+        }
+        private async Task GetAlgoritmnameFromTheServer(TextBlock algorithmName, string id)
+        {
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetStringAsync(AppPath + "api/algorithm/" + id);
+                algorithmName.Text = response;
             }
         }
 
+        private async void ButtonStartTournamemt_Click(object sender, RoutedEventArgs e)
+        {
+            await GetAlgoritmnameFromTheServer(WhiteAlgorithmName, "white");
+            await GetAlgoritmnameFromTheServer(BlackAlgorithmName, "black");
+            _mapSize = Convert.ToInt32(MapSize.Text);
+            NumberOfTournamentsGame = Convert.ToInt32(TextBoxNumberOfMatches.Text);
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(AppPath);
+                var value = new ClassForTournamentControllerPost
+                {
+                    MapSize = _mapSize,
+                    NumberOfGames = NumberOfTournamentsGame,
+                    WaitTime = (int)TurnsTimeSlider.Value
+                };
+                await client.PostAsJsonAsync(AppPath + "api/tournament/start", value);
+            }
+            UpdateButtonStatusAftertournamentStarts();
+        }
+
+        private async void ButtonCancellTournament_OnClick(object sender, RoutedEventArgs e)
+        {
+            using (var client = new HttpClient())
+            {
+               await client.DeleteAsync(AppPath + "api/tournament");
+            }
+            UpdateButtonsStatusAfterTournamentEnded();
+        }
         private void UpdateButtonsStatusAfterTournamentEnded()
         {
             MapSize.IsEnabled = true;
+            ButtonCancellTournament.IsEnabled = false;
             ButtonStartTournament.IsEnabled = true;
-            PauseOn.IsEnabled = false;
             TextBoxNumberOfMatches.IsEnabled = true;
             AlgoritmN1.IsEnabled = true;
             AlgoritmN2.IsEnabled = true;
         }
-
-
-        private void Show_Message(GameResult result)
+        private void UpdateButtonStatusAftertournamentStarts()
         {
-            if (result == GameResult.BlackArmyDestroyed || result == GameResult.BlackBaseDestroyed)
-                {
-                    WhiteArmyWins++;
-                }
-            if (result == GameResult.WhiteArmyDestroyed || result == GameResult.WhiteBaseDestroyed)
-                {
-                    BlackArmyWins++;
-                }
+            ButtonCancellTournament.IsEnabled = true;
+            ButtonStartTournament.IsEnabled = false;
+            MapSize.IsEnabled = false;
+            TextBoxNumberOfMatches.IsEnabled = false;
+            AlgoritmN1.IsEnabled = false;
+            AlgoritmN2.IsEnabled = false;
         }
 
         #region Changeable UI parts
-            
-
-
-            private void checkBox_Checked(object sender, RoutedEventArgs e)
-        {
-            PrintTimer.Stop();
-
-            Engine.IsCanceled = true;
-        }
-
-        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-
-            Engine.IsCanceled = false;
-        }
-
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             MyGrid.Width = Width;
             MyGrid.Height = Height;
-            MainImage.Height = (Width<Height? Width:Height) * 4 / 6;
+            MainImage.Height = (Width < Height ? Width : Height) * 4 / 6;
             MainImage.Width = MainImage.Height;
             WriteableBitmap = BitmapFactory.New((int)MainImage.Width, (int)MainImage.Width);
             MainImage.Source = WriteableBitmap;
@@ -170,108 +230,20 @@ namespace Game
         private void DrawTimeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var time = (int)DrawTimeSlider.Value;
-            PrintTimer.Interval=new TimeSpan(0,0,0,time);
+            PrintTimer.Interval = new TimeSpan(0, 0, 0, time);
 
         }
 
-        private void TurnsTimeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private async void TurnsTimeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if(Engine!=null)
-            Engine.WaitTime = (int)TurnsTimeSlider.Value;
-
-        }
-        #endregion
-
-        private async void AlgoritmN1_OnClick(object sender, RoutedEventArgs e)
-        {
-
-            await GetAlgoritmnameFromTheServer(WhiteAlgorithmName, "white");
-            //LoadDllAndCheckForInterface(ref WhiteArmyAlgorithm, (Button)sender);
-        }
-
-        private async Task GetAlgoritmnameFromTheServer(TextBlock algorithmName,string id)
-        {
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetStringAsync(AppPath+"api/algorithm/" + id);
-                algorithmName.Text = response;
-            }
-        }
-
-        private async void AlgoritmN2_OnClick(object sender, RoutedEventArgs e)
-        {
-            var asm = LoadDll();
-            if(asm.Length==0)
-                return;
-            await PostAlgorithmToTheServer(asm, "black");
-            await GetAlgoritmnameFromTheServer(BlackAlgorithmName, "black");
-        }
-
-        private async Task PostAlgorithmToTheServer(byte[] asm, string id)
-        {
-            using (var client = new HttpClient())
-            {
-                var byteArrayContent = new ByteArrayContent(asm);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/bson"));
-                byteArrayContent.Headers.ContentType = new MediaTypeHeaderValue("application/bson");
-                var result = await client.PostAsync(AppPath+"api/algorithm/"+id, byteArrayContent);
-            }
-        }
-
-        private byte[] LoadDll()
-        {
-            string filename = null;
-            var fd = new OpenFileDialog
-            {
-                Title = "Выберите библиотеку",
-                Filter = "Dll files | *.dll"
-            };
-            var result = fd.ShowDialog();
-            if (result == true)
-            {
-                filename = fd.FileName;
-                return File.ReadAllBytes(filename);
-            }
-            return new byte[0];
-        }
-
-        private async void ButtonStartTournamemt_Click(object sender, RoutedEventArgs e)
-        {
-            _mapSize = Convert.ToInt32(MapSize.Text);
-            NumberOfTournamentsGame = Convert.ToInt32(TextBoxNumberOfMatches.Text);
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(AppPath);
-                var value = new ClassForTournamentControllerPost
-                {
-                    MapSize = _mapSize,
-                    NumberOfGames = NumberOfTournamentsGame,
-                    WaitTime = (int)TurnsTimeSlider.Value
-                };
-                var response = await client.PostAsJsonAsync<ClassForTournamentControllerPost>(AppPath + "api/tournament", value);
-                if (!response.IsSuccessStatusCode)
-                {
-                   MessageBox.Show(" Tournamen information has not been sent. \r\nERROR:" + response.ReasonPhrase);
-                }
-
+                await client.PostAsJsonAsync(AppPath + "api/tournament/delay", (int)TurnsTimeSlider.Value);
             }
-            ButtonCancellTournament.IsEnabled = true;
-        }
 
-        private async void ButtonCancellTournament_OnClick(object sender, RoutedEventArgs e)
-        {
-            using (var client = new HttpClient())
-            {
-                var response = await client.DeleteAsync(AppPath + "api/tournament");
-                if (!response.IsSuccessStatusCode)
-                {
-                    MessageBox.Show(" Tournamen has not been stopped. \r\nERROR:" + response.ReasonPhrase);
-                }
-
-            }
         }
+        #endregion
     }
 }
 
