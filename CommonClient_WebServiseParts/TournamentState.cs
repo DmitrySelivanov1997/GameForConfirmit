@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Game.Models;
-using InterfaceLibrary;
+﻿using InterfaceLibrary;
 
-namespace WebGameService.Models
+namespace CommonClient_WebServiseParts
 {
     public class TournamentState
     {

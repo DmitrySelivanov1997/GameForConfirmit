@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Game.Models;
-using Game.Models.BaseItems;
 using InterfaceLibrary;
 
 namespace Game.Interfaces

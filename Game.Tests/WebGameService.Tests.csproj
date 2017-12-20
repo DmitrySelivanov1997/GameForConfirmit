@@ -39,8 +39,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommonClient_WebServiseParts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="CommonClient_WebServiseParts">
       <HintPath>..\CommonClient_WebServiseParts\bin\Debug\CommonClient_WebServiseParts.dll</HintPath>
     </Reference>
     <Reference Include="InterfaceLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -64,20 +63,16 @@
   <ItemGroup>
     <Compile Include="BaseTests.cs" />
     <Compile Include="CommonTestPart.cs" />
+    <Compile Include="EngineTests.cs" />
     <Compile Include="MapGeneratorTests.cs" />
     <Compile Include="MapManagerTests.cs" />
     <Compile Include="MapTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Documents\Visual Studio 2017\Projects\WebGameService\WebGameService\WebGameService.csproj">
-      <Project>{9C4C2FDE-33DD-40D3-897E-A0AA577E5BA5}</Project>
-      <Name>WebGameService</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

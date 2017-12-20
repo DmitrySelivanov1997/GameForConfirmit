@@ -20,15 +20,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Game.Models;
-using Game.Models.BaseItems;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using InterfaceLibrary;
 using Microsoft.Win32;
 using System.Net.Http.Formatting;
+using CommonClient_WebServiseParts;
 using Newtonsoft.Json;
-using WebGameService.Models;
-
 namespace Game
 {
     /// <summary>
@@ -38,8 +36,7 @@ namespace Game
     {
         public int WhiteArmyWins { get; set; }
         public int BlackArmyWins { get; set; }
-        public Engine Engine ;
-        public DispatcherTimer PrintTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 75) };
+        public DispatcherTimer PrintTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 0) };
         public WpfPrinter Printer;
         public TypesOfObject[,] MyMap;
         public WriteableBitmap WriteableBitmap;
@@ -59,17 +56,19 @@ namespace Game
         }
         
         private async void PrintMap(object sender, EventArgs e)
-        {
+        {   
             var state = await GetTournamentState();
             MyMap = state.Map;
             Printer.Print(MyMap, WriteableBitmap);
             SetStatisticInformation(state.WhiteStatistics, state.BlackStatistics);
         }
-        async Task<TournamentState> GetTournamentState()
+        private async Task<TournamentState> GetTournamentState()
         {
             using (var client = new HttpClient())
             {
-                string json = await client.GetStringAsync(AppPath + "api/tournament/");
+                PrintTimer.Stop();
+                string json = await client.GetStringAsync(AppPath + "api/tournament");
+                PrintTimer.Start();
                 return JsonConvert.DeserializeObject<TournamentState>(json);
             }
         }
@@ -140,12 +139,13 @@ namespace Game
         {
             await GetAlgoritmnameFromTheServer(WhiteAlgorithmName, "white");
             await GetAlgoritmnameFromTheServer(BlackAlgorithmName, "black");
+            UpdateButtonStatusAftertournamentStarts();
             _mapSize = Convert.ToInt32(MapSize.Text);
             NumberOfTournamentsGame = Convert.ToInt32(TextBoxNumberOfMatches.Text);
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(AppPath);
-                var value = new ClassForTournamentControllerPost
+                var value = new TournamentInitializingClass
                 {
                     MapSize = _mapSize,
                     NumberOfGames = NumberOfTournamentsGame,
@@ -153,7 +153,6 @@ namespace Game
                 };
                 await client.PostAsJsonAsync(AppPath + "api/tournament/start", value);
             }
-            UpdateButtonStatusAftertournamentStarts();
         }
 
         private async void ButtonCancellTournament_OnClick(object sender, RoutedEventArgs e)
@@ -239,7 +238,7 @@ namespace Game
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(AppPath);
-                await client.PostAsJsonAsync(AppPath + "api/tournament/delay", (int)TurnsTimeSlider.Value);
+                await client.PutAsJsonAsync(AppPath + "api/tournament", (int)TurnsTimeSlider.Value);
             }
 
         }

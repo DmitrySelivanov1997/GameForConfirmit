@@ -22,23 +22,5 @@ namespace Game.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.02")]
-        public double FoodProbability {
-            get {
-                return ((double)(this["FoodProbability"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.2")]
-        public double BrickProbability {
-            get {
-                return ((double)(this["BrickProbability"]));
-            }
-        }
     }
 }

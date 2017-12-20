@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using Game.Interfaces;
-using Game.Models.BaseItems;
+﻿using System.Collections.Generic;
 using InterfaceLibrary;
 
-namespace Game.Models
+namespace CommonClient_WebServiseParts
 {
     public class Map
     {

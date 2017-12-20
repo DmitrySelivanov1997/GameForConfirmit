@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommonClient_WebServiseParts">
+      <HintPath>..\CommonClient_WebServiseParts\bin\Debug\CommonClient_WebServiseParts.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -52,9 +55,6 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="WaveAlgorithm">
-      <HintPath>..\WaveAlgorithm\bin\Debug\WaveAlgorithm.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -67,7 +67,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="TournamentState.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -77,28 +76,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Interfaces\IPrinter.cs" />
-    <Compile Include="Interfaces\IUnitManagable.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\BaseItems\Base.cs" />
-    <Compile Include="Models\BaseItems\BaseItem.cs" />
-    <Compile Include="Models\BaseItems\Border.cs" />
-    <Compile Include="Models\BaseItems\Brick.cs" />
-    <Compile Include="Models\BaseItems\Food.cs" />
-    <Compile Include="Models\BaseItems\FreeSpace.cs" />
-    <Compile Include="Models\BaseItems\Unit.cs" />
-    <Compile Include="Models\BaseItems\UnitBase.cs" />
-    <Compile Include="Models\ClassForTournamentControllerPost.cs" />
-    <Compile Include="Models\Engine.cs" />
-    <Compile Include="Models\Map.cs" />
-    <Compile Include="Models\MapGenerator.cs" />
-    <Compile Include="Models\MapManager.cs" />
-    <Compile Include="Models\Rules.cs" />
-    <Compile Include="Models\Statistics.cs" />
+    <Compile Include="Models\WebServiceCaller.cs" />
     <Compile Include="Models\WpfPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -124,7 +108,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InterfaceLibrary\InterfaceLibrary.csproj">

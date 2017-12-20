@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Game.Models;
-using Game.Models.BaseItems;
 using System.Windows.Media;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using CommonClient_WebServiseParts;
 using InterfaceLibrary;
+using Border = System.Windows.Controls.Border;
 
 namespace Game.Tests
 {
@@ -70,7 +69,7 @@ namespace Game.Tests
         {
             Map.Array[0, 0] = TypesOfObject.UnitWhite;
             var item = Map.GetItem(-1, -1);
-            Assert.IsTrue(item is Models.BaseItems.Border);
+            Assert.IsTrue(item is Border);
         }
         #endregion
         [TestMethod]

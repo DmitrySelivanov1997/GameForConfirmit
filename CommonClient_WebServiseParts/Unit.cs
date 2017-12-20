@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
-using System.Windows.Media;
 using InterfaceLibrary;
 
-namespace Game.Models.BaseItems
+namespace CommonClient_WebServiseParts
 {
     public class Unit:UnitBase, IUnitManagable
     {

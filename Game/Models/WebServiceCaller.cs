@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InterfaceLibrary
+namespace Game.Models
 {
-    public interface IUnitManagable:IUnit
+    public class WebServiceCaller
     {
-        int I { get; set; }
-        int J { get; set; }
     }
 }

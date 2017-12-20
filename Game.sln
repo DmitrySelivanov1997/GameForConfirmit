@@ -5,13 +5,13 @@ VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", "{A8B932AF-AA5E-4861-AABB-213AC7C94C8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.Tests", "Game.Tests\Game.Tests.csproj", "{1DBB1C58-73B4-4BC7-AF5C-F96E7E0429D2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfaceLibrary", "InterfaceLibrary\InterfaceLibrary.csproj", "{C3F7A27B-7372-4CF0-986A-9E8386D938B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgoritmRandomDirections", "Algoritm\AlgoritmRandomDirections.csproj", "{DDF5EE5A-1E6C-4871-BB23-12C8837CB0FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveAlgorithm", "WaveAlgorithm\WaveAlgorithm.csproj", "{845ECF2E-32AC-45FB-ABB0-7CBC3DEC1E4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonClient_WebServiceParts", "CommonClient_WebServiseParts\CommonClient_WebServiceParts.csproj", "{320AB498-B3C3-467F-9B32-FC64E967CA09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,6 @@ Global
 		{A8B932AF-AA5E-4861-AABB-213AC7C94C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8B932AF-AA5E-4861-AABB-213AC7C94C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8B932AF-AA5E-4861-AABB-213AC7C94C8C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DBB1C58-73B4-4BC7-AF5C-F96E7E0429D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DBB1C58-73B4-4BC7-AF5C-F96E7E0429D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DBB1C58-73B4-4BC7-AF5C-F96E7E0429D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DBB1C58-73B4-4BC7-AF5C-F96E7E0429D2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3F7A27B-7372-4CF0-986A-9E8386D938B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3F7A27B-7372-4CF0-986A-9E8386D938B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3F7A27B-7372-4CF0-986A-9E8386D938B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{845ECF2E-32AC-45FB-ABB0-7CBC3DEC1E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{845ECF2E-32AC-45FB-ABB0-7CBC3DEC1E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{845ECF2E-32AC-45FB-ABB0-7CBC3DEC1E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{320AB498-B3C3-467F-9B32-FC64E967CA09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{320AB498-B3C3-467F-9B32-FC64E967CA09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{320AB498-B3C3-467F-9B32-FC64E967CA09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{320AB498-B3C3-467F-9B32-FC64E967CA09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
