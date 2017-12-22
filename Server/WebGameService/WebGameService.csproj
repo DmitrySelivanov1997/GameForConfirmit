@@ -48,11 +48,11 @@
   <ItemGroup>
     <Reference Include="CommonClient_WebServiseParts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Bin\CommonClient_WebServiseParts.dll</HintPath>
+      <HintPath>..\Dlls\CommonClient_WebServiseParts.dll</HintPath>
     </Reference>
     <Reference Include="InterfaceLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Bin\InterfaceLibrary.dll</HintPath>
+      <HintPath>..\Dlls\InterfaceLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -124,7 +124,7 @@
     </Reference>
     <Reference Include="WaveAlgorithm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Bin\WaveAlgorithm.dll</HintPath>
+      <HintPath>..\Dlls\WaveAlgorithm.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>

@@ -29,7 +29,7 @@
         </Grid>
         <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"     >
             <TextBlock Margin="0,0,15,0" TextWrapping="Wrap" FontSize="24" Text="Размер поля: " Height="73" HorizontalAlignment="Left" />
-            <TextBox Text="50"  Margin="0,0,15,0" MaxLength="3" PreviewTextInput="MapSize_OnPreviewTextInput" Name="MapSize" FontSize="24" TextChanged="MapSize_TextChanged"  HorizontalAlignment="Left"  Width="69"/>
+            <TextBox Text="50"  Margin="0,0,15,0" MaxLength="3" PreviewTextInput="MapSize_OnPreviewTextInput" Name="MapSizeTextBox" FontSize="24" TextChanged="MapSize_TextChanged"  HorizontalAlignment="Left"  Width="69"/>
             <TextBlock Margin="0,0,15,0" TextWrapping="Wrap" FontSize="24" Text="Номер Хода: " Height="73" HorizontalAlignment="Left"  />
             <Label Margin="0,0,15,0" Name="NumberOfTurns" FontSize="24" HorizontalAlignment="Left"  Height="44" />
             <TextBlock TextWrapping="Wrap" FontSize="18" Text="Количество турнирных партий:" Height="70" HorizontalAlignment="Left" Margin="0,0,15,0"  />

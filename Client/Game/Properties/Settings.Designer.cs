@@ -22,5 +22,14 @@ namespace Game.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:62109/")]
+        public string AppPath {
+            get {
+                return ((string)(this["AppPath"]));
+            }
+        }
     }
 }
