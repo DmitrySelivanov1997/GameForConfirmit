@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommonClient_WebServiseParts">
-      <HintPath>..\CommonClient_WebServiseParts\bin\Debug\CommonClient_WebServiseParts.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -113,6 +110,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonClient_WebServiseParts\CommonClient_WebServiceParts.csproj">
+      <Project>{320ab498-b3c3-467f-9b32-fc64e967ca09}</Project>
+      <Name>CommonClient_WebServiceParts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\InterfaceLibrary\InterfaceLibrary.csproj">
       <Project>{c3f7a27b-7372-4cf0-986a-9e8386d938b0}</Project>
       <Name>InterfaceLibrary</Name>
