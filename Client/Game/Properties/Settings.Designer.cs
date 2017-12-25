@@ -25,7 +25,7 @@ namespace Game.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:62109/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://co-yar-ws100:8080/WebGameService/")]
         public string AppPath {
             get {
                 return ((string)(this["AppPath"]));

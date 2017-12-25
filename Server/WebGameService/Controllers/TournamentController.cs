@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using CommonClient_WebServiseParts;
@@ -22,7 +23,10 @@ namespace WebGameService.Controllers
             GameSessionManager.Map = mapGenerator.GenerateMap();
             Engine.WaitTime = classForTournament.WaitTime;
             GameSessionManager.NumberOfGames = classForTournament.NumberOfGames;
-            new GameSessionManager().Startfight();
+            Task.Factory.StartNew(() =>
+            {
+                new GameSessionManager().Startfight();
+            });
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
         [System.Web.Http.HttpPut]

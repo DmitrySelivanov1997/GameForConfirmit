@@ -29,25 +29,19 @@ namespace WebGameService.Models.EngineLogic
                     (IAlgorithm) Activator.CreateInstance(AlgorithmContainer.AlgorithmWhite.GetType());
                 AlgorithmContainer.AlgorithmBlack =
                     (IAlgorithm) Activator.CreateInstance(AlgorithmContainer.AlgorithmBlack.GetType());
-                var task = Task.Factory.StartNew(() =>
+                Engine.Startbattle();
+                NumberOfGames--;
+                if (NumberOfGames > 0)
                 {
-                    Engine.Startbattle();
-                    NumberOfGames--;
-                }).ContinueWith(p =>
+                    var mapGenerator = new MapGenerator(Map.GetLength());
+                    Map = mapGenerator.GenerateMap();
+                    Engine.MapManager = new MapManager(Map);
+                    Engine.Ct = false;
+                }
+                else
                 {
-                    if (NumberOfGames > 0)
-                    {
-                        var mapGenerator = new MapGenerator(Map.GetLength());
-                        Map = mapGenerator.GenerateMap();
-                        Engine.MapManager = new MapManager(Map);
-                        Engine.Ct = false;
-                    }
-                    else
-                    {
-                        Map = null;
-                    }
-                });
-                task.Wait();
+                    Map = null;
+                }
             }
         }
     }

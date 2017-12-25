@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="AppPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://localhost:62109/</Value>
+      <Value Profile="(Default)">http://co-yar-ws100:8080/WebGameService/</Value>
     </Setting>
   </Settings>
 </SettingsFile>
