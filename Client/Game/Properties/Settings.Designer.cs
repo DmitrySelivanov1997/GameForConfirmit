@@ -25,10 +25,22 @@ namespace Game.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://co-yar-ws100:8080/WebGameService/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://co-yar-ws100:8080/")]
         public string AppPath {
             get {
                 return ((string)(this["AppPath"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:62109/")]
+        public string AppPath2 {
+            get {
+                return ((string)(this["AppPath2"]));
+            }
+            set {
+                this["AppPath2"] = value;
             }
         }
     }

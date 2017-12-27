@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using CommonClient_WebServiseParts;
 using InterfaceLibrary;
 

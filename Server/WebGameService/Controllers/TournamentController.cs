@@ -32,7 +32,7 @@ namespace WebGameService.Controllers
         [System.Web.Http.HttpPut]
         public void PostDelayForEachTurn([FromBody]int delay)
         {
-            Engine.WaitTime = delay;
+            Engine.WaitTime = delay; 
         }
 
         [System.Web.Http.HttpGet]
