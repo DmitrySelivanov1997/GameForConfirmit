@@ -16,6 +16,8 @@ namespace WebGameService
     {
         public static void Register(HttpConfiguration config)
         {
+
+            config.Filters.Add(new CustomHeaderFilter());
             // Web API configuration and services 
             config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
             config.Services.Replace(typeof(IExceptionLogger), new GlobalExceptionLogger());
