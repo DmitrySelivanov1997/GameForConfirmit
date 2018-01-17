@@ -4,9 +4,19 @@
 	        <meta charset="utf-8" />
 	        <title>Игровое поле</title>
 	        <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+	<link rel="stylesheet" href="styles/style.css">
 	</head>
 	<body>
-			<script src="Scripts/script.js"></script>
+		<div id="algorithmsAndScore">
+			<div id="firstAlgorithm" align="left" >1</div>
+			<div id="score">0:0</div>
+			<div id="secondAlgorithm" align="right">2</div>
+		</div>
+		<div id="table"></div>
+		<div id="here_table"></div>
+			<script src="scripts/get_algorithms_from_server.js"></script>
+			<script src="scripts/get_gamestats_from_server.js"></script>
 			<button id="getAlgorithm">Получить название алгоритма</button>
+			<button id="getStats">Получить карту</button>
 	</body>
 </html>
