@@ -1,9 +1,6 @@
 body {
     text-align: center; 
     }
-table {
-    margin: auto;
-}
 #algorithmsAndScore div {
     background: rgb(182, 182, 182);
     display: inline-block;
@@ -18,6 +15,7 @@ table {
     width: 100px;
 }
 #here_table {
-    height: 500px;
-    width: 500px;
+    height: 711px;
+    width: 711px;
+    margin: auto;
 }
