@@ -7,15 +7,53 @@
 			<link rel="stylesheet" href="styles/style.css">
 	</head>
 	<body>
-		<div id="algorithmsAndScore">
-			<div id="firstAlgorithm" align="left" >1</div>
-			<div id="score">0:0</div>
-			<div id="secondAlgorithm" align="right">2</div>
+		<div id="UI">
+			<div id="algorithmsAndScore">
+				<div id="firstAlgorithm" align="left" >1</div>
+				<div id="score">0:0</div>
+				<div id="secondAlgorithm" align="right">2</div>
+			</div>
+			<div id="gameSettings">
+				<div>Размер поля:</div>
+				<input type="number" name="mapSize" min="10" value="50" step="1">
+				<div>Номер хода:</div>
+				<div id="numberOfTurns">0</div>
+				<div>Количество турнирных партий:</div>
+				<input type="number" id="numberOfMatches" min="1"value="1" step="1">
+				<div>Задержка отрисовки:</div>
+				<input type="range" id="drawTimeSlider" min="0" max="4" value="0" step="0,5" value="50">
+				<output id="drawTimeOutput" for="drawTimeSlider">0</output>
+				<div>Скорость алгоритмов:</div>
+				<input type="range" id="turnsTimeSlider" min="0" max="1000" value="0" step="25" value="75">
+				<output id="turnsTimeOutput" for="turnsTimeSlider">0</output>
+				<button id="loadAlgN1">Загрузить алгоритм #1</button>
+				<button id="loadAlgN2">Загрузить алгоритм #2</button>
+			</div>
+			<div id="gameStatisitcs">
+				<div id="firstAlgorithmName"></div>
+				<div>Съедено еды:</div>
+				<div id="whiteArmyFoodEaten">0</div>
+				<div>Юнитов в армии:</div>
+				<div id="whiteArmyCurrentUnits">0</div>
+				<div>Юнитов уничтожено:</div>
+				<div id="whiteArmyEnemiesKilled">0</div>
+				<div id="secondAlgorithmName"></div>
+				<div>Съедено еды:</div>
+				<div id="blackArmyFoodEaten">0</div>
+				<div>Юнитов в армии:</div>
+				<div id="blackArmyCurrentUnits">0</div>
+				<div>Юнитов уничтожено:</div>
+				<div id="blackArmyEnemiesKilled">0</div>
+
+			</div>
+			<div id="here_table"></div>
 		</div>
-		<div id="here_table"></div>
 			<script src="scripts/get_algorithms_from_server.js"></script>
 			<script src="scripts/get_gamestats_from_server.js"></script>
+			<script src="scripts/slider_output.js"></script>
+		<div id="control_buttons">	
 			<button id="getAlgorithm">Получить название алгоритма</button>
 			<button id="getStats">Получить карту</button>
+		</div>
 	</body>
 </html>

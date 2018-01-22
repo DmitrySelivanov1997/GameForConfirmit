@@ -1,9 +1,25 @@
-body {
-    text-align: center; 
-    }
-#algorithmsAndScore div {
+
+#gameSettings,#algorithmsAndScore,#gameStatisitcs {
+    display: inline-block;
+    vertical-align: top;
+}
+#algorithmsAndScore, #here_table{
+    float: left;
+}
+#here_table,#control_buttons{
+    clear: left;
+}
+#algorithmsAndScore div{
     background: rgb(182, 182, 182);
     display: inline-block;
+}
+#gameSettings>*,#gameStatisitcs>*{
+    margin-bottom:10px; 
+    width: 100px; 
+    display: table;
+}
+#gameSettings{
+    width: 140px; 
 }
 #firstAlgorithm {
     width: 300px;
@@ -18,4 +34,7 @@ body {
     height: 711px;
     width: 711px;
     margin: auto;
+}
+#firstAlgorithmName,#secondAlgorithmName{
+        text-decoration: underline;
 }
