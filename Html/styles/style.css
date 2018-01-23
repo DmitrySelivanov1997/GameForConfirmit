@@ -1,4 +1,6 @@
-
+#UI{   
+    margin: auto; 
+}
 #gameSettings,#algorithmsAndScore,#gameStatisitcs {
     display: inline-block;
     vertical-align: top;
@@ -12,6 +14,7 @@
 #algorithmsAndScore div{
     background: rgb(182, 182, 182);
     display: inline-block;
+    text-align: center;
 }
 #gameSettings>*,#gameStatisitcs>*{
     margin-bottom:10px; 

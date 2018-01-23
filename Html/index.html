@@ -15,7 +15,7 @@
 			</div>
 			<div id="gameSettings">
 				<div>Размер поля:</div>
-				<input type="number" name="mapSize" min="10" value="50" step="1">
+				<input type="number" id="mapSize" min="10" value="50" step="1">
 				<div>Номер хода:</div>
 				<div id="numberOfTurns">0</div>
 				<div>Количество турнирных партий:</div>
@@ -26,8 +26,8 @@
 				<div>Скорость алгоритмов:</div>
 				<input type="range" id="turnsTimeSlider" min="0" max="1000" value="0" step="25" value="75">
 				<output id="turnsTimeOutput" for="turnsTimeSlider">0</output>
-				<button id="loadAlgN1">Загрузить алгоритм #1</button>
-				<button id="loadAlgN2">Загрузить алгоритм #2</button>
+				<input type="file" id="loadAlgN1">
+				<input type="file" id="loadAlgN2">
 			</div>
 			<div id="gameStatisitcs">
 				<div id="firstAlgorithmName"></div>
@@ -48,12 +48,12 @@
 			</div>
 			<div id="here_table"></div>
 		</div>
-			<script src="scripts/get_algorithms_from_server.js"></script>
-			<script src="scripts/get_gamestats_from_server.js"></script>
-			<script src="scripts/slider_output.js"></script>
 		<div id="control_buttons">	
-			<button id="getAlgorithm">Получить название алгоритма</button>
-			<button id="getStats">Получить карту</button>
+			<button id="startTournament">Начать турнир</button>
+			<button id="cancelltournament">Отменить турнир</button>
 		</div>
+		<script src="scripts/post_data_to_start_tournament.js"></script>
+		<script src="scripts/post_algorithms_to_the_server.js"></script>
+		<script src="scripts/slider_output.js"></script>
 	</body>
 </html>
