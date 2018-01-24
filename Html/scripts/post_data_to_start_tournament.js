@@ -1,4 +1,4 @@
-var timerId;
+var fieldChangeTimer;
 $( function() {
         $('#startTournament').click( function() {
             GetAlgorithmsNames();
@@ -26,7 +26,7 @@ function PostDataToTheServer(){
     $.post("http://co-yar-ws100:8080/api/tournament/start/", { MapSize: mapSize, NumberOfGames: numberOfGames, WaitTime:WaitTime }, CreateTable );
 }
 
-function CreateTable() {
+function CreateTable() { //creating a new game field after starting tournament
         $('#here_table').empty();
         $.get( "http://co-yar-ws100:8080/api/tournament", function( stats ) {
             var map = stats.Map;
@@ -39,16 +39,19 @@ function CreateTable() {
                  table.append(row);
                 }
             $('#here_table').append(table)
-            timerId = setInterval(drawingTable, 100);
+            fieldChangeTimer = setInterval(drawingTable, 100);
     });
 }
 
-function drawingTable(){
+function drawingTable(){ // changing color of table cell within 
          $.get( "http://co-yar-ws100:8080/api/tournament", function( stats ) {
             var map = stats.Map;
-            var table = $('#gameField ');
+            var whiteStatistics = stats.WhiteStatistics;
+            var blackStatistics = stats.BlackStatistics;
+            UpdateStats(whiteStatistics, blackStatistics);
+            var table = $('#gameField');
             if(map === null ){
-                clearInterval(timerId);
+                clearInterval(fieldChangeTimer);
                 return;
             }
             for(i=0; i<map.length; i++){
@@ -57,9 +60,6 @@ function drawingTable(){
                     $(table[0].rows[i].cells[j]).css("background-color",findColorForCell(i,j,map));
                 }
             }
-            var whiteStatistics = stats.WhiteStatistics;
-            var blackStatistics = stats.BlackStatistics;
-            UpdateStats(whiteStatistics, blackStatistics);
         }
     )
 }
@@ -92,11 +92,42 @@ function findColorForCell(i,j,map){
     }
 }
 
-$( function() {
+$( function() { // delete request to cancell tournament
         $('#cancelltournament').click( function() {
         $.ajax({
             url: 'http://co-yar-ws100:8080/api/tournament',
             type: 'DELETE',
         });
     });
+});
+$(function() { // code which happens after changing drawing slider
+    var el;
+    $("#drawTimeSlider").change(function() {
+    el = $(this);
+    el
+    .next("#drawTimeOutput")
+    .text(el.val());
+    if(fieldChangeTimer !== undefined){
+        clearInterval(fieldChangeTimer);
+        fieldChangeTimer = setInterval(drawingTable, el.val());
+    }
+    })
+    .trigger('change');
+})
+ $(function() { // code which happens after changing turn time slider
+    var el;
+    $("#turnsTimeSlider").change(function() {
+    el = $(this);
+    el
+   .next("#turnsTimeOutput")
+   .text(el.val());
+    $.ajax({
+        url: 'http://co-yar-ws100:8080/api/tournament',   
+        type: 'PUT', 
+        data:{
+           "" : el.val()
+        }
+    });
+   })
+   .trigger('change');
 });
