@@ -9,9 +9,9 @@
 	<body>
 		<div id="UI">
 			<div id="algorithmsAndScore">
-				<div id="firstAlgorithm" align="left" >1</div>
+				<div id="firstAlgorithm" align="left" ></div>
 				<div id="score">0:0</div>
-				<div id="secondAlgorithm" align="right">2</div>
+				<div id="secondAlgorithm" align="right"></div>
 			</div>
 			<div id="gameSettings">
 				<div>Размер поля:</div>
@@ -26,7 +26,9 @@
 				<div>Скорость алгоритмов:</div>
 				<input type="range" id="turnsTimeSlider" min="0" max="1000" value="0" step="25" value="75">
 				<output id="turnsTimeOutput" for="turnsTimeSlider">0</output>
+				<div>Белые:</div>
 				<input type="file" id="loadAlgN1">
+				<div>Черные:</div>
 				<input type="file" id="loadAlgN2">
 			</div>
 			<div id="gameStatisitcs">
@@ -53,7 +55,7 @@
 			<button id="cancelltournament">Отменить турнир</button>
 		</div>
 		<script src="scripts/post_data_to_start_tournament.js"></script>
-		<script src="scripts/post_algorithms_to_the_server.js"></script>
+		<script src="scripts/map_size_changed.js"></script>
 		<script src="scripts/post_algorithms.js"></script>
 	</body>
 </html>
