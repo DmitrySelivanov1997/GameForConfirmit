@@ -1,4 +1,39 @@
 var fieldChangeTimer;
+class WebServiceCaller {
+
+    constructor(url) {
+      this.url = url;
+    }
+  
+    Get(address,func){
+        $.get( this.url+address, func);
+    }
+    PostArray(array,address) {
+        var xhr = new XMLHttpRequest;
+        xhr.open("POST", this.url+address, true);
+        xhr.send(array);
+    }
+    PostData(address,data,func){
+        $.post(this.url+address, data, func );
+    }
+    CancellTournament(address){
+        $.ajax({
+            url: this.url+address,
+            type: 'DELETE',
+        });
+    }
+    PutData(address,data){
+        $.ajax({
+            url: this.url+address,   
+            type: 'PUT', 
+            data:{
+               "" : data
+            }
+        });
+    }
+  
+  }
+var webCaller= new WebServiceCaller("http://co-yar-ws100:8080");
 $( function() {
         $('#startTournament').click( function() {
             GetAlgorithmsNames();
@@ -10,11 +45,11 @@ function GetAlgorithmsNames(){
     var firstAlgName = $('#firstAlgorithmName');
     var secondAlg = $('#secondAlgorithm');
     var secondAlgName = $('#secondAlgorithmName');
-    $.get( "http://co-yar-ws100:8080/api/algorithm/white", function( algorithm ) {
+    webCaller.Get("/api/algorithm/white", function( algorithm ) {
         firstAlg.text(algorithm);
         firstAlgName.text(algorithm);
     });
-    $.get( "http://co-yar-ws100:8080/api/algorithm/black", function( algorithm ) {
+    webCaller.Get("/api/algorithm/black", function( algorithm ) {
     secondAlg.text(algorithm);
     secondAlgName.text(algorithm);
     });
@@ -23,28 +58,30 @@ function PostDataToTheServer(){
     var mapSize = $('#mapSize').val();
     var numberOfGames = $('#numberOfMatches').val();
     var WaitTime = $('#turnsTimeSlider').val();
-    $.post("http://co-yar-ws100:8080/api/tournament/start/", { MapSize: mapSize, NumberOfGames: numberOfGames, WaitTime:WaitTime }, CreateTable );
+    webCaller.PostData("/api/tournament/start/", { MapSize: mapSize, NumberOfGames: numberOfGames, WaitTime:WaitTime }, CreateTable );
 }
 
 function CreateTable() { //creating a new game field after starting tournament
-        $('#here_table').empty();
-        $.get( "http://co-yar-ws100:8080/api/tournament", function( stats ) {
+         $("table").remove()
+         webCaller.Get("/api/tournament", function( stats ) {
             var map = stats.Map;
-            var table = $('<table></table>').attr('id', 'gameField').css({"width":"100%","height":"100%","margin":"auto"});
+            var table = $('<table></table>').attr('id', 'gameField');
             for(i=0; i<map.length; i++){
                 var row = $('<tr></tr>');
                 for(j=0;j<map.length;j++){
+                    var td=$('<td></td>').css("background-color",findColorForCell(i,j,map));
+                    td.css("height",td.width());
                       row.append($('<td></td>').css("background-color",findColorForCell(i,j,map)));
                 }
                  table.append(row);
                 }
-            $('#here_table').append(table)
+            $('#hereTable').append(table)
             fieldChangeTimer = setInterval(drawingTable, 100);
     });
 }
 
 function drawingTable(){ // changing color of table cell within 
-         $.get( "http://co-yar-ws100:8080/api/tournament", function( stats ) {
+         webCaller.Get("/api/tournament", function( stats ) {
             var map = stats.Map;
             var whiteStatistics = stats.WhiteStatistics;
             var blackStatistics = stats.BlackStatistics;
@@ -94,10 +131,8 @@ function findColorForCell(i,j,map){
 
 $( function() { // delete request to cancell tournament
         $('#cancelltournament').click( function() {
-        $.ajax({
-            url: 'http://co-yar-ws100:8080/api/tournament',
-            type: 'DELETE',
-        });
+        webCaller.CancellTournament("/api/tournament");
+        ;
     });
 });
 $(function() { // code which happens after changing drawing slider
@@ -121,13 +156,31 @@ $(function() { // code which happens after changing drawing slider
     el
    .next("#turnsTimeOutput")
    .text(el.val());
-    $.ajax({
-        url: 'http://co-yar-ws100:8080/api/tournament',   
-        type: 'PUT', 
-        data:{
-           "" : el.val()
-        }
-    });
+   webCaller.PutData("/api/tournament",el.val());
    })
    .trigger('change');
 });
+$(function(){ //Posting algorithm for white
+    $("#loadAlgN1").change(function() {  
+      var reader = new FileReader();
+      reader.onload = function() {
+    
+        var arrayBuffer = this.result,
+        array = new Uint8Array(arrayBuffer);
+        webCaller.PostArray(array,"/api/algorithm/white");
+      }
+      reader.readAsArrayBuffer(this.files[0]);
+    })
+})
+$(function(){ // posting algorithm for black
+  $("#loadAlgN2").change(function() {  
+    var reader = new FileReader();
+    reader.onload = function() {
+  
+      var arrayBuffer = this.result,
+      array = new Uint8Array(arrayBuffer);
+      webCaller.PostArray(array,"/api/algorithm/black");
+    }
+    reader.readAsArrayBuffer(this.files[0]);
+  })
+})

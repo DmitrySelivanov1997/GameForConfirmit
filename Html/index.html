@@ -7,11 +7,12 @@
 			<link rel="stylesheet" href="styles/style.css">
 	</head>
 	<body>
-		<div id="UI">
 			<div id="algorithmsAndScore">
 				<div id="firstAlgorithm" align="left" ></div>
 				<div id="score">0:0</div>
 				<div id="secondAlgorithm" align="right"></div>
+			</div>
+			<div id="hereTable">
 			</div>
 			<div id="gameSettings">
 				<div>Размер поля:</div>
@@ -30,6 +31,8 @@
 				<input type="file" id="loadAlgN1">
 				<div>Черные:</div>
 				<input type="file" id="loadAlgN2">
+				<button id="startTournament">Начать турнир</button>
+				<button id="cancelltournament">Отменить турнир</button>
 			</div>
 			<div id="gameStatisitcs">
 				<div id="firstAlgorithmName"></div>
@@ -46,16 +49,8 @@
 				<div id="blackArmyCurrentUnits">0</div>
 				<div>Юнитов уничтожено:</div>
 				<div id="blackArmyEnemiesKilled">0</div>
-
 			</div>
-			<div id="here_table"></div>
-		</div>
-		<div id="control_buttons">	
-			<button id="startTournament">Начать турнир</button>
-			<button id="cancelltournament">Отменить турнир</button>
-		</div>
 		<script src="scripts/post_data_to_start_tournament.js"></script>
 		<script src="scripts/map_size_changed.js"></script>
-		<script src="scripts/post_algorithms.js"></script>
 	</body>
 </html>
