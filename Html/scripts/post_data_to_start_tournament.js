@@ -70,8 +70,7 @@ function CreateTable() { //creating a new game field after starting tournament
                 var row = $('<tr></tr>');
                 for(j=0;j<map.length;j++){
                     var td=$('<td></td>').css("background-color",findColorForCell(i,j,map));
-                    td.css("height",td.width());
-                      row.append($('<td></td>').css("background-color",findColorForCell(i,j,map)));
+                    row.append($('<td></td>').css("background-color",findColorForCell(i,j,map)));
                 }
                  table.append(row);
                 }

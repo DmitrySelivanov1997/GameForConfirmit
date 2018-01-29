@@ -4,51 +4,53 @@
 	        <meta charset="utf-8" />
 	        <title>Игровое поле</title>
 	        <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-			<link rel="stylesheet" href="styles/style.css">
+			<link rel="stylesheet"  href="styles/style.css">
 	</head>
 	<body>
 			<div id="algorithmsAndScore">
-				<div id="firstAlgorithm" align="left" ></div>
+				<div id="firstAlgorithm" >Первый алгоритм</div>
 				<div id="score">0:0</div>
-				<div id="secondAlgorithm" align="right"></div>
+				<div id="secondAlgorithm" >Второй алгоритм</div>
 			</div>
 			<div id="hereTable">
 			</div>
-			<div id="gameSettings">
-				<div>Размер поля:</div>
-				<input type="number" id="mapSize" min="10" value="50" step="1">
-				<div>Номер хода:</div>
-				<div id="numberOfTurns">0</div>
-				<div>Количество турнирных партий:</div>
-				<input type="number" id="numberOfMatches" min="1"value="1" step="1">
-				<div>Задержка отрисовки:</div>
-				<input type="range" id="drawTimeSlider" min="0" max="4000" value="0" step="100" >
-				<output id="drawTimeOutput" for="drawTimeSlider">0</output>
-				<div>Скорость алгоритмов:</div>
-				<input type="range" id="turnsTimeSlider" min="0" max="1000" value="0" step="25" value="75">
-				<output id="turnsTimeOutput" for="turnsTimeSlider">0</output>
-				<div>Белые:</div>
-				<input type="file" id="loadAlgN1">
-				<div>Черные:</div>
-				<input type="file" id="loadAlgN2">
-				<button id="startTournament">Начать турнир</button>
-				<button id="cancelltournament">Отменить турнир</button>
-			</div>
-			<div id="gameStatisitcs">
-				<div id="firstAlgorithmName"></div>
-				<div>Съедено еды:</div>
-				<div id="whiteArmyFoodEaten">0</div>
-				<div>Юнитов в армии:</div>
-				<div id="whiteArmyCurrentUnits">0</div>
-				<div>Юнитов уничтожено:</div>
-				<div id="whiteArmyEnemiesKilled">0</div>
-				<div id="secondAlgorithmName"></div>
-				<div>Съедено еды:</div>
-				<div id="blackArmyFoodEaten">0</div>
-				<div>Юнитов в армии:</div>
-				<div id="blackArmyCurrentUnits">0</div>
-				<div>Юнитов уничтожено:</div>
-				<div id="blackArmyEnemiesKilled">0</div>
+			<div id="gameProperties">
+				<div id="gameSettings">
+					<div>Размер поля:</div>
+					<input type="number" id="mapSize" min="10" value="50" step="1">
+					<div>Номер хода:</div>
+					<div id="numberOfTurns">0</div>
+					<div>Количество турнирных партий:</div>
+					<input type="number" id="numberOfMatches" min="1"value="1" step="1">
+					<div>Задержка отрисовки:</div>
+					<input type="range" id="drawTimeSlider" min="0" max="4000" value="0" step="100" >
+					<output id="drawTimeOutput" for="drawTimeSlider">0</output>
+					<div>Скорость алгоритмов:</div>
+					<input type="range" id="turnsTimeSlider" min="0" max="1000" value="0" step="25" value="75">
+					<output id="turnsTimeOutput" for="turnsTimeSlider">0</output>
+					<div>Белые:</div>
+					<input type="file" id="loadAlgN1">
+					<div>Черные:</div>
+					<input type="file" id="loadAlgN2">
+					<button id="startTournament"></button>
+					<button id="cancelltournament"></button>
+				</div>
+				<div id="gameStatisitcs">
+					<div id="firstAlgorithmName"></div>
+					<div>Съедено еды:</div>
+					<div id="whiteArmyFoodEaten">0</div>
+					<div>Юнитов в армии:</div>
+					<div id="whiteArmyCurrentUnits">0</div>
+					<div>Юнитов уничтожено:</div>
+					<div id="whiteArmyEnemiesKilled">0</div>
+					<div id="secondAlgorithmName"></div>
+					<div>Съедено еды:</div>
+					<div id="blackArmyFoodEaten">0</div>
+					<div>Юнитов в армии:</div>
+					<div id="blackArmyCurrentUnits">0</div>
+					<div>Юнитов уничтожено:</div>
+					<div id="blackArmyEnemiesKilled">0</div>
+				</div>
 			</div>
 		<script src="scripts/post_data_to_start_tournament.js"></script>
 		<script src="scripts/map_size_changed.js"></script>
