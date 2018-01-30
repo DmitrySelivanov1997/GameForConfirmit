@@ -70,13 +70,11 @@
 }
 .baseWhite{
     background: white;
-    border-top: 4px solid red;
-    border-bottom: 4px solid red;
+    border-radius: 50%
 }
 .baseBlack{
     background: black;
-    border-top: 4px solid red;
-    border-bottom: 4px solid red;
+    border-radius: 50%
 }
 .brick{
     background: brown;
