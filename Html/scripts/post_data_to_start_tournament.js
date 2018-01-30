@@ -2,184 +2,220 @@ var fieldChangeTimer;
 class WebServiceCaller {
 
     constructor(url) {
-      this.url = url;
+        this.url = url;
     }
-  
-    Get(address,func){
-        $.get( this.url+address, func);
+
+    async GetGameStats() {
+        return await $.get(this.url + "/api/tournament");
     }
-    PostArray(array,address) {
-        var xhr = new XMLHttpRequest;
-        xhr.open("POST", this.url+address, true);
-        xhr.send(array);
+    GetAlgorithmName(algName) {
+        if (algName === "white") {
+            $.get(this.url + "/api/algorithm/white", function (name) {
+                SetAlgorithmName(name, "white");
+            });
+        }
+        else {
+            $.get(this.url + "/api/algorithm/black", function (name) {
+                SetAlgorithmName(name, "black");
+            });
+        }
     }
-    PostData(address,data,func){
-        $.post(this.url+address, data, func );
+    PostArray(algType, array) {
+        if(algType==="white"){
+            var xhr = new XMLHttpRequest;
+            xhr.open("POST", this.url + "/api/algorithm/white", true);
+            xhr.send(array);
+        }
+        if(algType==="black"){
+            var xhr = new XMLHttpRequest;
+            xhr.open("POST", this.url + "/api/algorithm/black", true);
+            xhr.send(array);
+        }
     }
-    CancellTournament(address){
+    PostData(data) {
+        $.post(this.url + "/api/tournament/start/", data, function (result) {
+            CreateTable(result)
+        });
+    }
+    CancellTournament() {
         $.ajax({
-            url: this.url+address,
+            url: this.url + "/api/tournament",
             type: 'DELETE',
         });
     }
-    PutData(address,data){
+    PutData(data) {
         $.ajax({
-            url: this.url+address,   
-            type: 'PUT', 
-            data:{
-               "" : data
+            url: this.url + "/api/tournament",
+            type: 'PUT',
+            data: {
+                "": data
             }
         });
     }
-  
-  }
-var webCaller= new WebServiceCaller("http://co-yar-ws100:8080");
-$( function() {
-        $('#startTournament').click( function() {
-            GetAlgorithmsNames();
-            PostDataToTheServer();
-        } );
-    } );
-function GetAlgorithmsNames(){
-    var firstAlg = $('#firstAlgorithm');
-    var firstAlgName = $('#firstAlgorithmName');
-    var secondAlg = $('#secondAlgorithm');
-    var secondAlgName = $('#secondAlgorithmName');
-    webCaller.Get("/api/algorithm/white", function( algorithm ) {
-        firstAlg.text(algorithm);
-        firstAlgName.text(algorithm);
-    });
-    webCaller.Get("/api/algorithm/black", function( algorithm ) {
-    secondAlg.text(algorithm);
-    secondAlgName.text(algorithm);
-    });
+
 }
-function PostDataToTheServer(){
+var webCaller = new WebServiceCaller("http://co-yar-ws100:8080");
+$(function () {
+    $('#startTournament').click(function () {
+        GetAlgorithmsNames();
+        PostDataToTheServer();
+        DisableButtons();
+    });
+});
+function GetAlgorithmsNames() {
+    webCaller.GetAlgorithmName("white");
+    webCaller.GetAlgorithmName("black");
+}
+
+function SetAlgorithmName(name, algType) {
+    if (algType === "black") {
+        var secondAlg = $('#secondAlgorithm');
+        var secondAlgName = $('#secondAlgorithmName');
+        secondAlg.text(name);
+        secondAlgName.text(name);
+    }
+    if (algType === "white") {
+        var firstAlg = $('#firstAlgorithm');
+        var firstAlgName = $('#firstAlgorithmName');
+        firstAlg.text(name);
+        firstAlgName.text(name);
+    }
+}
+function PostDataToTheServer() {
     var mapSize = $('#mapSize').val();
     var numberOfGames = $('#numberOfMatches').val();
     var WaitTime = $('#turnsTimeSlider').val();
-    webCaller.PostData("/api/tournament/start/", { MapSize: mapSize, NumberOfGames: numberOfGames, WaitTime:WaitTime }, CreateTable );
+    webCaller.PostData({ MapSize: mapSize, NumberOfGames: numberOfGames, WaitTime: WaitTime });
 }
 
-function CreateTable() { //creating a new game field after starting tournament
-         $("table").remove()
-         webCaller.Get("/api/tournament", function( stats ) {
-            var map = stats.Map;
-            var table = $('<table></table>').attr('id', 'gameField');
-            for(i=0; i<map.length; i++){
-                var row = $('<tr></tr>');
-                for(j=0;j<map.length;j++){
-                    var td=$('<td></td>').css("background-color",findColorForCell(i,j,map));
-                    row.append($('<td></td>').css("background-color",findColorForCell(i,j,map)));
-                }
-                 table.append(row);
-                }
-            $('#hereTable').append(table)
-            fieldChangeTimer = setInterval(drawingTable, 100);
-    });
-}
-
-function drawingTable(){ // changing color of table cell within 
-         webCaller.Get("/api/tournament", function( stats ) {
-            var map = stats.Map;
-            var whiteStatistics = stats.WhiteStatistics;
-            var blackStatistics = stats.BlackStatistics;
-            UpdateStats(whiteStatistics, blackStatistics);
-            var table = $('#gameField');
-            if(map === null ){
-                clearInterval(fieldChangeTimer);
-                return;
-            }
-            for(i=0; i<map.length; i++){
-                var row = $('<tr></tr>');
-                for(j=0;j<map.length;j++){
-                    $(table[0].rows[i].cells[j]).css("background-color",findColorForCell(i,j,map));
-                }
-            }
+async function CreateTable() { //creating a new game field after starting tournament
+    $("table").remove()
+    var stats = await webCaller.GetGameStats();
+    var map = stats.Map;
+    var table = $('<table></table>').attr('id', 'gameField');
+    for (i = 0; i < map.length; i++) {
+        var row = $('<tr></tr>');
+        for (j = 0; j < map.length; j++) {
+            row.append($('<td></td>').addClass(addClassForCell(i, j, map)));
         }
-    )
+        table.append(row);
+    }
+    $('#hereTable').append(table)
+    fieldChangeTimer = setInterval(drawingTable, 100);
+
 }
-function UpdateStats(whiteStat, blackStat){
+
+async function drawingTable() { // changing color of table cell within 
+    var stats = await webCaller.GetGameStats();
+    var map = stats.Map;
+    var whiteStatistics = stats.WhiteStatistics;
+    var blackStatistics = stats.BlackStatistics;
+    UpdateStats(whiteStatistics, blackStatistics);
+    var table = $('#gameField');
+    if (map === null) {
+        clearInterval(fieldChangeTimer);
+        EnableButtons();
+        return;
+    }
+    for (i = 0; i < map.length; i++) {
+        var row = $('<tr></tr>');
+        for (j = 0; j < map.length; j++) {
+            $(table[0].rows[i].cells[j]).attr("class",addClassForCell(i, j, map));
+        }
+    }
+}
+function UpdateStats(whiteStat, blackStat) {
     $('#numberOfTurns').text(whiteStat.TurnNumber);
-    $('#score').text(whiteStat.NumberOfWins+':'+blackStat.NumberOfWins);
+    $('#score').text(whiteStat.NumberOfWins + ':' + blackStat.NumberOfWins);
 
     $('#whiteArmyFoodEaten').text(whiteStat.FoodEaten);
     $('#whiteArmyCurrentUnits').text(whiteStat.CurrentArmyNumber);
     $('#whiteArmyEnemiesKilled').text(whiteStat.EnemiesKilled);
-    
+
     $('#blackArmyFoodEaten').text(blackStat.FoodEaten);
     $('#blackArmyCurrentUnits').text(blackStat.CurrentArmyNumber);
     $('#blackArmyEnemiesKilled').text(blackStat.EnemiesKilled);
 }
-function findColorForCell(i,j,map){
-    switch(map[i][j]) {
+function addClassForCell(i, j, map) {
+    switch (map[i][j]) {
         case 0:
-            return "#FFE4C4";
+            return "freeSpace";
         case 1:
-            return "#008000";
+            return "food";
         case 2:
+            return "unitWhite";
         case 4:
-            return "#FFFFFF";
+            return "baseWhite";
         case 3:
+            return "unitBlack";
         case 5:
-            return "#000000";
+            return "baseBlack";
         case 6:
-            return "#A52A2A"
+            return "brick";
     }
 }
 
-$( function() { // delete request to cancell tournament
-        $('#cancelltournament').click( function() {
-        webCaller.CancellTournament("/api/tournament");
+$(function () { // delete request to cancell tournament
+    $('#cancelltournament').click(function () {
+        webCaller.CancellTournament();
+        EnableButtons();
         ;
     });
 });
-$(function() { // code which happens after changing drawing slider
+$(function () { // code which happens after changing drawing slider
     var el;
-    $("#drawTimeSlider").change(function() {
-    el = $(this);
-    el
-    .next("#drawTimeOutput")
-    .text(el.val());
-    if(fieldChangeTimer !== undefined){
-        clearInterval(fieldChangeTimer);
-        fieldChangeTimer = setInterval(drawingTable, el.val());
-    }
+    $("#drawTimeSlider").change(function () {
+        el = $(this);
+        el
+            .next("#drawTimeOutput")
+            .text(el.val());
+        if (fieldChangeTimer !== undefined) {
+            clearInterval(fieldChangeTimer);
+            fieldChangeTimer = setInterval(drawingTable, el.val());
+        }
     })
-    .trigger('change');
+        .trigger('change');
 })
- $(function() { // code which happens after changing turn time slider
+$(function () { // code which happens after changing turn time slider
     var el;
-    $("#turnsTimeSlider").change(function() {
-    el = $(this);
-    el
-   .next("#turnsTimeOutput")
-   .text(el.val());
-   webCaller.PutData("/api/tournament",el.val());
-   })
-   .trigger('change');
+    $("#turnsTimeSlider").change(function () {
+        el = $(this);
+        el
+            .next("#turnsTimeOutput")
+            .text(el.val());
+        webCaller.PutData(el.val());
+    })
+        .trigger('change');
 });
-$(function(){ //Posting algorithm for white
-    $("#loadAlgN1").change(function() {  
-      var reader = new FileReader();
-      reader.onload = function() {
-    
-        var arrayBuffer = this.result,
-        array = new Uint8Array(arrayBuffer);
-        webCaller.PostArray(array,"/api/algorithm/white");
-      }
-      reader.readAsArrayBuffer(this.files[0]);
+$(function () { //Posting algorithm for white
+    $("#loadAlgN1").change(function () {
+        var reader = new FileReader();
+        reader.onload = function () {
+
+            var arrayBuffer = this.result,
+                array = new Uint8Array(arrayBuffer);
+            webCaller.PostArray("white",array);
+        }
+        reader.readAsArrayBuffer(this.files[0]);
     })
 })
-$(function(){ // posting algorithm for black
-  $("#loadAlgN2").change(function() {  
-    var reader = new FileReader();
-    reader.onload = function() {
-  
-      var arrayBuffer = this.result,
-      array = new Uint8Array(arrayBuffer);
-      webCaller.PostArray(array,"/api/algorithm/black");
-    }
-    reader.readAsArrayBuffer(this.files[0]);
-  })
+$(function () { // posting algorithm for black
+    $("#loadAlgN2").change(function () {
+        var reader = new FileReader();
+        reader.onload = function () {
+
+            var arrayBuffer = this.result,
+                array = new Uint8Array(arrayBuffer);
+            webCaller.PostArray("black",array);
+        }
+        reader.readAsArrayBuffer(this.files[0]);
+    })
 })
+function DisableButtons(){
+    $("#loadAlgN1").prop('disabled',true);
+    $("#loadAlgN2").prop('disabled',true);
+}
+function EnableButtons(){
+    $("#loadAlgN1").prop('disabled',false);
+    $("#loadAlgN2").prop('disabled',false);
+}

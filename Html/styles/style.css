@@ -65,6 +65,31 @@
         content: "Отменить турнир";
     }
 }
+.food{
+    background: green;
+}
+.baseWhite{
+    background: white;
+    border-top: 4px solid red;
+    border-bottom: 4px solid red;
+}
+.baseBlack{
+    background: black;
+    border-top: 4px solid red;
+    border-bottom: 4px solid red;
+}
+.brick{
+    background: brown;
+}
+.freeSpace{
+    background: bisque;
+}
+.unitWhite{
+    background: white;
+}
+.unitBlack{
+    background: black;
+}
 
 @media (max-width: 1057px) and (min-width: 300px){
     table{  
