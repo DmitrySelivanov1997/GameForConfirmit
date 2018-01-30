@@ -66,7 +66,7 @@ async function drawingTable() { // changing color of table cell within
     for (i = 0; i < map.length; i++) {
         var row = $('<tr></tr>');
         for (j = 0; j < map.length; j++) {
-            $(table[0].rows[i].cells[j]).attr("class", addClassForCell(i, j, map));
+            $(table[0].rows[i].cells[j]).attr("class",addClassForCell(i, j, map));
         }
     }
 }
@@ -140,7 +140,7 @@ $(function () { //Posting algorithm for white army
 
             var arrayBuffer = this.result,
                 array = new Uint8Array(arrayBuffer);
-            webCaller.PostArray("white", array);
+            webCaller.PostArray("white",array);
         }
         reader.readAsArrayBuffer(this.files[0]);
     })
@@ -152,16 +152,16 @@ $(function () { // posting algorithm for black army
 
             var arrayBuffer = this.result,
                 array = new Uint8Array(arrayBuffer);
-            webCaller.PostArray("black", array);
+            webCaller.PostArray("black",array);
         }
         reader.readAsArrayBuffer(this.files[0]);
     })
 })
-function DisableButtons() {
-    $("#loadAlgN1").prop('disabled', true);
-    $("#loadAlgN2").prop('disabled', true);
+function DisableButtons(){
+    $("#loadAlgN1").prop('disabled',true);
+    $("#loadAlgN2").prop('disabled',true);
 }
-function EnableButtons() {
-    $("#loadAlgN1").prop('disabled', false);
-    $("#loadAlgN2").prop('disabled', false);
+function EnableButtons(){
+    $("#loadAlgN1").prop('disabled',false);
+    $("#loadAlgN2").prop('disabled',false);
 }
