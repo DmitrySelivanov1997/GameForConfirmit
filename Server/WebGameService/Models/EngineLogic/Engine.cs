@@ -68,15 +68,26 @@ namespace WebGameService.Models.EngineLogic
             MapManager.UpdateArmies();
             if (MapManager.CheckForGameOver() != GameResult.NotAGameOver)
             {
+                string gameResult = "";
                 var result = MapManager.CheckForGameOver();
                 Ct = true;
                 if (result == GameResult.BlackArmyDestroyed || result == GameResult.BlackBaseDestroyed)
                 {
+                    if (result == GameResult.BlackArmyDestroyed)
+                        gameResult = "Армия черных разбита";
+                    else
+                        gameResult = "База черных разбита";
+                    GameSessionManager.WriteEndingDataForStatistic(WhiteArmyStatistics.TurnNumber,gameResult);
                     WhiteArmyStatistics.NumberOfWins++;
                 }
                 if (result == GameResult.WhiteArmyDestroyed || result == GameResult.WhiteBaseDestroyed)
                 {
-                   BlackArmyStatistics.NumberOfWins++;
+                    if (result == GameResult.WhiteArmyDestroyed)
+                        gameResult = "Армия белых разбита";
+                    else
+                        gameResult = "База белых разбита";
+                    GameSessionManager.WriteEndingDataForStatistic(BlackArmyStatistics.TurnNumber, gameResult);
+                    BlackArmyStatistics.NumberOfWins++;
                 }
             }
 
