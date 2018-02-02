@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +29,6 @@ namespace WebGameService.Models.EngineLogic
         }
         public void Startfight()
         {
-            WriteStartingDataForStatistic();
             try
             {
                 while (Map != null)
@@ -37,6 +37,7 @@ namespace WebGameService.Models.EngineLogic
                         (IAlgorithm)Activator.CreateInstance(AlgorithmContainer.AlgorithmWhite.GetType());
                     AlgorithmContainer.AlgorithmBlack =
                         (IAlgorithm)Activator.CreateInstance(AlgorithmContainer.AlgorithmBlack.GetType());
+                    WriteStartingDataForStatistic();
                     Engine.Startbattle();
                     NumberOfGames--;
                     AddDataToDB();
@@ -61,6 +62,11 @@ namespace WebGameService.Models.EngineLogic
 
         private void AddDataToDB()
         {
+            using (var db = new GameSessionStatisticContext())
+            {
+                db.GameSessionStatistics.Add(GameSessionStatistic);
+                db.SaveChanges();
+            }
         }
 
         private void WriteStartingDataForStatistic()
@@ -75,7 +81,7 @@ namespace WebGameService.Models.EngineLogic
         {
             GameSessionStatistic.TurnsNumber = turnNumber;
             GameSessionStatistic.GameResult = gameResult;
-            GameSessionStatistic.GameDuration = DateTime.Now.Subtract(DateTime.Now.TimeOfDay);
+            GameSessionStatistic.GameDuration = DateTime.Now.Subtract(GameSessionStatistic.GameStartTime.TimeOfDay).ToString("mm:ss,fffff");
         }
     }
 }

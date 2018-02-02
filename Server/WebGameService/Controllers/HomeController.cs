@@ -9,17 +9,15 @@ namespace WebGameService.Controllers
 {
     public class HomeController : Controller
     {
-        private GameSessionStatisticContext db = new GameSessionStatisticContext();
-        public ActionResult Index()
+        public void Index(GameSessionStatistic gameSessionStatistic)
         {
-            return View(db.GameSessionStatistics);
-        }
-        public ActionResult Create()
-        {
-            db.GameSessionStatistics.Add(new GameSessionStatistic());
-            db.SaveChanges();
+            using (var db = new GameSessionStatisticContext())
 
-            return RedirectToAction("Index");
+            
+{
+                db.GameSessionStatistics.Add(gameSessionStatistic);
+                db.SaveChanges();
+            }
         }
     }
 }

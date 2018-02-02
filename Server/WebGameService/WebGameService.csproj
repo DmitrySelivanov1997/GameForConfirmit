@@ -199,14 +199,25 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AlgorithmController.cs" />
+    <Compile Include="Controllers\DBController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TournamentController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802020939436_InitialCreate.cs" />
+    <Compile Include="Migrations\201802020939436_InitialCreate.Designer.cs">
+      <DependentUpon>201802020939436_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802021100080_AddStringMigration.cs" />
+    <Compile Include="Migrations\201802021100080_AddStringMigration.Designer.cs">
+      <DependentUpon>201802021100080_AddStringMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AlgorithmContainer.cs" />
     <Compile Include="Models\CustomHeaderFilter.cs" />
+    <Compile Include="Models\DataBaseManager.cs" />
     <Compile Include="Models\EngineLogic\Engine.cs" />
     <Compile Include="Models\EngineLogic\GameSessionManager.cs" />
     <Compile Include="Models\EngineLogic\MapGenerator.cs" />
@@ -223,10 +234,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\GameStatisticDB.mdf" />
-    <Content Include="App_Data\GameStatisticDB_log.ldf">
-      <DependentUpon>GameStatisticDB.mdf</DependentUpon>
-    </Content>
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -283,7 +290,9 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
   </ItemGroup>
@@ -296,6 +305,14 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201802020939436_InitialCreate.resx">
+      <DependentUpon>201802020939436_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802021100080_AddStringMigration.resx">
+      <DependentUpon>201802021100080_AddStringMigration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

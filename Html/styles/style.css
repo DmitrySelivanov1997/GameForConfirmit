@@ -31,6 +31,29 @@
     display: inherit;
     overflow-wrap: break-word;
 }
+.food{
+    background: green;
+}
+.baseWhite{
+    background: white;
+    border-radius: 50%
+}
+.baseBlack{
+    background: black;
+    border-radius: 50%
+}
+.brick{
+    background: brown;
+}
+.freeSpace{
+    background: bisque;
+}
+.unitWhite{
+    background: white;
+}
+.unitBlack{
+    background: black;
+}
 @media (min-width: 1058px){
     table{  
         width: 700px;
@@ -64,29 +87,6 @@
     #cancelltournament:after{
         content: "Отменить турнир";
     }
-}
-.food{
-    background: green;
-}
-.baseWhite{
-    background: white;
-    border-radius: 50%
-}
-.baseBlack{
-    background: black;
-    border-radius: 50%
-}
-.brick{
-    background: brown;
-}
-.freeSpace{
-    background: bisque;
-}
-.unitWhite{
-    background: white;
-}
-.unitBlack{
-    background: black;
 }
 
 @media (max-width: 1057px) and (min-width: 300px){
