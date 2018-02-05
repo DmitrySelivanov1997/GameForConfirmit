@@ -8,9 +8,11 @@ $(function () {
         DisableButtons();
     });
 });
-function GetAlgorithmsNames() {
-    webCaller.GetAlgorithmName("white");
-    webCaller.GetAlgorithmName("black");
+async function GetAlgorithmsNames() {
+    var whiteName = await webCaller.GetAlgorithmName("white");
+    SetAlgorithmName(whiteName,"white");
+    var blackName = await webCaller.GetAlgorithmName("black");
+    SetAlgorithmName(blackName,"black");
 }
 
 function SetAlgorithmName(name, algType) {

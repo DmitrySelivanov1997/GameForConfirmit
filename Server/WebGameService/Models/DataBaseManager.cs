@@ -8,28 +8,15 @@ namespace WebGameService.Models
 {
     public class DataBaseManager
     {
-        private SqlConnection SqlConnection { get; set; }
-
-        public DataBaseManager()
+        private int numberOfObjectsInList = 25;
+        public List<GameSessionStatistic> GetRangeOfObjects(int startPosition)
         {
-            SqlConnection = new SqlConnection(@"Data Source = CO - YAR - WS100\SQLEXPRESS; Initial Catalog = GameStatisticDb; User ID = sa; Password = firm;");
-        }
-
-        public void GetWholeInformation()
-        {
-            using (SqlConnection)
+            List < GameSessionStatistic > selectedList=new List<GameSessionStatistic>();
+            using (var db = new GameSessionStatisticContext())
             {
-                SqlCommand command = new SqlCommand(
-                    "SELECT All FROM GameStatisticDb",SqlConnection);
-                SqlDataReader dataReader = command.ExecuteReader();
-                List<object> dataList = new List<object>();
-                while (dataReader.Read())
-                {
-                    dataList.Add(dataReader.GetString(0));
-
-                }
-                dataReader.Close();
+                selectedList = db.GameSessionStatistics.Where(p => p.Id <=startPosition+numberOfObjectsInList).ToList();
             }
+            return selectedList;
         }
     }
 }

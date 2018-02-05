@@ -9,5 +9,10 @@ namespace WebGameService.Models
     public class GameSessionStatisticContext : DbContext
     {
         public DbSet<GameSessionStatistic> GameSessionStatistics { get; set; }
+
+        public GameSessionStatisticContext():base("GameSessionStatisticContext") 
+        {
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<GameSessionStatisticContext>());
+        }
     }
 }

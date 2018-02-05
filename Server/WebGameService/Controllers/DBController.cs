@@ -13,9 +13,9 @@ namespace WebGameService.Controllers
     {
         private DataBaseManager DbManager = new DataBaseManager();
         [System.Web.Http.HttpGet]
-        public void GetDataFromDb()
+        public List<GameSessionStatistic> GetAllDataFromDb(int id)
         {
-             DbManager.GetWholeInformation();
+            return DbManager.GetRangeOfObjects(id);
         }
     }
 }

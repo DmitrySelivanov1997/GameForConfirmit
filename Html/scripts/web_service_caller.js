@@ -3,21 +3,19 @@ class WebServiceCaller {
     constructor(url) {
         this.url = url;
     }
-
-    async GetGameStats() {
-        return await $.get(this.url + "/api/tournament");
+    GetGameStats() {
+        return $.get(this.url + "/api/tournament");
     }
     GetAlgorithmName(algName) {
         if (algName === "white") {
-            $.get(this.url + "/api/algorithm/white", function (name) {
-                SetAlgorithmName(name, "white");
-            });
+            return $.get(this.url + "/api/algorithm/white");
         }
         else {
-            $.get(this.url + "/api/algorithm/black", function (name) {
-                SetAlgorithmName(name, "black");
-            });
+           return $.get(this.url + "/api/algorithm/black");
         }
+    }
+    GetGameSessionStatistic() {
+        return $.get(this.url + "/api/db");
     }
     PostArray(algType, array) {
         if(algType==="white"){
