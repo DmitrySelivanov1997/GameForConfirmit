@@ -14,8 +14,8 @@ class WebServiceCaller {
            return $.get(this.url + "/api/algorithm/black");
         }
     }
-    GetGameSessionStatistic() {
-        return $.get(this.url + "/api/db");
+    GetGameSessionStatistic(id) {
+        return $.get(this.url + "/api/db"+id);
     }
     PostArray(algType, array) {
         if(algType==="white"){

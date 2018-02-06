@@ -21,6 +21,7 @@ namespace WebGameService.Models.EngineLogic
         public static int WaitTime { get; set; }
         public static Engine Engine { get; set; }
         public static GameSessionStatistic GameSessionStatistic { get; set; }
+        private static DateTime gameStart { get; set; }
 
         public GameSessionManager()
         {
@@ -73,15 +74,33 @@ namespace WebGameService.Models.EngineLogic
         {
             GameSessionStatistic.WhiteAlgorithmName = AlgorithmContainer.AlgorithmWhite.GetType().FullName;
             GameSessionStatistic.BlackAlgorithmName = AlgorithmContainer.AlgorithmBlack.GetType().FullName;
-            GameSessionStatistic.GameStartTime = DateTime.Now;
+            gameStart = DateTime.Now;
+            GameSessionStatistic.GameStartTime = gameStart.ToString("G");
             GameSessionStatistic.MapSize = Map.Array.GetLength(0);
         }
 
-        public static void WriteEndingDataForStatistic(int turnNumber, string gameResult)
+        public static void WriteEndingDataForStatistic(int turnNumber, GameResult gameResult)
         {
             GameSessionStatistic.TurnsNumber = turnNumber;
-            GameSessionStatistic.GameResult = gameResult;
-            GameSessionStatistic.GameDuration = DateTime.Now.Subtract(GameSessionStatistic.GameStartTime.TimeOfDay).ToString("mm:ss,fffff");
+            GameSessionStatistic.GameResult = GetGameResult(gameResult);
+            GameSessionStatistic.GameDuration = DateTime.Now.Subtract(gameStart.TimeOfDay).ToString("mm:ss,fffff");
+        }
+
+        private static string GetGameResult(GameResult gameResult)
+        {
+            switch (gameResult)
+            {
+                case GameResult.BlackArmyDestroyed:
+                    return "Армия черных разбита";
+                case GameResult.BlackBaseDestroyed:
+                    return "База черных разбита";
+                case GameResult.WhiteArmyDestroyed:
+                    return "Армия белых разбита";
+                case GameResult.WhiteBaseDestroyed:
+                    return "База белых разбита";
+                default:
+                    return "Игра отменена";
+            }
         }
     }
 }

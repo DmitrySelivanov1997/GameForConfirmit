@@ -11,4 +11,10 @@ $( function() {
             if(c>250) c=250;
             this.value=c;
         })
+        $('#number').change(function() {
+            var c = this.value;
+            if(c<1) c=1;
+            if(c>250) c=250;
+            this.value=c;
+        })
 })

@@ -1,0 +1,32 @@
+table {
+    border-collapse: collapse;
+  }
+thead{
+    background: bisque;
+}
+tbody{
+    background: blanchedalmond;
+}
+th,td{
+    border:1px solid black;
+    text-align: center;
+}
+#number{
+    width: 75px;
+}
+@media (min-width: 1300px){
+    table{
+        width: 1300px;
+    }
+    th,td{
+        font-size: 13pt;
+    }
+}
+@media (max-width: 1000px) and (min-width: 300px){
+    table{
+        width: 700px;
+    }
+    th,td{
+        font-size: 9pt;
+    }
+}

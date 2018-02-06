@@ -15,7 +15,8 @@ namespace WebGameService.Controllers
         [System.Web.Http.HttpGet]
         public List<GameSessionStatistic> GetAllDataFromDb(int id)
         {
-            return DbManager.GetRangeOfObjects(id);
+
+            return DbManager.GetRangeOfObjects((id-1)*25); // Id is the number of page and here is also means the first element in db.List
         }
     }
 }
