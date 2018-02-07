@@ -49,5 +49,7 @@ class WebServiceCaller {
             }
         });
     }
-
+    GetDataAfterOrdering(data) {
+        return $.get( this.url + "/api/db/getstatsbyorder",data);
+    }
 }

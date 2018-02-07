@@ -1,5 +1,6 @@
 var webCaller = new WebServiceCaller("http://co-yar-ws100:8080");
 var pageNumber = 1;
+var orderType = "descending";
 GetStats(pageNumber);
 async function GetStats(id) {
     var stats = await webCaller.GetGameSessionStatistic("/"+id);
@@ -12,7 +13,7 @@ function DrawTable(stats) {
         "Number of Turns", "White Algorithm", "Black Algorithm"
     ];
     var myTable = $('<table/>', {
-        class: 'mytable'
+        class: 'myTable'
     }).append(
         $('<thead/>'),
         $('<tfoot/>'),
@@ -29,14 +30,14 @@ function DrawTable(stats) {
     $.each(stats,function( i, myData ) {
         $("tbody",myTable).append(
             $('<tr/>').append(
-                $('<td/>',{text:myData.Id}),
-                $('<td/>',{text:myData.MapSize}),
-                $('<td/>',{text:myData.GameStartTime}),
-                $('<td/>',{text:myData.GameDuration}), 
-                $('<td/>',{text:myData.GameResult}),
-                $('<td/>',{text:myData.TurnsNumber}),
-                $('<td/>',{text:myData.WhiteAlgorithmName}),
-                $('<td/>',{text:myData.BlackAlgorithmName}),
+                $('<td/>',{text:myData.Id}).addClass("Id").on("click",TdOnClick),
+                $('<td/>',{text:myData.MapSize}).addClass("MapSize").on("click",TdOnClick),
+                $('<td/>',{text:myData.GameStartTime}).addClass("GameStartTime").on("click",TdOnClick),
+                $('<td/>',{text:myData.GameDuration}).addClass("GameDuration").on("click",TdOnClick), 
+                $('<td/>',{text:myData.GameResult}).addClass("GameResult").on("click",TdOnClick),
+                $('<td/>',{text:myData.TurnsNumber}).addClass("TurnsNumber").on("click",TdOnClick),
+                $('<td/>',{text:myData.WhiteAlgorithmName}).addClass("WhiteAlgorithmname").on("click",TdOnClick),
+                $('<td/>',{text:myData.BlackAlgorithmName}).addClass("BlackAlgorithmName").on("click",TdOnClick),
             )
         );
     });

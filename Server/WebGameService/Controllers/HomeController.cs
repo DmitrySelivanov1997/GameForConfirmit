@@ -11,13 +11,6 @@ namespace WebGameService.Controllers
     {
         public void Index(GameSessionStatistic gameSessionStatistic)
         {
-            using (var db = new GameSessionStatisticContext())
-
-            
-{
-                db.GameSessionStatistics.Add(gameSessionStatistic);
-                db.SaveChanges();
-            }
         }
     }
 }

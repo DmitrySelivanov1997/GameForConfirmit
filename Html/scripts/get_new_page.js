@@ -1,7 +1,7 @@
 $(function () {
     $('#openNewPage').click(function () {
-        var page = $('#number').val();
+        pageNumber = $('#number').val();
         $("table").remove()
-        GetStats(page);
+        GetStats(pageNumber);
     });
 });
