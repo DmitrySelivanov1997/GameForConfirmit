@@ -11,8 +11,15 @@ th,td{
     border:1px solid black;
     text-align: center;
 }
+#pageinput *{
+    margin-bottom: 5px;
+}
 #number{
     width: 75px;
+    display: inline-block;
+}
+#date, #algorithmName{
+    width: 147px;
 }
 @media (min-width: 1300px){
     table{

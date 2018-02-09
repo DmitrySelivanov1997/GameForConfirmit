@@ -27,5 +27,13 @@ namespace WebGameService.Models
             }
             return selectedList;
         }
+
+        public IQueryable<GameSessionStatistic> GetAll()
+        {
+            using (var db = new GameSessionStatisticContext())
+            {
+                return db.GameSessionStatistics;
+            }
+        }
     }
 }

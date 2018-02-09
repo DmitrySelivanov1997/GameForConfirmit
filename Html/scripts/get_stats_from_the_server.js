@@ -1,12 +1,16 @@
 var webCaller = new WebServiceCaller("http://co-yar-ws100:8080");
 var pageNumber = 1;
-var orderType = "descending";
-GetStats(pageNumber);
-async function GetStats(id) {
-    var stats = await webCaller.GetGameSessionStatistic("/"+id);
+var orderType = "desc";
+var entriesNumber = 25;
+var filterName = $('#algorithmName').val();
+var filterDate= $('#date').val();
+GetStats(pageNumber,entriesNumber,filterName,filterDate);
+async function GetStats(pageNumber,entriesNumber,filterName,filterDate) {
+    var stats = await webCaller.GetGameSessionStatistic(pageNumber, entriesNumber,filterName,filterDate);
     DrawTable(stats);
 }
 function DrawTable(stats) {
+    $("table").remove()
     var table = $('#hereTable');
     var tableTitle = [
         "Id","Map Size", "Start Time", "Duration", "Game Result",

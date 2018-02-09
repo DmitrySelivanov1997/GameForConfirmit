@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
+using System.Web.Http.OData.Builder;
 using System.Windows;
 using WebGameService.Models;
 
@@ -16,10 +17,11 @@ namespace WebGameService
     {
         public static void Register(HttpConfiguration config)
         {
-
-           // config.Filters.Add(new CustomHeaderFilter());
-            // Web API configuration and services 
-
+            config.EnableQuerySupport();
+            ODataModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            modelBuilder.EntitySet<GameSessionStatistic>("GameSessionStatistic");
+            Microsoft.Data.Edm.IEdmModel model = modelBuilder.GetEdmModel();
+            config.Routes.MapODataRoute("ODataRoute", "odata", model);
             config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
             config.Services.Replace(typeof(IExceptionLogger), new GlobalExceptionLogger());
             config.Formatters.Add(new BsonMediaTypeFormatter());
@@ -28,7 +30,7 @@ namespace WebGameService
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional}
+                defaults: new { id = RouteParameter.Optional }
             );
         }
     }

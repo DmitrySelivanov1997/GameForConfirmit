@@ -14,8 +14,11 @@ class WebServiceCaller {
            return $.get(this.url + "/api/algorithm/black");
         }
     }
-    GetGameSessionStatistic(id) {
-        return $.get(this.url + "/api/db"+id);
+    GetGameSessionStatistic(pageNumber,entriesNumber,filterName, filterDate) {
+        return $.get(this.url + "/api/gamesessionstatistic?$skip="+(pageNumber-1)*25+"&$top="+entriesNumber+
+        "&$filter=(substringof('"+filterName+"', WhiteAlgorithmName) eq true or "+
+        "substringof('"+filterName+"', BlackAlgorithmName) eq true) "+
+        "and substringof('"+filterDate+"', GameStartTime) eq true");
     }
     PostArray(algType, array) {
         if(algType==="white"){
@@ -49,7 +52,11 @@ class WebServiceCaller {
             }
         });
     }
-    GetDataAfterOrdering(data) {
-        return $.get( this.url + "/api/db/getstatsbyorder",data);
+    GetDataAfterOrdering(pageNumber,parametr,orderType,entriesNumber,filterName, filterDate) {
+        return $.get( this.url + "/api/gamesessionstatistic"+
+        "?$orderby="+parametr+" "+orderType+"&$skip="+(pageNumber-1)*25+"&$top="+entriesNumber+
+        "&$filter=(substringof('"+filterName+"', WhiteAlgorithmName) eq true or "+
+        "substringof('"+filterName+"', BlackAlgorithmName) eq true) "+
+        "and substringof('"+filterDate+"', GameStartTime) eq true");
     }
 }
