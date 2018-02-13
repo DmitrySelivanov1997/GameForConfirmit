@@ -15,6 +15,12 @@ namespace WebGameService.Controllers
 {
     public class TournamentController : ApiController
     {
+        private readonly ISessionRepository _repository;
+        public TournamentController(ISessionRepository repository)
+        {
+            _repository = repository;
+        }
+
         [System.Web.Http.HttpPost]
         public HttpStatusCodeResult StartAndLaunchNewTournament([FromBody] TournamentInitializingClass classForTournament)
         {
@@ -25,7 +31,7 @@ namespace WebGameService.Controllers
             GameSessionManager.NumberOfGames = classForTournament.NumberOfGames;
             Task.Factory.StartNew(() =>
             {
-                new GameSessionManager().Startfight();
+                new GameSessionManager(_repository).Startfight();
             });
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }

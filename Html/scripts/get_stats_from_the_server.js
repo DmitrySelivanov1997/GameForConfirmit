@@ -4,9 +4,10 @@ var orderType = "desc";
 var entriesNumber = 25;
 var filterName = $('#algorithmName').val();
 var filterDate= $('#date').val();
+var parametr = "Id";
 GetStats(pageNumber,entriesNumber,filterName,filterDate);
-async function GetStats(pageNumber,entriesNumber,filterName,filterDate) {
-    var stats = await webCaller.GetGameSessionStatistic(pageNumber, entriesNumber,filterName,filterDate);
+async function GetStats() {
+    var stats = await webCaller.GetData(pageNumber,parametr,orderType,entriesNumber,filterName, filterDate);
     DrawTable(stats);
 }
 function DrawTable(stats) {

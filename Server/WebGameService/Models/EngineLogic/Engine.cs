@@ -3,7 +3,6 @@ using System.Threading;
 using CommonClient_WebServiseParts;
 using InterfaceLibrary;
 
-
 namespace WebGameService.Models.EngineLogic
 {
     public class Engine

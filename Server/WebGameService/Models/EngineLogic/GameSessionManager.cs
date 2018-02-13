@@ -16,15 +16,16 @@ namespace WebGameService.Models.EngineLogic
 {
     public class GameSessionManager
     {
+        private readonly ISessionRepository _repository;
         public static Map Map { get; set; }
         public static int NumberOfGames { get; set; }
         public static int WaitTime { get; set; }
-        public static Engine Engine { get; set; }
-        public static GameSessionStatistic GameSessionStatistic { get; set; }
-        private static DateTime gameStart { get; set; }
+        private static Engine Engine { get; set; }
+        private static GameSessionStatistic GameSessionStatistic { get; set; }
 
-        public GameSessionManager()
+        public GameSessionManager(ISessionRepository repository)
         {
+            _repository = repository;
             Engine = new Engine();
             GameSessionStatistic = new GameSessionStatistic();
         }
@@ -41,7 +42,7 @@ namespace WebGameService.Models.EngineLogic
                     WriteStartingDataForStatistic();
                     Engine.Startbattle();
                     NumberOfGames--;
-                    AddDataToDB();
+                    AddDataToDb();
                     if (NumberOfGames > 0)
                     {
                         var mapGenerator = new MapGenerator(Map.GetLength());
@@ -61,21 +62,16 @@ namespace WebGameService.Models.EngineLogic
             }
         }
 
-        private void AddDataToDB()
+        private void AddDataToDb()
         {
-            using (var db = new GameSessionStatisticContext())
-            {
-                db.GameSessionStatistics.Add(GameSessionStatistic);
-                db.SaveChanges();
-            }
+            _repository.Add(GameSessionStatistic);
         }
 
         private void WriteStartingDataForStatistic()
         {
             GameSessionStatistic.WhiteAlgorithmName = AlgorithmContainer.AlgorithmWhite.GetType().FullName;
             GameSessionStatistic.BlackAlgorithmName = AlgorithmContainer.AlgorithmBlack.GetType().FullName;
-            gameStart = DateTime.Now;
-            GameSessionStatistic.GameStartTime = gameStart.ToString("G");
+            GameSessionStatistic.GameStartTime = DateTime.Now;
             GameSessionStatistic.MapSize = Map.Array.GetLength(0);
         }
 
@@ -83,7 +79,7 @@ namespace WebGameService.Models.EngineLogic
         {
             GameSessionStatistic.TurnsNumber = turnNumber;
             GameSessionStatistic.GameResult = GetGameResult(gameResult);
-            GameSessionStatistic.GameDuration = DateTime.Now.Subtract(gameStart.TimeOfDay).ToString("mm:ss,fffff");
+            GameSessionStatistic.GameDuration = DateTime.Now.Subtract(GameSessionStatistic.GameStartTime.TimeOfDay).ToString("mm:ss,fffff");
         }
 
         private static string GetGameResult(GameResult gameResult)

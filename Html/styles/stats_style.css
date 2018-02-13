@@ -19,7 +19,7 @@ th,td{
     display: inline-block;
 }
 #date, #algorithmName{
-    width: 147px;
+    width: 230px;
 }
 @media (min-width: 1300px){
     table{
