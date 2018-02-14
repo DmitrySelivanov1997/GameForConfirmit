@@ -20,7 +20,6 @@ namespace WebGameService.Models
             return queryOptions.ApplyTo(_context.GameSessionStatistics).OfType<GameSessionStatistic>().ToList();
         }
 
-
         public int GetCountOfEntries(ODataQueryOptions<GameSessionStatistic> queryOptions)
         {
             return queryOptions.ApplyTo(_context.GameSessionStatistics).OfType<GameSessionStatistic>().Count();

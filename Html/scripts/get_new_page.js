@@ -1,8 +1,9 @@
 $(function () {
     $('#openNewPage').click(function () {
-        pageNumber = $('#number').val();
+       // pageNumber = $('#number').val();
         filterName = $('#algorithmName').val();
-        filterDate= $('#date').val();
+        filterDateBefore= $('#dateBefore').val();
+        filterDateAfter = $('#dateAfter').val();
         GetStats();
     });
 });

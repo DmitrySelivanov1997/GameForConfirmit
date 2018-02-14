@@ -6,6 +6,11 @@ class WebServiceCaller {
     GetGameStats() {
         return $.get(this.url + "/api/tournament");
     }
+    GetNumberOfPages(){
+        return $.get(this.url + "api/statistic/count"+
+        "&$filter=(substringof('"+filterName+"', WhiteAlgorithmName) eq true or "+
+        "substringof('"+filterName+"', BlackAlgorithmName) eq true)");
+    }
     GetAlgorithmName(algName) {
         if (algName === "white") {
             return $.get(this.url + "/api/algorithm/white");
@@ -46,16 +51,15 @@ class WebServiceCaller {
             }
         });
     }
-    GetData(pageNumber,parametr,orderType,entriesNumber,filterName, filterDate) {
-        if(filterDate!=="")
-            return $.get( this.url + "/api/statistic"+
-            "?$orderby="+parametr+" "+orderType+"&$skip="+(pageNumber-1)*entriesNumber+"&$top="+entriesNumber+
-            "&$filter=(substringof('"+filterName+"', WhiteAlgorithmName) eq true or "+
-            "substringof('"+filterName+"', BlackAlgorithmName) eq true) "+
-            "and GameStartTime eq DateTime'"+filterDate+"'");
+    GetData(pageNumber,parametr,orderType,entriesNumber,filterName, filterDateBefore, filterDateAfter) {
+        if(filterDateBefore==="")
+            filterDateBefore = "9999-12-12T23:00"
+        if(filterDateAfter==="")
+            filterDateAfter = "0001-12-12T23:00"
         return $.get( this.url + "/api/statistic"+
         "?$orderby="+parametr+" "+orderType+"&$skip="+(pageNumber-1)*entriesNumber+"&$top="+entriesNumber+
         "&$filter=(substringof('"+filterName+"', WhiteAlgorithmName) eq true or "+
-        "substringof('"+filterName+"', BlackAlgorithmName) eq true) ");
+        "substringof('"+filterName+"', BlackAlgorithmName) eq true) "+
+        "and GameStartTime gt DateTime'"+filterDateAfter+"'and GameStartTime lt DateTime'"+filterDateBefore+"'");
     }
 }

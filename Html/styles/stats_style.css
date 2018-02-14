@@ -18,8 +18,14 @@ th,td{
     width: 75px;
     display: inline-block;
 }
-#date, #algorithmName{
+.filter{
+    display: inline-table;
+}
+#dateBefore, #dateAfter, #algorithmName{
     width: 230px;
+}
+#algorithmName{
+    height: 18px;
 }
 @media (min-width: 1300px){
     table{
