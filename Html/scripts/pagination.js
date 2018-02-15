@@ -1,4 +1,4 @@
-function pagination(c, m) {
+function pagination(c, m)  {
     var current = c,
         last = m,
         delta = 2,
@@ -28,14 +28,21 @@ function pagination(c, m) {
 
     return rangeWithDots;
 }
-function Setpagination(){
-    $("ul").remove()
+function DrawPagination(totalPages){
+    $("ul").remove();
     var paging = $('.paginate');
     var myUl = $('<ul/>');
-    var c = pagination(pageNumber,20);
-    for (let i = 0, l = 20; i <= l; i++)
+    var c = pagination(pageNumber,totalPages);
+    for (let i = 0; i < c.length; i++)
     {
-        myUl.append($('<li/>').text(c[i]));
+        if((pageNumber)===c[i])
+        {
+            myUl.append($('<li/>').text(c[i]).addClass("liClicked"));
+        }
+        else
+        { 
+            myUl.append($('<li/>').text(c[i]));
+        }
     }
     paging.append(myUl);
 }

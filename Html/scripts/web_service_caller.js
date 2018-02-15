@@ -7,9 +7,14 @@ class WebServiceCaller {
         return $.get(this.url + "/api/tournament");
     }
     GetNumberOfPages(){
-        return $.get(this.url + "api/statistic/count"+
-        "&$filter=(substringof('"+filterName+"', WhiteAlgorithmName) eq true or "+
-        "substringof('"+filterName+"', BlackAlgorithmName) eq true)");
+        if(filterDateBefore==="")
+            filterDateBefore = "9999-12-12T23:00"
+        if(filterDateAfter==="")
+            filterDateAfter = "0001-12-12T23:00"
+        return $.get(this.url + "/api/statistic/count"+
+        "?$filter=(substringof('"+filterName+"', WhiteAlgorithmName) eq true or "+
+        "substringof('"+filterName+"', BlackAlgorithmName) eq true)"+
+        "and GameStartTime gt DateTime'"+filterDateAfter+"'and GameStartTime lt DateTime'"+filterDateBefore+"'");
     }
     GetAlgorithmName(algName) {
         if (algName === "white") {

@@ -6,7 +6,9 @@ var filterName = $('#algorithmName').val();
 var filterDateBefore = $('#dateBefore').val();
 var filterDateAfter = $('#dateBefore').val();
 var parametr = "Id";
+var pageCount;
 GetStats();
+SetPagination();
 async function GetStats() {
     var stats = await webCaller.GetData(pageNumber, parametr, orderType, entriesNumber, filterName, filterDateBefore, filterDateAfter);
     DrawTable(stats);
@@ -51,4 +53,10 @@ function DrawTable(stats) {
     });
     $("thead", myTable).append(titleCell);
     table.append(myTable);
+}
+
+async function SetPagination() {
+    var numberOfEntries = await webCaller.GetNumberOfPages();
+    pageCount = (Math.floor(numberOfEntries/entriesNumber))+1; 
+    DrawPagination(pageCount);
 }
