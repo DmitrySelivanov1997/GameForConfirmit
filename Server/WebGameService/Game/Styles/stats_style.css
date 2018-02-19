@@ -1,0 +1,64 @@
+table {
+    border-collapse: collapse;
+  }
+thead{
+    background: bisque;
+}
+tbody{
+    background: blanchedalmond;
+}
+th,td{
+    border:1px solid black;
+    text-align: center;
+}
+#pageinput *{
+    margin-bottom: 5px;
+}
+#number{
+    width: 75px;
+    display: inline-block;
+}
+.filter{
+    display: inline-table;
+}
+#dateBefore, #dateAfter, #algorithmName{
+    width: 230px;
+}
+#algorithmName{
+    height: 18px;
+}
+li {
+    background: bisque;
+    display: inline; 
+    font-size: 30px;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px;
+    margin: 1px 2px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.liClicked{
+    background: grey;
+}
+.paginate ul {
+    list-style: none;
+    margin: 10;
+    padding: 0;
+}
+
+@media (min-width: 1300px){
+    table{
+        width: 1300px;
+    }
+    th,td{
+        font-size: 13pt;
+    }
+}
+@media (max-width: 1000px) and (min-width: 300px){
+    table{
+        width: 700px;
+    }
+    th,td{
+        font-size: 9pt;
+    }
+}

@@ -1,0 +1,134 @@
+#gameProperties, #gameSettings, #algorithmsAndScore, #gameStatisitcs, #hereTable {
+    float:left;
+}
+#here_table,#control_buttons{
+    clear: left;
+}
+#algorithmsAndScore div{
+    background: rgb(182, 182, 182);
+    float:left;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-wrap: break-word;
+}
+#firstAlgorithm {
+    width: 40%;
+}
+#secondAlgorithm {
+    width: 40%;
+}
+#score {
+    width: 20%;
+}
+#firstAlgorithmName,#secondAlgorithmName{
+    text-decoration: underline;
+}
+#hereTable{
+    clear: left;
+}
+#gameSettings>*,#gameStatisitcs>*{
+    display: inherit;
+    overflow-wrap: break-word;
+}
+.food{
+    background: green;
+}
+.baseWhite{
+    background: white;
+    border-radius: 50%
+}
+.baseBlack{
+    background: black;
+    border-radius: 50%
+}
+.brick{
+    background: brown;
+}
+.freeSpace{
+    background: bisque;
+}
+.unitWhite{
+    background: white;
+}
+.unitBlack{
+    background: black;
+}
+@media (min-width: 1058px){
+    table{  
+        width: 700px;
+        height: 700px; 
+    }
+    #algorithmsAndScore{
+        width: 710px;
+    }
+    #gameProperties{
+        width: 320px;
+        border-top: 5px solid black; 
+        border-bottom: 5px solid black;  
+        border-right: 5px solid black; 
+    }
+    #hereTable{
+        border: 5px solid black; 
+        width: 700px;
+        height: 700px;  
+        background: wheat;
+    }
+    #gameSettings>*,#gameStatisitcs>*{
+        margin-bottom:10px; 
+        width: 150px; 
+    }
+    #gameSettings{
+        border-right: 2px solid gray;
+    }
+    #startTournament:after {
+        content: "Начать турнир";
+    }
+    #cancelltournament:after{
+        content: "Отменить турнир";
+    }
+}
+
+@media (max-width: 1057px) and (min-width: 300px){
+    table{  
+        width: 400px;
+        height: 400px;   
+    }
+    #algorithmsAndScore{
+        width: 406px;
+    }
+    #hereTable{
+        width: 400px;
+        height: 400px;  
+        background: wheat;
+        border-top: 3px solid black; 
+        border-bottom: 3px solid black;  
+        border-left: 3px solid black; 
+    }
+    #gameProperties{
+        width: 220px;
+        border: 3px solid black;
+    }
+    #gameSettings>*,#gameStatisitcs>*{
+        margin-bottom:5px; 
+        width: 100px; 
+        font-size: 10pt;
+    }
+    #algorithmsAndScore div{
+        font-size:10pt;
+    }
+    #gameSettings{
+        border-right: 2px solid gray;
+    }
+    #startTournament:after {
+        content: "Начать";
+    }
+    #cancelltournament:after{
+        content: "Отменить";
+    }
+    @media (max-width: 645px){
+        #hereTable{
+            border-right: 3px solid black;
+        }
+    }
+}

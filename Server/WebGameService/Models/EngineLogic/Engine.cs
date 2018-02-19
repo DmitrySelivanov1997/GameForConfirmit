@@ -7,40 +7,37 @@ namespace WebGameService.Models.EngineLogic
 {
     public class Engine
     {
-        public static bool Ct;
-        public static Statistics WhiteArmyStatistics { get; set; } = new Statistics();
-        public static Statistics BlackArmyStatistics { get; set; } = new Statistics();
-        public static int WaitTime { get; set; }
-        public Rules Rules = new Rules();
-        public MapManager MapManager { get; set; }
+        public static bool IsGameAlive;
+        private StatisticManager StatisticManager { get; set; }
+        public static int WaitTime { private get; set; }
+        private readonly Rules _rules = new Rules();
+        public MapManager MapManager { private get; set; }
 
         public Engine()
         {
             MapManager= new MapManager(GameSessionManager.Map);
-            WhiteArmyStatistics = new Statistics();
-            BlackArmyStatistics = new Statistics();
+            StatisticManager = new StatisticManager();
         }
 
         public void Startbattle()
         {
-            WhiteArmyStatistics = new Statistics{NumberOfWins = WhiteArmyStatistics.NumberOfWins};
-            BlackArmyStatistics = new Statistics{NumberOfWins = BlackArmyStatistics.NumberOfWins};
+            IsGameAlive = true;
+            StatisticManager = new StatisticManager(StatisticManager);
+            StatisticManager.WriteStartingDataForStatistic();
             while (true)
             {
-                MakeATurn(AlgorithmContainer.AlgorithmWhite, TypesOfObject.UnitWhite, WhiteArmyStatistics);
-                WhiteArmyStatistics.TurnNumber++;
-                if (Ct)
+                MakeATurn(AlgorithmContainer.AlgorithmWhite, TypesOfObject.UnitWhite, StatisticManager.WhiteArmyStatistics);
+                StatisticManager.WhiteArmyStatistics.TurnNumber++;
+                if (!IsGameAlive)
                 {
-                    GameSessionManager.WriteEndingDataForStatistic(WhiteArmyStatistics.TurnNumber,
-                        MapManager.CheckForGameOver());
+                    StatisticManager.WriteEndingDataForStatistic(MapManager.CheckForGameOver());
                     return;
                 }
-                MakeATurn(AlgorithmContainer.AlgorithmBlack, TypesOfObject.UnitBlack, BlackArmyStatistics);
-                BlackArmyStatistics.TurnNumber++;
-                if (Ct)
+                MakeATurn(AlgorithmContainer.AlgorithmBlack, TypesOfObject.UnitBlack, StatisticManager.BlackArmyStatistics);
+                StatisticManager.BlackArmyStatistics.TurnNumber++;
+                if (!IsGameAlive)
                 {
-                    GameSessionManager.WriteEndingDataForStatistic(WhiteArmyStatistics.TurnNumber, 
-                        MapManager.CheckForGameOver());
+                    StatisticManager.WriteEndingDataForStatistic(MapManager.CheckForGameOver());
                     return;
                 }
                 Thread.Sleep(WaitTime);
@@ -65,10 +62,10 @@ namespace WebGameService.Models.EngineLogic
                 {
                     MapManager.UnitDied(unit);
                     if (unit.TypeOfObject == TypesOfObject.UnitBlack)
-                        WhiteArmyStatistics.EnemyGotKilled();
+                        StatisticManager.WhiteArmyStatistics.EnemyGotKilled();
                     else
                     {
-                        BlackArmyStatistics.EnemyGotKilled();
+                        StatisticManager.BlackArmyStatistics.EnemyGotKilled();
                     }
                 }
             }
@@ -76,14 +73,14 @@ namespace WebGameService.Models.EngineLogic
             if (MapManager.CheckForGameOver() != GameResult.NotAGameOver)
             {
                 var result = MapManager.CheckForGameOver();
-                Ct = true;
+                IsGameAlive = false;
                 if (result == GameResult.BlackArmyDestroyed || result == GameResult.BlackBaseDestroyed)
                 {
-                    WhiteArmyStatistics.NumberOfWins++;
+                    StatisticManager.WhiteArmyStatistics.NumberOfWins++;
                 }
                 if (result == GameResult.WhiteArmyDestroyed || result == GameResult.WhiteBaseDestroyed)
                 {
-                    BlackArmyStatistics.NumberOfWins++;
+                    StatisticManager.BlackArmyStatistics.NumberOfWins++;
                 }
             }
 
@@ -96,8 +93,8 @@ namespace WebGameService.Models.EngineLogic
                 {
                     var xNew = unitToUpdate.X;
                     var yNew = unitToUpdate.Y;
-                    Rules.GetNewPositionAccordingToDirection(ref yNew, ref xNew, unitToUpdate);
-                    if (!Rules.ShouldUnitsBeUpdated(MapManager.Map.GetItem(yNew, xNew))) continue;
+                    _rules.GetNewPositionAccordingToDirection(ref yNew, ref xNew, unitToUpdate);
+                    if (!_rules.ShouldUnitsBeUpdated(MapManager.Map.GetItem(yNew, xNew))) continue;
                     if (MapManager.Map.GetItem(yNew, xNew) is Food)
                     {
                         MapManager.MoveUnit(yNew, xNew, unitToUpdate);

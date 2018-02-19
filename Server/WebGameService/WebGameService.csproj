@@ -276,6 +276,7 @@
       <DependentUpon>201802131231140_dateTime.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\AlgorithmContainer.cs" />
+    <Compile Include="Models\EngineLogic\StatisticManager.cs" />
     <Compile Include="Models\SessionRepository.cs" />
     <Compile Include="Models\EngineLogic\Engine.cs" />
     <Compile Include="Models\EngineLogic\GameSessionManager.cs" />
@@ -300,6 +301,17 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Game\session.html" />
+    <Content Include="Game\Scripts\get_new_page.js" />
+    <Content Include="Game\Scripts\get_stats_from_the_server.js" />
+    <Content Include="Game\Scripts\input_constraints.js" />
+    <Content Include="Game\Scripts\order_by_click.js" />
+    <Content Include="Game\Scripts\pagination.js" />
+    <Content Include="Game\Scripts\post_get_requests_and_drawing.js" />
+    <Content Include="Game\Scripts\web_service_caller.js" />
+    <Content Include="Game\statistic.html" />
+    <Content Include="Game\Styles\stats_style.css" />
+    <Content Include="Game\Styles\style.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
