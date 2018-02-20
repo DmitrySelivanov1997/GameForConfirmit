@@ -104,10 +104,16 @@ function addClassForCell(i, j, map) {
 }
 
 $(function () { // delete request to cancell tournament
-    $('#cancelltournament').click(function () {
+    $('#cancellTournament').click(function () {
         webCaller.CancellTournament();
         EnableButtons();
         ;
+    });
+});
+
+$(function () { 
+    $('#openStatistics').click(function () {
+        window.open("http://co-yar-ws100:8080/game/statistic.html");
     });
 });
 $(function () { // code which happens after changing drawing slider

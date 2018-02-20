@@ -41,7 +41,7 @@ function DrawPagination(totalPages){
         }
         else
         { 
-            myUl.append($('<li/>').text(c[i]));
+            myUl.append($('<li/>').text(c[i]).attr('data-value',c[i]).addClass("pageNumber").on("click", pageOnClick));
         }
     }
     paging.append(myUl);

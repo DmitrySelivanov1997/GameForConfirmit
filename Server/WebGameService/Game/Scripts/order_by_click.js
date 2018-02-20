@@ -1,4 +1,4 @@
-async function TdOnClick() {
+$(document).on('click','.buttonHead',async function(){
     filterName = $('#algorithmName').val();
     filterDateBefore = $('#dateBefore').val();
     filterDateAfter = $('#dateAfter').val();
@@ -6,7 +6,8 @@ async function TdOnClick() {
         orderType = "asc";
     else
         orderType = "desc";
-    parametr = this.className;
-    var stats = await webCaller.GetData(pageNumber, parametr, orderType, entriesNumber, filterName, filterDateBefore, filterDateAfter)
+    parametr = this.id;
+    this.classList.add("orderedDesc");
+    var stats = await webCaller.GetData(pageNumber, parametr, orderType, entriesNumber, filterName, filterDateBefore, filterDateAfter);
     DrawTable(stats);
-}
+    });

@@ -16,13 +16,31 @@
         <div class="filter">
             <div>Название: </div>
             <input id="algorithmName"  maxlength="15" type="text" >
-            <input type="button" id="openNewPage" value="Найти">
+            <input type="submit" id="openNewPage" value="Найти">
         </div>
-        <div id="hereTable"></div>
-        <div id="pageinput">
-            <div> 
-                <ul id="pagination-demo" class="pagination-sm"></ul>
-            </div>
+        <div id="hereTable">
+            <script id="entry-template" type="text/x-handlebars-template">
+                <div class="tableFromHB">
+                    <table>
+                        <thead>
+                                {{#each headingName}}
+                                <th class="buttonHead" id="{{this.class}}">{{this.name}}</th>
+                                {{/each}}
+                            </tr>
+                        </thead>
+                        <tfoot></tfoot>
+                        <tbody>
+                            {{#each stats}}
+                                <tr>
+                                    {{#each this}}
+                                        <td>{{this}}</td>
+                                    {{/each}}
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+              </script>
         </div>
         <div class="paginate"></div>
         <script src="scripts/web_service_caller.js"></script>
@@ -30,5 +48,6 @@
         <script src="scripts/get_stats_from_the_server.js"></script>
         <script src="scripts/order_by_click.js"></script>
         <script src="scripts/pagination.js"></script>
+        <script src="scripts/handlebars.js"></script>
     </body>
 </html>

@@ -45,7 +45,13 @@ li {
     margin: 10;
     padding: 0;
 }
+.orderedAsc ::after{
+    content: " &#11014";
+}
 
+.orderedDesc {
+    background: red;
+}
 @media (min-width: 1300px){
     table{
         width: 1300px;
