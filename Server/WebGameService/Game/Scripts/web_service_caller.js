@@ -7,14 +7,14 @@ class WebServiceCaller {
         return $.get(this.url + "/api/tournament");
     }
     GetNumberOfPages(){
-        if(filterDateBefore==="")
-            filterDateBefore = "9999-12-12T23:00"
-        if(filterDateAfter==="")
-            filterDateAfter = "0001-12-12T23:00"
+        if(filterManager.FilterDateBefore==="")
+            filterManager.FilterDateBefore = "9999-12-12T23:00"
+        if(filterManager.FilterDateAfter==="")
+            filterManager.FilterDateAfter = "0001-12-12T23:00"
         return $.get(this.url + "/api/statistic/count"+
-        "?$filter=(substringof('"+filterName+"', WhiteAlgorithmName) eq true or "+
-        "substringof('"+filterName+"', BlackAlgorithmName) eq true)"+
-        "and GameStartTime gt DateTime'"+filterDateAfter+"'and GameStartTime lt DateTime'"+filterDateBefore+"'");
+        "?$filter=(substringof('"+filterManager.FilterName+"', WhiteAlgorithmName) eq true or "+
+        "substringof('"+filterManager.FilterName+"', BlackAlgorithmName) eq true)"+
+        "and GameStartTime gt DateTime'"+filterManager.FilterDateAfter+"'and GameStartTime lt DateTime'"+filterManager.FilterDateBefore+"'");
     }
     GetAlgorithmName(algName) {
         if (algName === "white") {
@@ -56,15 +56,15 @@ class WebServiceCaller {
             }
         });
     }
-    GetData(pageNumber,parametr,orderType,entriesNumber,filterName, filterDateBefore, filterDateAfter) {
-        if(filterDateBefore==="")
-            filterDateBefore = "9999-12-12T23:00"
-        if(filterDateAfter==="")
-            filterDateAfter = "0001-12-12T23:00"
+    GetData() {
+        if(filterManager.FilterDateBefore==="")
+            filterManager.FilterDateBefore = "9999-12-12T23:00"
+        if(filterManager.FilterDateAfter==="")
+        filterManager.FilterDateAfter = "0001-12-12T23:00"
         return $.get( this.url + "/api/statistic"+
-        "?$orderby="+parametr+" "+orderType+"&$skip="+(pageNumber-1)*entriesNumber+"&$top="+entriesNumber+
-        "&$filter=(substringof('"+filterName+"', WhiteAlgorithmName) eq true or "+
-        "substringof('"+filterName+"', BlackAlgorithmName) eq true) "+
-        "and GameStartTime gt DateTime'"+filterDateAfter+"'and GameStartTime lt DateTime'"+filterDateBefore+"'");
+        "?$orderby="+filterManager.Parametr+" "+filterManager.OrderType+"&$skip="+(paginationManager.PageNumber-1)*paginationManager.EntriesNumber+"&$top="+paginationManager.EntriesNumber+
+        "&$filter=(substringof('"+filterManager.FilterName+"', WhiteAlgorithmName) eq true or "+
+        "substringof('"+filterManager.FilterName+"', BlackAlgorithmName) eq true) "+
+        "and GameStartTime gt DateTime'"+filterManager.FilterDateAfter+"'and GameStartTime lt DateTime'"+filterManager.FilterDateBefore+"'");
     }
 }

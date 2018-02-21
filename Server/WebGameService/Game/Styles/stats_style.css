@@ -45,12 +45,12 @@ li {
     margin: 10;
     padding: 0;
 }
-.orderedAsc ::after{
-    content: " &#11014";
+.orderedAsc:after{
+    content: "\2B06";
 }
 
-.orderedDesc {
-    background: red;
+.orderedDesc:after {
+    content: "\2B07";
 }
 @media (min-width: 1300px){
     table{
