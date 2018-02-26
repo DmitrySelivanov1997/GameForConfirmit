@@ -73,7 +73,7 @@ class PaginationManager {
     }
 }
 
-var webCaller = new WebServiceCaller("http://co-yar-ws100:8080");
+var webCaller = new WebServiceCaller();
 var filterManager = new FilterManager("desc", "Id");
 var paginationManager = new PaginationManager(1, 25);
 

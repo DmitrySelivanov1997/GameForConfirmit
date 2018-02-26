@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using CommonClient_WebServiseParts;
 
 namespace WebGameService.Models.EngineLogic
@@ -27,17 +25,17 @@ namespace WebGameService.Models.EngineLogic
         }
 
 
-        public static void WriteEndingDataForStatistic( GameResult gameResult)
+        public static async Task WriteEndingDataForStatistic( GameResult gameResult)
         {
             GameSessionStatistic.TurnsNumber = WhiteArmyStatistics.TurnNumber;
             GameSessionStatistic.GameResult = GetGameResult(gameResult);
             GameSessionStatistic.GameDuration = DateTime.Now.Subtract(GameSessionStatistic.GameStartTime.TimeOfDay).ToString("mm:ss,fffff");
-            AddToDataBase();
+            await AddToDataBase();
         }
 
-        private static void AddToDataBase()
+        private static async Task AddToDataBase()
         {
-            _repository.Add(GameSessionStatistic);
+            await _repository.Add(GameSessionStatistic);
         }
 
         public void WriteStartingDataForStatistic()

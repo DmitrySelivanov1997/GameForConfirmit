@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http.ExceptionHandling;
-using System.Windows.Threading;
 using CommonClient_WebServiseParts;
 using InterfaceLibrary;
-using WebGameService.Controllers;
 
 namespace WebGameService.Models.EngineLogic
 {
@@ -25,7 +16,7 @@ namespace WebGameService.Models.EngineLogic
         {
             Engine = new Engine();
         }
-        public void Startfight()
+        public async void Startfight()
         {
             try
             {
@@ -38,7 +29,7 @@ namespace WebGameService.Models.EngineLogic
                         (IAlgorithm)Activator.CreateInstance(AlgorithmContainer.AlgorithmWhite.GetType());
                     AlgorithmContainer.AlgorithmBlack =
                         (IAlgorithm)Activator.CreateInstance(AlgorithmContainer.AlgorithmBlack.GetType());
-                    Engine.Startbattle();
+                    await Engine.Startbattle();
                     NumberOfGames--;
                 }
 

@@ -14,14 +14,14 @@ namespace Game.Models
 {
     public class WebServiceCaller
     {
-        public string AppPath = Properties.Settings.Default.AppPath;
+        private readonly string _appPath = Properties.Settings.Default.AppPath;
 
         public async Task<TournamentState> GetTournamentStateFromTheServer(DispatcherTimer timer)
         {
             using (var client = new HttpClient())
             {
                 timer.Stop();
-                string json = await client.GetStringAsync(AppPath + "api/tournament");
+                string json = await client.GetStringAsync(_appPath + "api/tournament");
                 timer.Start();
                 return JsonConvert.DeserializeObject<TournamentState>(json);
             }
@@ -35,14 +35,14 @@ namespace Game.Models
                 client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/bson"));
                 byteArrayContent.Headers.ContentType = new MediaTypeHeaderValue("application/bson");
-                await client.PostAsync(AppPath + "api/algorithm/" + id, byteArrayContent);
+                await client.PostAsync(_appPath + "api/algorithm/" + id, byteArrayContent);
             }
         }
         public async Task GetAlgoritmnameFromTheServer(TextBlock algorithmName, string id)
         {
             using (var client = new HttpClient())
             {
-                var response = await client.GetStringAsync(AppPath + "api/algorithm/" + id);
+                var response = await client.GetStringAsync(_appPath + "api/algorithm/" + id);
                 algorithmName.Text = response;
             }
         }
@@ -51,7 +51,7 @@ namespace Game.Models
         {
             using (var client = new HttpClient())
             {
-                await client.DeleteAsync(AppPath + "api/tournament");
+                await client.DeleteAsync(_appPath + "api/tournament");
             }
         }
 
@@ -59,7 +59,7 @@ namespace Game.Models
         {
             using (var client = new HttpClient())
             {
-                await client.PostAsJsonAsync(AppPath + "api/tournament/start/", value);
+                await client.PostAsJsonAsync(_appPath + "api/tournament/start/", value);
             }
         }
 
@@ -67,8 +67,7 @@ namespace Game.Models
         {
             using (var client = new HttpClient())
             {
-                client.Timeout = new TimeSpan(int.MaxValue);
-                await client.PutAsJsonAsync(AppPath + "api/tournament/", value);
+                await client.PutAsJsonAsync(_appPath + "api/tournament/", value);
             }
         }
     }

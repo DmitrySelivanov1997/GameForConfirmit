@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Mvc;
 using CommonClient_WebServiseParts;
-using InterfaceLibrary;
-using WebGameService.Models;
 using WebGameService.Models.EngineLogic;
 
 namespace WebGameService.Controllers
 {
     public class TournamentController : ApiController
     {
-        [System.Web.Http.HttpPost]
-        public HttpStatusCodeResult StartAndLaunchNewTournament([FromBody] TournamentInitializingClass classForTournament)
+        [HttpPost]
+        public void StartAndLaunchNewTournament([FromBody] TournamentInitializingClass classForTournament)
         {
+            if(Engine.IsGameAlive)
+                return;
+
             GameSessionManager.MapSize = classForTournament.MapSize;
             Engine.WaitTime = classForTournament.WaitTime;
             GameSessionManager.NumberOfGames = classForTournament.NumberOfGames;
@@ -29,15 +24,14 @@ namespace WebGameService.Controllers
             {
                 //не возвращать результат, пока не создастся карта
             }
-            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
-        [System.Web.Http.HttpPut]
+        [HttpPut]
         public void PostDelayForEachTurn([FromBody]int delay)
         {
             Engine.WaitTime = delay; 
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public TournamentState GetTournamentState()
         {
             if(GameSessionManager.Map == null)
@@ -54,11 +48,15 @@ namespace WebGameService.Controllers
             };
         }
 
-        [System.Web.Http.HttpDelete]
+        [HttpDelete]
         public void StopTournament()
         {
             GameSessionManager.NumberOfGames = 0;
             Engine.IsGameAlive = false;
+            while (GameSessionManager.Map != null)
+            {
+                //не возвращать результат, пока не удалится карта
+            }
         }
     }
 }

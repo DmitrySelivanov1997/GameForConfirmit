@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
+using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 
@@ -378,7 +379,7 @@ namespace WebGameService.Areas.HelpPage
             try
             {
                 object parsedJson = JsonConvert.DeserializeObject(str);
-                return JsonConvert.SerializeObject(parsedJson, Formatting.Indented);
+                return JsonConvert.SerializeObject(parsedJson, Newtonsoft.Json.Formatting.Indented);
             }
             catch
             {
@@ -392,7 +393,7 @@ namespace WebGameService.Areas.HelpPage
         {
             try
             {
-                XDocument xml = XDocument.Parse(str);
+                XmlDocument xml = new XmlDocument();
                 return xml.ToString();
             }
             catch

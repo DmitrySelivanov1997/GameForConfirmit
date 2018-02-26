@@ -14,7 +14,6 @@ using WebGameService.Models;
 using System.Web.Http.Dependencies;
 using System.Web.Http.OData.Builder;
 using Microsoft.Data.Edm;
-using Microsoft.Practices.Unity;
 
 namespace WebGameService
 {

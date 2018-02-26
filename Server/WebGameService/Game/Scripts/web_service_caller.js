@@ -1,7 +1,7 @@
 class WebServiceCaller {
 
-    constructor(url) {
-        this.url = url;
+    constructor() {
+        this.url = "http://co-yar-ws100:8080";
     }
     GetGameStats() {
         return $.get(this.url + "/api/tournament");

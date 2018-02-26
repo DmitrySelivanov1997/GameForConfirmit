@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using CommonClient_WebServiseParts;
 using InterfaceLibrary;
 
@@ -9,7 +9,7 @@ namespace WebGameService.Models.EngineLogic
     {
         public static bool IsGameAlive;
         private StatisticManager StatisticManager { get; set; }
-        public static int WaitTime { private get; set; }
+        public static int WaitTime { get; set; }
         private readonly Rules _rules = new Rules();
         public MapManager MapManager { private get; set; }
 
@@ -19,7 +19,7 @@ namespace WebGameService.Models.EngineLogic
             StatisticManager = new StatisticManager();
         }
 
-        public void Startbattle()
+        public async Task Startbattle()
         {
             IsGameAlive = true;
             StatisticManager = new StatisticManager(StatisticManager);
@@ -30,14 +30,14 @@ namespace WebGameService.Models.EngineLogic
                 StatisticManager.WhiteArmyStatistics.TurnNumber++;
                 if (!IsGameAlive)
                 {
-                    StatisticManager.WriteEndingDataForStatistic(MapManager.CheckForGameOver());
+                    await StatisticManager.WriteEndingDataForStatistic(MapManager.CheckForGameOver());
                     return;
                 }
                 MakeATurn(AlgorithmContainer.AlgorithmBlack, TypesOfObject.UnitBlack, StatisticManager.BlackArmyStatistics);
                 StatisticManager.BlackArmyStatistics.TurnNumber++;
                 if (!IsGameAlive)
                 {
-                    StatisticManager.WriteEndingDataForStatistic(MapManager.CheckForGameOver());
+                    await StatisticManager.WriteEndingDataForStatistic(MapManager.CheckForGameOver());
                     return;
                 }
                 Thread.Sleep(WaitTime);
