@@ -302,11 +302,8 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Game\session.html" />
-    <Content Include="Game\Scripts\get_new_page.js" />
     <Content Include="Game\Scripts\get_stats_from_the_server.js" />
     <Content Include="Game\Scripts\input_constraints.js" />
-    <Content Include="Game\Scripts\order_by_click.js" />
-    <Content Include="Game\Scripts\pagination.js" />
     <Content Include="Game\Scripts\post_get_requests_and_drawing.js" />
     <Content Include="Game\Scripts\web_service_caller.js" />
     <Content Include="Game\statistic.html" />
