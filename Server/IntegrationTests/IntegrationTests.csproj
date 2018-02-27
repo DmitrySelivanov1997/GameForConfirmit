@@ -89,6 +89,7 @@
   <ItemGroup>
     <Compile Include="AlgorithmControllerTests.cs" />
     <Compile Include="SessionStatisticControllerTests.cs" />
+    <Compile Include="TestWebCaller.cs" />
     <Compile Include="TournamentControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -47,6 +47,7 @@ namespace WebGameService.Models.EngineLogic
             catch (Exception e)
             {
                 Trace.WriteLine(DateTime.Now + $", task error:{e}");
+                Map = null;
             }
         }
     }

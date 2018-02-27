@@ -17,27 +17,7 @@ namespace IntegrationTests
     [TestClass]
     public class AlgorithmControllerTests
     {
-        private readonly string _appPath = "http://co-yar-ws100:8080/";
-        private async Task PostAlgorithmToTheServer(byte[] asm, string id)
-        {
-            using (var client = new HttpClient())
-            {
-                var byteArrayContent = new ByteArrayContent(asm);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/bson"));
-                byteArrayContent.Headers.ContentType = new MediaTypeHeaderValue("application/bson");
-                await client.PostAsync(_appPath + "api/algorithm/" + id, byteArrayContent);
-            }
-        }
-        private async Task<string> GetAlgoritmnameFromTheServer(string id)
-        {
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetStringAsync(_appPath + "api/algorithm/" + id);
-                return response;
-            }
-        }
+        private TestWebCaller WebCaller = new TestWebCaller();
 
         [TestMethod]
         public async Task SetAndCheckWhiteAlgorithmName()
@@ -57,8 +37,8 @@ namespace IntegrationTests
         {
             var fileName = Path.GetFullPath(_assembly);
             var assembly = File.ReadAllBytes(fileName);
-            await PostAlgorithmToTheServer(assembly, algType);
-            var result = await GetAlgoritmnameFromTheServer(algType);
+            await WebCaller.PostAlgorithmToTheServer(assembly, algType);
+            var result = await WebCaller.GetAlgoritmnameFromTheServer(algType);
             return result == expected;
         }
     }
